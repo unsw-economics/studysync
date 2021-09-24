@@ -6,7 +6,10 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.275446139058384" />
         <entry key="app/src/main/res/layout/activity_raw_daily_stats.xml" value="0.2956107338103644" />
         <entry key="app/src/main/res/layout/content_raw_daily_stats.xml" value="0.16972069423464997" />
-        <entry key="app/src/main/res/layout/fragment_first.xml" value="0.279883991468613" />
+        <entry key="app/src/main/res/layout/fragment_debrief.xml" value="0.225" />
+        <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2665856467251272" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.43854166666666666" />
+        <entry key="app/src/main/res/xml/network_security_config.xml" value="0.25364583333333335" />
       </map>
     </option>
   </component>

@@ -3,27 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/LoginFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="au.edu.unsw.business.studysync.FirstFragment"
+        android:id="@+id/LoginFragment"
+        android:name="au.edu.unsw.business.studysync.LoginFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_login">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            android:id="@+id/action_login_to_debrief"
             app:destination="@id/SecondFragment"
-            app:popUpTo="@id/FirstFragment"
+            app:popUpTo="@id/LoginFragment"
             app:popUpToInclusive="true" />
 
     </fragment>
 
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="au.edu.unsw.business.studysync.SecondFragment"
+        android:name="au.edu.unsw.business.studysync.DebriefFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_debrief">
+
+        <action
+            android:id="@+id/action_debrief_to_login"
+            app:destination="@id/LoginFragment"
+            app:popUpTo="@id/SecondFragment"
+            app:popUpToInclusive="true" />
 
     </fragment>
 

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.widget.TextView
-import au.edu.unsw.business.studysync.MainActivity.Companion.RAW_STATS_TEXT
 
 class RawDailyStatsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

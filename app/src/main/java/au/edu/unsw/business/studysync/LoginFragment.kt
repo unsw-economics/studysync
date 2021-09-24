@@ -1,33 +1,43 @@
 package au.edu.unsw.business.studysync
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.edit
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import au.edu.unsw.business.studysync.databinding.FragmentFirstBinding
+import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
+import au.edu.unsw.business.studysync.network.SyncApi
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class LoginFragment : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
+    private val vm: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /*
         binding.requestPermissionButton.setOnClickListener {
             UsageStatsNegotiator.openUsageAccessPermissionsMenu(requireContext())
         }
@@ -39,15 +49,38 @@ class FirstFragment : Fragment() {
 
             startActivity(intent)
         }
+        */
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        binding.identifyButton.setOnClickListener {
+            val subjectId = binding.subjectIdField.text.toString()
+
+            lifecycleScope.launch {
+                try {
+                    val result = SyncApi.service.identify(subjectId)
+
+                    if (result.message == null) {
+                        val data = result.data!!
+                        vm.identify(subjectId, data.authToken)
+                    } else {
+                        throw Exception(result.message)
+                    }
+                } catch (e: Exception) {
+                    Log.d("MainActivity", "Error: ${e.message}")
+                }
+            }
+        }
+
+        vm.identified.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigate(R.id.action_login_to_debrief)
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
 
+        /*
         if (UsageStatsNegotiator.hasUsageStatsPermission(requireContext())) {
             binding.requestPermissionButton.text = "Permission Granted"
             binding.requestPermissionButton.isEnabled = false
@@ -59,6 +92,7 @@ class FirstFragment : Fragment() {
 
             binding.requestStatsButton.isEnabled = false
         }
+        */
     }
 
     override fun onDestroyView() {
