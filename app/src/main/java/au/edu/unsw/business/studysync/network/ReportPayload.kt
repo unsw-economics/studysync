@@ -1,5 +1,16 @@
 package au.edu.unsw.business.studysync.network
 
-data class ReportPayload(val subjectId: String, val reportDate: String, val reports: List<AppReport>)
+import com.squareup.moshi.Json
+import retrofit2.http.Field
 
-data class AppReport(val applicationId: String, val usageSeconds: Int)
+data class ReportPayload(
+    @Json(name = "subject_id") val subjectId: String,
+    @Json(name = "report_period") val reportPeriod: String,
+    @Json(name = "report_day") val reportDay: Int,
+    val reports: List<AppReport>
+)
+
+data class AppReport(
+    @Json(name = "application_id") val applicationId: String,
+    @Json(name = "usage_seconds") val usageSeconds: Long
+)

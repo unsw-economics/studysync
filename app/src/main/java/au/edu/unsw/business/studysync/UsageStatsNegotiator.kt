@@ -9,6 +9,9 @@ import android.content.pm.PackageManager
 import android.os.Process
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
+import au.edu.unsw.business.studysync.logic.TimeUtils
+import au.edu.unsw.business.studysync.logic.TimeUtils.getToday
+import au.edu.unsw.business.studysync.network.AppReport
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -45,14 +48,14 @@ object UsageStatsNegotiator {
         for ((appName, time) in usageList) {
             val usage = JSONArray()
             usage.put(appName)
-            usage.put(TimeUtil.humanizeTime(time))
+            usage.put(TimeUtils.humanizeTime(time))
 
             sum += time
             usageJSON.put(usage)
         }
 
         val meta = JSONObject()
-        meta.put("today_usage", TimeUtil.humanizeTime(sum))
+        meta.put("today_usage", TimeUtils.humanizeTime(sum))
 
         usageJSON.put(0, meta)
 
@@ -60,16 +63,10 @@ object UsageStatsNegotiator {
     }
 
     fun getTodayUsageJson(context: Context): JSONArray {
-        val today = GregorianCalendar()
-        today.set(Calendar.HOUR_OF_DAY, 0)
-        today.set(Calendar.MINUTE, 0)
-        today.set(Calendar.SECOND, 0)
-        today.set(Calendar.MILLISECOND, 0)
-
-        val previousMidnight = today.timeInMillis
+        val todayStart = getToday().timeInMillis
         val now = System.currentTimeMillis()
 
-        val usageMap = computeUsagesSerial(context, previousMidnight, now)
+        val usageMap = computeUsagesSerial(context, todayStart, now)
         return generateUsageJson(context, usageMap)
     }
 
@@ -113,6 +110,16 @@ object UsageStatsNegotiator {
         }
 
         return usageMap
+    }
+
+    fun prepareReports(map: Map<String, Long>): List<AppReport> {
+        val reports: MutableList<AppReport> = LinkedList()
+
+        for ((appName, usageMilliseconds) in map) {
+            reports.add(AppReport(appName, usageMilliseconds / 1000))
+        }
+
+        return reports
     }
 
     private fun getAppName(context: Context, packageName: String): String {

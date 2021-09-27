@@ -56,14 +56,12 @@ class LoginFragment : Fragment() {
 
             lifecycleScope.launch {
                 try {
-                    val result = SyncApi.service.identify(subjectId)
+                    val response = SyncApi.service.identify(subjectId)
 
-                    if (result.message == null) {
-                        val data = result.data!!
-                        vm.identify(subjectId, data.authToken)
-                    } else {
-                        throw Exception(result.message)
-                    }
+                    if (response.message != null) throw Exception(response.message)
+
+                    val data = response.data!!
+                    vm.identify(subjectId, data.authToken)
                 } catch (e: Exception) {
                     Log.d("MainActivity", "Error: ${e.message}")
                 }

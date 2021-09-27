@@ -1,12 +1,14 @@
 package au.edu.unsw.business.studysync.network
 
-import android.os.TestLooperManager
-import au.edu.unsw.business.studysync.Environment
+import au.edu.unsw.business.studysync.constants.Constants
+import au.edu.unsw.business.studysync.constants.Environment
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
+import kotlin.reflect.jvm.internal.impl.resolve.scopes.MemberScope
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -23,11 +25,10 @@ interface SyncApiService {
     suspend fun identify(@Field("subject_id") subjectId: String): ApiResponse<IdentifyResponse>
 
     @GET("api/get-test-group")
-    suspend fun getTestGroup(@Header("auth_token") authToken: String, @Query("subject_id") subjectId: String): ApiResponse<GetTestGroupResponse>
+    suspend fun getTestGroup(@Header("Authorization") authToken: String, @Query("subject_id") subjectId: String): ApiResponse<GetTestGroupResponse>
 
-    @FormUrlEncoded
     @POST("api/submit-report")
-    suspend fun submitReport(@Body reportPayload: ReportPayload): ApiResponse<Unit>
+    suspend fun submitReport(@Header("Authorization") authToken: String, @Body reportPayload: ReportPayload): BasicApiResponse
 }
 
 object SyncApi {

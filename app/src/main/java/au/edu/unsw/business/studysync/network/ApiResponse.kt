@@ -7,6 +7,10 @@ data class ApiResponse<T>(
     val data: T?
 )
 
+data class BasicApiResponse(
+    val message: String?
+)
+
 data class IdentifyResponse(
     @Json(name = "auth_token")
     val authToken: String
