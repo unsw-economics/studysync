@@ -10,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
 import au.edu.unsw.business.studysync.network.SyncApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -25,6 +27,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val vm: MainViewModel by activityViewModels()
+    private val loginVm: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +59,7 @@ class LoginFragment : Fragment() {
 
             lifecycleScope.launch {
                 try {
+                    loginVm.disableLogin()
                     val response = SyncApi.service.identify(subjectId)
 
                     if (response.message != null) throw Exception(response.message)
@@ -64,6 +68,9 @@ class LoginFragment : Fragment() {
                     vm.identify(subjectId, data.authToken)
                 } catch (e: Exception) {
                     Log.d("MainActivity", "Error: ${e.message}")
+                    // to avoid flashing on error
+                    delay(300)
+                    loginVm.enableLogin()
                 }
             }
         }
@@ -72,6 +79,10 @@ class LoginFragment : Fragment() {
             if (it) {
                 findNavController().navigate(R.id.action_login_to_debrief)
             }
+        }
+
+        loginVm.loginEnabled.observe(viewLifecycleOwner) {
+            binding.identifyButton.isEnabled = it
         }
     }
 
