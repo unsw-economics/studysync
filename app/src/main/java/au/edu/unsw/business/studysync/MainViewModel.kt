@@ -5,15 +5,10 @@ import androidx.core.content.edit
 import androidx.lifecycle.*
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE_STRING
-import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE_STRING
-import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
 import au.edu.unsw.business.studysync.database.DailyReport
 import au.edu.unsw.business.studysync.database.DailyReportDao
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.ZonedDateTime
-import java.util.*
 
 class MainViewModel(
     private val preferences: SharedPreferences,
@@ -71,6 +66,6 @@ class MainViewModel(
     }
 
     suspend fun getRecordedReports(): List<DailyReport> {
-        return dailyReportDao.getRecordedBaselineReports()
+        return dailyReportDao.getRecordedReports()
     }
 }

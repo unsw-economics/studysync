@@ -14,7 +14,7 @@ object Constants {
 }
 
 object Environment {
-    const val SERVER_URL = "https://10.0.2.2:8443"
+    const val SERVER_URL = "http://192.168.20.12:3000"
 
     val ZONE_ID: ZoneId by lazy {
         ZoneId.systemDefault()
