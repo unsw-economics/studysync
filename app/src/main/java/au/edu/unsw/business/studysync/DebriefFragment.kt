@@ -10,17 +10,24 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import au.edu.unsw.business.studysync.UsageStatsNegotiator.computeUsagesSerial
-import au.edu.unsw.business.studysync.UsageStatsNegotiator.getEventsJson
 import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
-import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
 import au.edu.unsw.business.studysync.databinding.FragmentDebriefBinding
+import au.edu.unsw.business.studysync.development.DevUtils
+import au.edu.unsw.business.studysync.logic.TimeUtils.getStudyPeriodAndDay
 import au.edu.unsw.business.studysync.logic.TimeUtils.humanizeTime
+import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
+import au.edu.unsw.business.studysync.logic.TimeUtils.now
+import au.edu.unsw.business.studysync.logic.TimeUtils.toMilliseconds
+import au.edu.unsw.business.studysync.network.ReportPayload
+import au.edu.unsw.business.studysync.network.SyncApi
+import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
+import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.getFilteredEventsWithInitialState
+import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.prepareReports
 import kotlinx.coroutines.*
+import retrofit2.HttpException
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
-import kotlin.math.min
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -53,30 +60,15 @@ class DebriefFragment : Fragment() {
         }
 
         binding.submitReportButton.setOnClickListener {
-            val json = UsageStatsNegotiator.getEventsJson(requireContext(), LocalDate.now().atStartOfDay(
-                ZONE_ID).toInstant().toEpochMilli(), ZonedDateTime.now().toInstant().toEpochMilli())
-
-            val str = json.toString(2)
-
-            val length = str.length
-
-            for (i in 0..(length / 1000)) {
-                Log.d("MainActivity", str.subSequence(i * 1000, min(i * 1000 + 1000, length)).toString())
-            }
-
-        }
-
-        /*
-        binding.submitReportButton.setOnClickListener {
             MainScope().launch {
                 withContext(Dispatchers.IO) {
-                    val (period, day) = getStudyPeriodAndDay(getToday())
+                    val (period, day) = getStudyPeriodAndDay(LocalDate.now())
 
-                    val reports = UsageStatsNegotiator.prepareReports(
-                        UsageStatsNegotiator.computeUsagesSerial(
+                    val reports = prepareReports(
+                        computeUsage(
                             requireContext(),
-                            getToday().timeInMillis,
-                            System.currentTimeMillis()
+                            midnight(),
+                            now()
                         )
                     )
 
@@ -100,20 +92,8 @@ class DebriefFragment : Fragment() {
                 }
             }
         }
-        */
 
         binding.recordNewUsagesButton.setOnClickListener {
-            /*
-            val now = ZonedDateTime.now()
-            val midnight = now.toLocalDate().atStartOfDay(ZONE_ID)
-            val (period, day) = getStudyPeriodAndDay(LocalDate.now())
-
-            Log.d("MainActivity", TimeUtils.humanizeTime(ChronoUnit.MILLIS.between(midnight, now)))
-            Log.d("MainActivity", "$period $day")
-
-            Log.d("MainActivity", getTodayUsageJson(requireContext()).toString())
-            */
-
             var date = vm.lastRecorded.value!!
             val today = LocalDate.now()
 
@@ -121,23 +101,14 @@ class DebriefFragment : Fragment() {
 
             while (date.isBefore(today)) {
                 val nextDate = date.plusDays(1)
-                val usage = computeUsagesSerial(
-                    requireContext(),
-                    date.atStartOfDay(ZONE_ID).toInstant().toEpochMilli(),
-                    nextDate.atStartOfDay(ZONE_ID).toInstant().toEpochMilli()
-                )
-
-                Log.d("MainActivity", date.toString())
-
-                Log.d("MainActivity", getEventsJson(
-                    requireContext(),
-                    date.atStartOfDay(ZONE_ID).toInstant().toEpochMilli(),
-                    nextDate.atStartOfDay(ZONE_ID).toInstant().toEpochMilli()
-                ).toString(2))
+                val usage = computeUsage(requireContext(), toMilliseconds(date), toMilliseconds(nextDate))
 
                 usagesList.add(Pair(date.toString(), usage))
                 date = nextDate
             }
+
+            // commit to database instead of displaying to screen
+            // then update lastRecorded
 
             var text = ""
             for ((d, usage) in usagesList) {
@@ -146,6 +117,9 @@ class DebriefFragment : Fragment() {
                 for ((app, seconds) in usage) {
                     text += "$app ${humanizeTime(seconds)}\n"
                 }
+
+                text += "\n"
+
             }
 
             val intent = Intent(activity, DebugActivity::class.java).apply {
@@ -153,7 +127,6 @@ class DebriefFragment : Fragment() {
             }
 
             startActivity(intent)
-
         }
 
         binding.displayAllUsagesButton.setOnClickListener {

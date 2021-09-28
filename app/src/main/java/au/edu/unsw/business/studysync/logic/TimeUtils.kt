@@ -34,4 +34,20 @@ object TimeUtils {
             Pair(PERIOD_BASELINE, diff + BASELINE_LENGTH)
         }
     }
+
+    fun toMilliseconds(d: ZonedDateTime): Long {
+        return d.toInstant().toEpochMilli()
+    }
+
+    fun toMilliseconds(d: LocalDate): Long {
+        return toMilliseconds(d.atStartOfDay(ZONE_ID))
+    }
+
+    fun now(): Long {
+        return toMilliseconds(ZonedDateTime.now())
+    }
+
+    fun midnight(): Long {
+        return toMilliseconds(LocalDate.now())
+    }
 }
