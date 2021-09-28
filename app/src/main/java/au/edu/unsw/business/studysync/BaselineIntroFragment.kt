@@ -11,8 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
-import au.edu.unsw.business.studysync.databinding.FragmentDebriefBinding
-import au.edu.unsw.business.studysync.development.DevUtils
+import au.edu.unsw.business.studysync.databinding.FragmentBaselineIntroBinding
 import au.edu.unsw.business.studysync.logic.TimeUtils.getStudyPeriodAndDay
 import au.edu.unsw.business.studysync.logic.TimeUtils.humanizeTime
 import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
@@ -21,20 +20,18 @@ import au.edu.unsw.business.studysync.logic.TimeUtils.toMilliseconds
 import au.edu.unsw.business.studysync.network.ReportPayload
 import au.edu.unsw.business.studysync.network.SyncApi
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
-import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.getFilteredEventsWithInitialState
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.prepareReports
 import kotlinx.coroutines.*
 import retrofit2.HttpException
 import java.time.LocalDate
-import java.time.ZonedDateTime
 import java.util.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class DebriefFragment : Fragment() {
+class BaselineIntroFragment: Fragment() {
 
-    private var _binding: FragmentDebriefBinding? = null
+    private var _binding: FragmentBaselineIntroBinding? = null
     private val binding get() = _binding!!
 
     private val vm: MainViewModel by activityViewModels()
@@ -44,7 +41,7 @@ class DebriefFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentDebriefBinding.inflate(inflater, container, false)
+        _binding = FragmentBaselineIntroBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -149,7 +146,7 @@ class DebriefFragment : Fragment() {
 
         vm.identified.observe(viewLifecycleOwner) {
             if (!it) {
-                findNavController().navigate(R.id.action_debrief_to_login)
+                findNavController().navigate(R.id.action_baseline_intro_to_login)
             }
         }
     }

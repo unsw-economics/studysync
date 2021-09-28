@@ -15,9 +15,6 @@ import au.edu.unsw.business.studysync.network.SyncApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
@@ -74,7 +71,7 @@ class LoginFragment : Fragment() {
 
         vm.identified.observe(viewLifecycleOwner) {
             if (it) {
-                findNavController().navigate(R.id.action_login_to_debrief)
+                findNavController().navigate(R.id.action_login_to_baseline_intro)
             }
         }
 

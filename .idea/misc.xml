@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/layout/fragment_debrief.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2665856467251272" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.43854166666666666" />
+        <entry key="app/src/main/res/layout/fragment_treatment.xml" value="0.2046875" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.25364583333333335" />
       </map>
     </option>

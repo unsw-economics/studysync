@@ -8,28 +8,42 @@
     <fragment
         android:id="@+id/LoginFragment"
         android:name="au.edu.unsw.business.studysync.LoginFragment"
-        android:label="@string/first_fragment_label"
+        android:label="Login"
         tools:layout="@layout/fragment_login">
 
         <action
-            android:id="@+id/action_login_to_debrief"
-            app:destination="@id/SecondFragment"
+            android:id="@+id/action_login_to_baseline_intro"
+            app:destination="@id/BaselineIntroFragment"
+            app:popUpTo="@id/LoginFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_login_to_treatment"
+            app:destination="@id/TreatmentFragment"
             app:popUpTo="@id/LoginFragment"
             app:popUpToInclusive="true" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="au.edu.unsw.business.studysync.DebriefFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_debrief">
+        android:id="@+id/BaselineIntroFragment"
+        android:name="au.edu.unsw.business.studysync.BaselineIntroFragment"
+        android:label="Baseline Intro"
+        tools:layout="@layout/fragment_baseline_intro">
 
         <action
-            android:id="@+id/action_debrief_to_login"
+            android:id="@+id/action_baseline_intro_to_login"
             app:destination="@id/LoginFragment"
-            app:popUpTo="@id/SecondFragment"
+            app:popUpTo="@id/BaselineIntroFragment"
             app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/TreatmentFragment"
+        android:name="au.edu.unsw.business.studysync.TreatmentFragment"
+        android:label="Treatment"
+        tools:layout="@layout/fragment_treatment">
 
     </fragment>
 

@@ -3,6 +3,7 @@ package au.edu.unsw.business.studysync
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.*
+import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE_STRING
 import au.edu.unsw.business.studysync.database.DailyReport
@@ -26,11 +27,15 @@ class MainViewModel(
     private val _lastRecorded = MutableLiveData<LocalDate>()
     val lastRecorded get(): LiveData<LocalDate> = _lastRecorded
 
+    private val _group = MutableLiveData<Int?>()
+    val group get(): LiveData<Int?> = _group
+
     init {
         _identified.value = preferences.getBoolean("identified", false)
         _subjectId.value = preferences.getString("subject-id", null)
         _authToken.value = preferences.getString("auth-token", null)
         _lastRecorded.value = LocalDate.parse(preferences.getString("last-recorded", BASELINE_START_DATE_STRING))
+        _group.value = preferences.getInt("group", GROUP_UNASSIGNED)
     }
 
     fun identify(subjectId: String, authToken: String) {
@@ -55,6 +60,7 @@ class MainViewModel(
                 putString("subject-id", null)
                 putString("auth-token", null)
                 putString("last-recorded", null)
+                putInt("group", GROUP_UNASSIGNED)
                 commit()
             }
 
@@ -62,6 +68,7 @@ class MainViewModel(
             _subjectId.value = null
             _authToken.value = null
             _lastRecorded.value = BASELINE_START_DATE
+            _group.value = GROUP_UNASSIGNED
         }
     }
 

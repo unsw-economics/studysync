@@ -11,6 +11,8 @@ object Constants {
     const val PERIOD_BASELINE = "baseline"
     const val PERIOD_EXPERIMENT = "experiment"
     const val DEBUG_DATA = "DEBUG_DATA"
+    const val GROUP_UNASSIGNED = -1
+    const val GROUP_CONTROL = 0
 }
 
 object Environment {
