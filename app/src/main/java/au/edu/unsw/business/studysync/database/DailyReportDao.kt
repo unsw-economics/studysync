@@ -6,5 +6,5 @@ import androidx.room.Query
 @Dao
 interface DailyReportDao {
     @Query("select * from daily_reports")
-    suspend fun getRecordedBaselineReports(): List<DailyReport>
+    suspend fun getRecordedReports(): List<DailyReport>
 }

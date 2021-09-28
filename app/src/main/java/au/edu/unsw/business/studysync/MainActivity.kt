@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import au.edu.unsw.business.studysync.constants.Environment
+import java.time.LocalDate
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +30,10 @@ class MainActivity : AppCompatActivity() {
             val navController = navHostFragment.navController
 
             navController.navigate(R.id.action_login_to_debrief)
+        }
+        // TODO complete this block
+        if (LocalDate.now().isBefore(Environment.TREATMENT_START_DATE)) {
+
         }
     }
 
