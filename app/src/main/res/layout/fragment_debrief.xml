@@ -20,27 +20,49 @@
             android:layout_height="wrap_content"
             android:text="Welcome to the study."
             app:layout_constraintBottom_toTopOf="@+id/submitReportButton"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="136dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/clear_identity_button"
+            android:id="@+id/clear_data_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clear Identity"
+            android:text="Clear Data"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/submitReportButton"
-            tools:layout_editor_absoluteX="128dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/displayAllUsagesButton" />
 
         <Button
             android:id="@+id/submitReportButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Submit Today's Report"
-            app:layout_constraintBottom_toTopOf="@+id/clear_identity_button"
+            app:layout_constraintBottom_toTopOf="@+id/recordNewUsagesButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/subject_info_textview" />
+
+        <Button
+            android:id="@+id/recordNewUsagesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Record New Usages"
+            app:layout_constraintBottom_toTopOf="@+id/displayAllUsagesButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/submitReportButton" />
+
+        <Button
+            android:id="@+id/displayAllUsagesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Display All Usages"
+            app:layout_constraintBottom_toTopOf="@+id/clear_data_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recordNewUsagesButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

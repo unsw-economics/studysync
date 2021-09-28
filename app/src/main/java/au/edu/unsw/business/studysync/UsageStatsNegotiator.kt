@@ -8,12 +8,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Process
 import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
 import au.edu.unsw.business.studysync.logic.TimeUtils
-import au.edu.unsw.business.studysync.logic.TimeUtils.getToday
 import au.edu.unsw.business.studysync.network.AppReport
 import org.json.JSONArray
 import org.json.JSONObject
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -63,11 +66,34 @@ object UsageStatsNegotiator {
     }
 
     fun getTodayUsageJson(context: Context): JSONArray {
-        val todayStart = getToday().timeInMillis
-        val now = System.currentTimeMillis()
+        val now = ZonedDateTime.now()
+        val midnight = now.toLocalDate().atStartOfDay(ZONE_ID)
 
-        val usageMap = computeUsagesSerial(context, todayStart, now)
+        val usageMap = computeUsagesSerial(context, midnight.toInstant().toEpochMilli(), now.toInstant().toEpochMilli())
         return generateUsageJson(context, usageMap)
+    }
+
+    fun getEventsJson(context: Context, begin: Long, end: Long): JSONArray {
+        val manager = context.getSystemService(AppCompatActivity.USAGE_STATS_SERVICE) as UsageStatsManager
+        val stats = manager.queryEvents(begin, end)
+
+        val event = UsageEvents.Event()
+
+        val json = JSONArray()
+
+        while (stats.hasNextEvent()) {
+            stats.getNextEvent(event)
+
+            val item = JSONArray()
+
+            item.put(getAppName(context, event.packageName))
+            item.put(event.eventType)
+            item.put(event.timeStamp)
+
+            json.put(item)
+        }
+
+        return json
     }
 
     fun computeUsagesSerial(context: Context, begin: Long, end: Long): Map<String, Long> {

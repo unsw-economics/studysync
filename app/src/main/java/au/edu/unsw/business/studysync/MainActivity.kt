@@ -8,8 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import java.util.*
 
-const val RAW_STATS_TEXT = "au.edu.unsw.business.studysync.RAW_STATS_TEXT"
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var vm: MainViewModel
@@ -22,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        vm = ViewModelProvider(this, MainViewModelFactory(preferences)).get(MainViewModel::class.java)
+        vm = ViewModelProvider(this, MainViewModelFactory(preferences, (application as StudySyncApplication).database.dailyReportDao())).get(MainViewModel::class.java)
 
         if (vm.identified.value!!) {
             val navHostFragment =

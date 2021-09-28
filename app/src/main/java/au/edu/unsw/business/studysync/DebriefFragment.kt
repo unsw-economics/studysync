@@ -1,31 +1,26 @@
 package au.edu.unsw.business.studysync
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.edit
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
+import au.edu.unsw.business.studysync.UsageStatsNegotiator.computeUsagesSerial
+import au.edu.unsw.business.studysync.UsageStatsNegotiator.getEventsJson
+import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
+import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
 import au.edu.unsw.business.studysync.databinding.FragmentDebriefBinding
-import au.edu.unsw.business.studysync.logic.TimeUtils.getStudyPeriodAndDay
-import au.edu.unsw.business.studysync.logic.TimeUtils.getToday
-import au.edu.unsw.business.studysync.network.BasicApiResponse
-import au.edu.unsw.business.studysync.network.ReportPayload
-import au.edu.unsw.business.studysync.network.SyncApi
-import com.squareup.moshi.Moshi
+import au.edu.unsw.business.studysync.logic.TimeUtils.humanizeTime
 import kotlinx.coroutines.*
-import retrofit2.HttpException
-import java.lang.Exception
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import java.util.*
+import kotlin.math.min
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -51,12 +46,27 @@ class DebriefFragment : Fragment() {
 
         binding.vm = vm
 
-        binding.clearIdentityButton.setOnClickListener {
+        binding.clearDataButton.setOnClickListener {
             lifecycleScope.launch {
-                vm.clearIdentity()
+                vm.clearData()
             }
         }
 
+        binding.submitReportButton.setOnClickListener {
+            val json = UsageStatsNegotiator.getEventsJson(requireContext(), LocalDate.now().atStartOfDay(
+                ZONE_ID).toInstant().toEpochMilli(), ZonedDateTime.now().toInstant().toEpochMilli())
+
+            val str = json.toString(2)
+
+            val length = str.length
+
+            for (i in 0..(length / 1000)) {
+                Log.d("MainActivity", str.subSequence(i * 1000, min(i * 1000 + 1000, length)).toString())
+            }
+
+        }
+
+        /*
         binding.submitReportButton.setOnClickListener {
             MainScope().launch {
                 withContext(Dispatchers.IO) {
@@ -88,6 +98,79 @@ class DebriefFragment : Fragment() {
                         TODO("handle exception properly")
                     }
                 }
+            }
+        }
+        */
+
+        binding.recordNewUsagesButton.setOnClickListener {
+            /*
+            val now = ZonedDateTime.now()
+            val midnight = now.toLocalDate().atStartOfDay(ZONE_ID)
+            val (period, day) = getStudyPeriodAndDay(LocalDate.now())
+
+            Log.d("MainActivity", TimeUtils.humanizeTime(ChronoUnit.MILLIS.between(midnight, now)))
+            Log.d("MainActivity", "$period $day")
+
+            Log.d("MainActivity", getTodayUsageJson(requireContext()).toString())
+            */
+
+            var date = vm.lastRecorded.value!!
+            val today = LocalDate.now()
+
+            val usagesList: MutableList<Pair<String, Map<String, Long>>> = LinkedList()
+
+            while (date.isBefore(today)) {
+                val nextDate = date.plusDays(1)
+                val usage = computeUsagesSerial(
+                    requireContext(),
+                    date.atStartOfDay(ZONE_ID).toInstant().toEpochMilli(),
+                    nextDate.atStartOfDay(ZONE_ID).toInstant().toEpochMilli()
+                )
+
+                Log.d("MainActivity", date.toString())
+
+                Log.d("MainActivity", getEventsJson(
+                    requireContext(),
+                    date.atStartOfDay(ZONE_ID).toInstant().toEpochMilli(),
+                    nextDate.atStartOfDay(ZONE_ID).toInstant().toEpochMilli()
+                ).toString(2))
+
+                usagesList.add(Pair(date.toString(), usage))
+                date = nextDate
+            }
+
+            var text = ""
+            for ((d, usage) in usagesList) {
+                text += "Usage data for $d:\n"
+
+                for ((app, seconds) in usage) {
+                    text += "$app ${humanizeTime(seconds)}\n"
+                }
+            }
+
+            val intent = Intent(activity, DebugActivity::class.java).apply {
+                putExtra(DEBUG_DATA, text)
+            }
+
+            startActivity(intent)
+
+        }
+
+        binding.displayAllUsagesButton.setOnClickListener {
+            lifecycleScope.launch {
+                val reports = vm.getRecordedReports()
+
+                var text = ""
+
+                for (report in reports) {
+                    text += "${report.day} ${report.period} ${report.json}\n"
+                }
+
+                val intent = Intent(activity, DebugActivity::class.java).apply {
+                    putExtra(DEBUG_DATA, text)
+                }
+
+                startActivity(intent)
             }
         }
 

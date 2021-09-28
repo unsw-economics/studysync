@@ -2,8 +2,15 @@ package au.edu.unsw.business.studysync.logic
 
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
+import au.edu.unsw.business.studysync.constants.Environment.BASELINE_LENGTH
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
+import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object TimeUtils {
     fun humanizeTime(milliseconds: Long): String {
@@ -18,33 +25,13 @@ object TimeUtils {
         return "${seconds}s"
     }
 
-    fun getStartOfDay(c: Calendar): Calendar {
-        val day = c.clone() as Calendar
-        day.set(Calendar.HOUR_OF_DAY, 0)
-        day.set(Calendar.MINUTE, 0)
-        day.set(Calendar.SECOND, 0)
-        day.set(Calendar.MILLISECOND, 0)
-        return day
-    }
-
-    fun getToday(): Calendar {
-        return getStartOfDay(GregorianCalendar())
-    }
-
-    fun daysDifference(c: Calendar, d: Calendar): Int {
-        // assumes calendars are set to midnight at the start of the day
-        val diff = d.timeInMillis - c.timeInMillis
-        return (diff / (1000 * 60 * 60 * 24)).toInt()
-    }
-
-    fun getStudyPeriodAndDay(c: Calendar): Pair<String, Int> {
-        val day = getStartOfDay(c)
-        val diff = daysDifference(TREATMENT_START_DATE, day)
+    fun getStudyPeriodAndDay(d: LocalDate): Pair<String, Int> {
+        val diff = ChronoUnit.DAYS.between(TREATMENT_START_DATE, d).toInt()
 
         return if (diff >= 0) {
             Pair(PERIOD_EXPERIMENT, diff)
         } else {
-            Pair(PERIOD_BASELINE, diff + 7)
+            Pair(PERIOD_BASELINE, diff + BASELINE_LENGTH)
         }
     }
 }

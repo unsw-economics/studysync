@@ -56,10 +56,10 @@ class LoginFragment : Fragment() {
 
         binding.identifyButton.setOnClickListener {
             val subjectId = binding.subjectIdField.text.toString()
+            loginVm.disableLogin()
 
             lifecycleScope.launch {
                 try {
-                    loginVm.disableLogin()
                     val response = SyncApi.service.identify(subjectId)
 
                     if (response.message != null) throw Exception(response.message)
