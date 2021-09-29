@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [DailyReport::class], version = 1)
+@Database(entities = [DbReport::class, DbAppReport::class], version = 2)
 abstract class AppDatabase: RoomDatabase() {
     companion object {
         @Volatile
@@ -17,12 +17,12 @@ abstract class AppDatabase: RoomDatabase() {
                     context,
                     AppDatabase::class.java,
                     "studysync-db"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
 
                 instance
             }
         }
     }
 
-    abstract fun dailyReportDao(): DailyReportDao
+    abstract fun reportDao(): ReportDao
 }

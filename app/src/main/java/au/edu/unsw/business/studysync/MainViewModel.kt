@@ -6,14 +6,17 @@ import androidx.lifecycle.*
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE_STRING
-import au.edu.unsw.business.studysync.database.DailyReport
-import au.edu.unsw.business.studysync.database.DailyReportDao
+import au.edu.unsw.business.studysync.database.AppDatabase
+import au.edu.unsw.business.studysync.database.DbAppReport
+import au.edu.unsw.business.studysync.database.DbReport
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 class MainViewModel(
     private val preferences: SharedPreferences,
-    private val dailyReportDao: DailyReportDao
+    private val database: AppDatabase
 ): ViewModel() {
     private val _identified = MutableLiveData<Boolean>()
     val identified get(): LiveData<Boolean> = _identified
@@ -29,6 +32,8 @@ class MainViewModel(
 
     private val _group = MutableLiveData<Int?>()
     val group get(): LiveData<Int?> = _group
+
+    private val reportDao = database.reportDao()
 
     init {
         _identified.value = preferences.getBoolean("identified", false)
@@ -56,11 +61,7 @@ class MainViewModel(
     fun clearData() {
         viewModelScope.launch {
             preferences.edit {
-                putBoolean("identified", false)
-                putString("subject-id", null)
-                putString("auth-token", null)
-                putString("last-recorded", null)
-                putInt("group", GROUP_UNASSIGNED)
+                clear()
                 commit()
             }
 
@@ -69,10 +70,34 @@ class MainViewModel(
             _authToken.value = null
             _lastRecorded.value = BASELINE_START_DATE
             _group.value = GROUP_UNASSIGNED
+
+            withContext(Dispatchers.IO) {
+                database.clearAllTables()
+            }
         }
     }
 
-    suspend fun getRecordedReports(): List<DailyReport> {
-        return dailyReportDao.getRecordedReports()
+    suspend fun insertMultipleDayReports(reports: List<DbReport>, appReports: List<DbAppReport>) {
+        reportDao.insertMultipleDayReports(reports, appReports)
+    }
+
+    fun setLastRecorded(date: LocalDate) {
+        preferences.edit {
+            putString("last-recorded", date.toString())
+        }
+
+        _lastRecorded.value = date
+    }
+
+    suspend fun getAllAppReports(): List<DbAppReport> {
+        return reportDao.getAllAppReports()
+    }
+
+    suspend fun getUnsyncedAppReports(): List<DbAppReport> {
+        return reportDao.getUnsyncedAppReports()
+    }
+
+    suspend fun markReportSynced(period: String, day: Int) {
+        reportDao.markReportSynced(period, day)
     }
 }

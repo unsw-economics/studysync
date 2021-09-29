@@ -30,7 +30,7 @@ class TreatmentFragment: Fragment() {
     private val vm: MainViewModel by activityViewModels()
     private val treatmentVm: TreatmentViewModel by viewModels {
         val activity = requireActivity() as MainActivity
-        TreatmentViewModelFactory(activity.preferences, activity.dailyReportDao)
+        TreatmentViewModelFactory(activity.preferences, activity.database)
     }
 
     override fun onCreateView(
