@@ -6,18 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".TreatmentFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
+            android:id="@+id/linearLayout"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -26,101 +23,120 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/treatmentHintLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="72dp"
                 android:text="Stay under the limit to earn your incentive!"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="72dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
-                    android:layout_width="315dp"
-                    android:layout_height="283dp"
-                    android:indeterminate="false"
-                    android:indeterminateOnly="false"
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:progress="75"
-                    android:progressDrawable="@drawable/circle"
+                    app:indicatorColor="#F07F2D"
+                    app:indicatorSize="240dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:trackColor="#00000000"
+                    app:trackCornerRadius="5dp"
+                    app:trackThickness="5dp" />
 
-                <TextView
-                    android:id="@+id/textView7"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1:30"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textSize="48sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-                    app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                    app:layout_constraintStart_toStartOf="@+id/progressBar"
-                    app:layout_constraintTop_toTopOf="@+id/progressBar" />
-
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Max 2:00"
+                    android:gravity="center"
+                    android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                    app:layout_constraintHorizontal_bias="0.498"
-                    app:layout_constraintStart_toStartOf="@+id/progressBar"
-                    app:layout_constraintTop_toBottomOf="@+id/textView7"
-                    app:layout_constraintVertical_bias="0.111" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/todayUsageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/work_sans_light"
+                        android:text="1:30"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textSize="72sp" />
+
+                    <TextView
+                        android:id="@+id/maxUsageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/work_sans_light"
+                        android:text="Max 2:00"
+                        android:textColor="#888888"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="200dp"
-                    android:layout_height="41dp"
+                    android:id="@+id/incentiveLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:text="Daily Incentive"
+                    android:textColor="#CCFFFFFF"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="90dp"
+                    android:id="@+id/incentiveView"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:fontFamily="@font/work_sans_medium"
+                    android:gravity="end|center_vertical"
                     android:text="$5.00"
-                    android:textAlignment="textEnd"
-                    android:textSize="20sp" />
+                    android:textSize="30sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="200dp"
-                    android:layout_height="41dp"
+                    android:id="@+id/totalEarnedLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:text="Total Earned"
+                    android:textColor="#CC6ADB58"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="90dp"
+                    android:id="@+id/totalEarnedView"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:fontFamily="@font/work_sans_medium"
+                    android:gravity="end|center_vertical"
                     android:text="$5.00"
-                    android:textAlignment="textEnd"
-                    android:textSize="20sp" />
+                    android:textColor="#6ADB58"
+                    android:textSize="30sp" />
             </LinearLayout>
 
         </LinearLayout>

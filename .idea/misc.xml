@@ -3,15 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/circle.xml" value="0.22916666666666666" />
+        <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.26979166666666665" />
+        <entry key="app/src/main/res/drawable/rounded_corners_green.xml" value="0.26979166666666665" />
+        <entry key="app/src/main/res/font/work_sans_thin.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/activity_debug.xml" value="0.25364583333333335" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.275446139058384" />
         <entry key="app/src/main/res/layout/activity_raw_daily_stats.xml" value="0.2956107338103644" />
         <entry key="app/src/main/res/layout/content_raw_daily_stats.xml" value="0.16972069423464997" />
-        <entry key="app/src/main/res/layout/fragment_baseline_intro.xml" value="0.25364583333333335" />
+        <entry key="app/src/main/res/layout/fragment_baseline_intro.xml" value="0.1943916349809886" />
         <entry key="app/src/main/res/layout/fragment_debrief.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2665856467251272" />
-        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.43854166666666666" />
-        <entry key="app/src/main/res/layout/fragment_treatment.xml" value="0.2046875" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.36599701939447804" />
+        <entry key="app/src/main/res/layout/fragment_treatment.xml" value="0.27381417641469297" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.25364583333333335" />
       </map>
     </option>
