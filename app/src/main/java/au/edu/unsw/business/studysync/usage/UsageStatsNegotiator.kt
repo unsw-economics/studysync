@@ -1,17 +1,11 @@
 package au.edu.unsw.business.studysync.usage
 
 import android.app.AppOpsManager
-import android.app.usage.UsageEvents
-import android.app.usage.UsageEvents.Event.*
-import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Process
 import android.provider.Settings
-import androidx.appcompat.app.AppCompatActivity
-import au.edu.unsw.business.studysync.network.AppReport
-import java.util.*
 import kotlin.collections.HashMap
 
 object UsageStatsNegotiator {

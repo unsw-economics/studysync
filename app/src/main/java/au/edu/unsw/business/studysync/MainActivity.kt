@@ -17,8 +17,8 @@ class MainActivity : AppCompatActivity() {
         getSharedPreferences("studysync-config", Context.MODE_PRIVATE)
     }
 
-    val dailyReportDao by lazy {
-        (application as StudySyncApplication).database.dailyReportDao()
+    val database by lazy {
+        (application as StudySyncApplication).database
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         vm = ViewModelProvider(
             this,
-            MainViewModelFactory(preferences, dailyReportDao)
+            MainViewModelFactory(preferences, database)
         ).get(MainViewModel::class.java)
 
         val isBaselinePeriod = LocalDate.now().isBefore(TREATMENT_START_DATE)

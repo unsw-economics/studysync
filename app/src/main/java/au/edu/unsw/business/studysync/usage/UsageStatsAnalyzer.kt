@@ -3,8 +3,10 @@ package au.edu.unsw.business.studysync.usage
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import au.edu.unsw.business.studysync.network.AppReport
+import au.edu.unsw.business.studysync.database.DbAppReport
+import au.edu.unsw.business.studysync.network.ServerAppReport
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -47,13 +49,13 @@ object UsageStatsAnalyzer {
         }
 
         if (initialState == null) {
-            initialState = false
+            initialState = true
         }
 
         return Pair(filteredEvents, initialState)
     }
 
-    fun computeUsage(context: Context, begin: Long, end: Long): Map<String, Long> {
+    fun computeUsageSynthetic(context: Context, begin: Long, end: Long): Map<String, Long> {
         val (filteredEvents, initialState) = getFilteredEventsWithInitialState(context, begin, end)
 
         val usageMap: MutableMap<String, Long> = HashMap()
@@ -84,21 +86,28 @@ object UsageStatsAnalyzer {
             }
         }
 
-        if (interactive) {
+        if (interactive && currentApp != "") {
             usageMap[currentApp] = usageMap.getOrDefault(currentApp, 0) + end - beginTime
         }
 
         return usageMap
     }
 
-    fun prepareReports(map: Map<String, Long>): List<AppReport> {
-        val reports: MutableList<AppReport> = LinkedList()
+    fun computeUsageOriginal(context: Context, begin: Long, end: Long): Map<String, Long> {
+        val manager = context.getSystemService(AppCompatActivity.USAGE_STATS_SERVICE) as UsageStatsManager
+        val stats = manager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, begin, end)
 
-        for ((appName, usageMilliseconds) in map) {
-            reports.add(AppReport(appName, usageMilliseconds / 1000))
+        val usageMap: MutableMap<String, Long> = HashMap()
+
+        for (usage in stats) {
+            val appName = UsageStatsNegotiator.getAppName(context, usage.packageName)
+            usageMap[appName] = usageMap.getOrDefault(appName, 0) + usage.totalTimeInForeground
         }
 
-        return reports
+        return usageMap
     }
 
+    fun computeUsage(context: Context, begin: Long, end: Long): Map<String, Long> {
+        return computeUsageSynthetic(context, begin, end)
+    }
 }

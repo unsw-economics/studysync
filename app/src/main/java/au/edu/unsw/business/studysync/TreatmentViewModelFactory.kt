@@ -3,13 +3,13 @@ package au.edu.unsw.business.studysync
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import au.edu.unsw.business.studysync.database.DailyReportDao
+import au.edu.unsw.business.studysync.database.AppDatabase
 
 class TreatmentViewModelFactory(
     private val preferences: SharedPreferences,
-    private val dailyReportDao: DailyReportDao
+    private val database: AppDatabase
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return TreatmentViewModel(preferences, dailyReportDao) as T
+        return TreatmentViewModel(preferences, database) as T
     }
 }

@@ -1,14 +1,9 @@
 package au.edu.unsw.business.studysync
 
 import android.content.SharedPreferences
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.edit
 import androidx.lifecycle.*
-import au.edu.unsw.business.studysync.constants.Environment
-import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE
-import au.edu.unsw.business.studysync.database.DailyReport
-import au.edu.unsw.business.studysync.database.DailyReportDao
-import au.edu.unsw.business.studysync.network.SyncApi
+import au.edu.unsw.business.studysync.database.AppDatabase
+import au.edu.unsw.business.studysync.database.DbAppReport
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -16,7 +11,7 @@ import java.util.*
 
 class TreatmentViewModel(
     private val preferences: SharedPreferences,
-    private val dailyReportDao: DailyReportDao
+    private val database: AppDatabase
 ): ViewModel() {
     private val _timeSpentToday = MutableLiveData<Long>()
     val timeSpentToday get(): LiveData<Long> = _timeSpentToday
@@ -29,6 +24,9 @@ class TreatmentViewModel(
 
     private val _limit = MutableLiveData<Duration>()
     val limit get(): LiveData<Duration> = _limit
+
+    private val reportDao = database.reportDao()
+
 
     fun setTimeSpentToday(timeSpentToday: Long) {
         _timeSpentToday.value = timeSpentToday
@@ -51,7 +49,7 @@ class TreatmentViewModel(
         }
     }
 
-    suspend fun getRecordedReports(): List<DailyReport> {
-        return dailyReportDao.getRecordedReports()
+    suspend fun getAllAppReports(): List<DbAppReport> {
+        return reportDao.getAllAppReports()
     }
 }

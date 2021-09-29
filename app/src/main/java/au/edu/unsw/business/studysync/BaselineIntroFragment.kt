@@ -11,20 +11,27 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
+import au.edu.unsw.business.studysync.database.DbAppReport
+import au.edu.unsw.business.studysync.database.DbReport
 import au.edu.unsw.business.studysync.databinding.FragmentBaselineIntroBinding
+import au.edu.unsw.business.studysync.development.DevUtils
+import au.edu.unsw.business.studysync.development.DevUtils.printList
 import au.edu.unsw.business.studysync.logic.TimeUtils.getStudyPeriodAndDay
 import au.edu.unsw.business.studysync.logic.TimeUtils.humanizeTime
 import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
 import au.edu.unsw.business.studysync.logic.TimeUtils.now
 import au.edu.unsw.business.studysync.logic.TimeUtils.toMilliseconds
 import au.edu.unsw.business.studysync.network.ReportPayload
+import au.edu.unsw.business.studysync.network.ServerAppReport
 import au.edu.unsw.business.studysync.network.SyncApi
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
-import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.prepareReports
+import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsageOriginal
 import kotlinx.coroutines.*
 import retrofit2.HttpException
+import java.lang.Error
 import java.time.LocalDate
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -58,33 +65,44 @@ class BaselineIntroFragment: Fragment() {
 
         binding.submitReportButton.setOnClickListener {
             MainScope().launch {
+                val unsyncedAppReports = withContext(Dispatchers.IO) {
+                    vm.getUnsyncedAppReports()
+                }
+
+                val subjectId = vm.subjectId.value!!
+
+                val payloadMap: MutableMap<Pair<String, Int>, ReportPayload> = HashMap()
+
+                for (appReport in unsyncedAppReports) {
+                    val period = appReport.period
+                    val day = appReport.day
+
+                    val periodDay = Pair(appReport.period, appReport.day)
+
+                    if (!payloadMap.contains(periodDay)) {
+                        payloadMap[periodDay] = ReportPayload(subjectId, period, day, LinkedList())
+                    }
+
+                    val serverAppReport =
+                        ServerAppReport(appReport.applicationName, appReport.usageSeconds)
+                    (payloadMap[periodDay]!!.reports as MutableList).add(serverAppReport)
+                }
+
+                val authToken = vm.authToken.value!!
+
                 withContext(Dispatchers.IO) {
-                    val (period, day) = getStudyPeriodAndDay(LocalDate.now())
+                    for ((_, payload) in payloadMap) {
+                        try {
+                            Log.d("MainActivity", "Submitting $payload")
+                            val response = SyncApi.service.submitReport(authToken, payload)
 
-                    val reports = prepareReports(
-                        computeUsage(
-                            requireContext(),
-                            midnight(),
-                            now()
-                        )
-                    )
-
-                    val reportPayload = ReportPayload(vm.subjectId.value!!, period, day, reports)
-                    val authToken = vm.authToken.value!!
-
-                    try {
-                        Log.d("MainActivity", "Submitting $reportPayload")
-                        val response = SyncApi.service.submitReport(authToken, reportPayload)
-
-                        if (response.message != null) {
-                            throw Exception(response.message)
+                            Log.d("MainActivity", "Submitted")
+                            vm.markReportSynced(payload.period, payload.day)
+                        } catch (e: HttpException) {
+                            val errorBody = e.response()?.errorBody()?.source().toString()
+                            Log.d("MainActivity", "Error: ${e.message}; $errorBody")
+                            // TODO handle exception properly
                         }
-
-                        Log.d("MainActivity", "Successfully reported")
-                    } catch (e: HttpException) {
-                        val errorBody = e.response()?.errorBody()?.source().toString()
-                        Log.d("MainActivity", "Error: ${e.message}; $errorBody")
-                        TODO("handle exception properly")
                     }
                 }
             }
@@ -94,48 +112,64 @@ class BaselineIntroFragment: Fragment() {
             var date = vm.lastRecorded.value!!
             val today = LocalDate.now()
 
-            val usagesList: MutableList<Pair<String, Map<String, Long>>> = LinkedList()
+            val reports: MutableList<DbReport> = LinkedList()
+            val appReports: MutableList<DbAppReport> = LinkedList()
 
             while (date.isBefore(today)) {
                 val nextDate = date.plusDays(1)
                 val usage = computeUsage(requireContext(), toMilliseconds(date), toMilliseconds(nextDate))
+                val (period, day) = getStudyPeriodAndDay(date)
 
-                usagesList.add(Pair(date.toString(), usage))
+                reports.add(
+                    DbReport(
+                        period,
+                        day
+                    )
+                )
+
+                for ((appName, usage_ms) in usage) {
+                    Log.d("MainActivity", "$period $day $appName ${usage_ms / 1000}")
+                    appReports.add(DbAppReport(period, day, appName, usage_ms / 1000))
+                }
+
                 date = nextDate
             }
 
-            // commit to database instead of displaying to screen
-            // then update lastRecorded
+            MainScope().launch {
+                vm.insertMultipleDayReports(reports, appReports)
+                vm.setLastRecorded(today)
 
-            var text = ""
-            for ((d, usage) in usagesList) {
-                text += "Usage data for $d:\n"
+                val text = printList(reports) + "\n" + printList(appReports)
 
-                for ((app, seconds) in usage) {
-                    text += "$app ${humanizeTime(seconds)}\n"
+                val intent = Intent(activity, DebugActivity::class.java).apply {
+                    putExtra(DEBUG_DATA, text)
                 }
 
-                text += "\n"
-
+                startActivity(intent)
             }
-
-            val intent = Intent(activity, DebugActivity::class.java).apply {
-                putExtra(DEBUG_DATA, text)
-            }
-
-            startActivity(intent)
         }
 
-        binding.displayAllUsagesButton.setOnClickListener {
+        binding.displayRecordedUsagesButton.setOnClickListener {
             lifecycleScope.launch {
-                val reports = vm.getRecordedReports()
+                val appReports = vm.getAllAppReports()
+                val text = printList(appReports.map {
+                    "${it.period} ${it.day} ${humanizeTime(it.usageSeconds * 1000)}\n${it.applicationName}"
+                })
 
-                var text = ""
-
-                for (report in reports) {
-                    text += "${report.day} ${report.period} ${report.json}\n"
+                val intent = Intent(activity, DebugActivity::class.java).apply {
+                    putExtra(DEBUG_DATA, text)
                 }
 
+                startActivity(intent)
+            }
+        }
+
+        binding.displayTodayUsagesButton.setOnClickListener {
+            lifecycleScope.launch {
+                val todayUsages = computeUsage(requireContext(), midnight(), now())
+                val text = printList(todayUsages.toList().map {
+                    "${it.first} ${humanizeTime(it.second)}"
+                })
                 val intent = Intent(activity, DebugActivity::class.java).apply {
                     putExtra(DEBUG_DATA, text)
                 }
