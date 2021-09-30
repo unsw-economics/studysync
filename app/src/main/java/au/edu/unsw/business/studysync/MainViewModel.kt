@@ -1,26 +1,28 @@
 package au.edu.unsw.business.studysync
 
-import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.*
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE_STRING
-import au.edu.unsw.business.studysync.database.AppDatabase
 import au.edu.unsw.business.studysync.database.DbAppReport
 import au.edu.unsw.business.studysync.database.DbReport
+import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
+import com.jakewharton.rxrelay3.PublishRelay
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 class MainViewModel(
-    private val preferences: SharedPreferences,
-    private val database: AppDatabase
-): ViewModel() {
+    private val application: StudySyncApplication
+): AndroidViewModel(application) {
     private val _identified = MutableLiveData<Boolean>()
     val identified get(): LiveData<Boolean> = _identified
+
+    private val _usageAccessEnabled = MutableLiveData<Boolean>()
+    val usageAccessEnabled get(): LiveData<Boolean> = _usageAccessEnabled
 
     private val _subjectId = MutableLiveData<String?>()
     val subjectId get(): LiveData<String?> = _subjectId
@@ -41,10 +43,16 @@ class MainViewModel(
     private val _treatmentLimit = MutableLiveData<Int>()
     val treatmentLimit get(): LiveData<Int> = _treatmentLimit
 
+    private val _clearDataEvents: PublishRelay<Unit> = PublishRelay.create()
+    val clearDataEvents get(): Observable<Unit> = _clearDataEvents
+
+    private val preferences = application.preferences
+    private val database = application.database
     private val reportDao = database.reportDao()
 
     init {
         _identified.value = preferences.getBoolean("identified", false)
+        _usageAccessEnabled.value = UsageStatsNegotiator.hasUsageStatsPermission(application)
         _subjectId.value = preferences.getString("subject-id", null)
         _authToken.value = preferences.getString("auth-token", null)
         _lastRecorded.value = LocalDate.parse(preferences.getString("last-recorded", BASELINE_START_DATE_STRING))
@@ -68,6 +76,10 @@ class MainViewModel(
         }
     }
 
+    fun setUsageAccessEnabled(isEnabled: Boolean) {
+        _usageAccessEnabled.value = isEnabled
+    }
+
     fun clearData() {
         viewModelScope.launch {
             preferences.edit {
@@ -80,10 +92,14 @@ class MainViewModel(
             _authToken.value = null
             _lastRecorded.value = BASELINE_START_DATE
             _group.value = GROUP_UNASSIGNED
+            _treatmentDebriefed.value = false
+            _treatmentLimit.value = 0
 
             withContext(Dispatchers.IO) {
                 database.clearAllTables()
             }
+
+            _clearDataEvents.accept(Unit)
         }
     }
 

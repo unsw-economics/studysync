@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import au.edu.unsw.business.studysync.DebugActivity
+import au.edu.unsw.business.studysync.MainActivity
 import au.edu.unsw.business.studysync.MainViewModel
 import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
@@ -56,6 +57,7 @@ class BaselineIntroFragment: Fragment() {
         binding.clearDataButton.setOnClickListener {
             lifecycleScope.launch {
                 vm.clearData()
+                (activity as MainActivity).navigate()
             }
         }
 
@@ -171,12 +173,6 @@ class BaselineIntroFragment: Fragment() {
                 }
 
                 startActivity(intent)
-            }
-        }
-
-        vm.identified.observe(viewLifecycleOwner) {
-            if (!it) {
-                findNavController().navigate(R.id.action_baseline_intro_to_login)
             }
         }
     }

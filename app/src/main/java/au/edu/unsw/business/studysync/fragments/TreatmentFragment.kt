@@ -7,10 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import au.edu.unsw.business.studysync.MainActivity
-import au.edu.unsw.business.studysync.MainViewModel
-import au.edu.unsw.business.studysync.TreatmentViewModel
-import au.edu.unsw.business.studysync.TreatmentViewModelFactory
+import au.edu.unsw.business.studysync.*
 import au.edu.unsw.business.studysync.databinding.FragmentTreatmentBinding
 import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
 import au.edu.unsw.business.studysync.logic.TimeUtils.now
@@ -24,7 +21,8 @@ class TreatmentFragment: Fragment() {
     private val vm: MainViewModel by activityViewModels()
     private val treatmentVm: TreatmentViewModel by viewModels {
         val activity = requireActivity() as MainActivity
-        TreatmentViewModelFactory(activity.preferences, activity.database)
+        val application = activity.application as StudySyncApplication
+        TreatmentViewModelFactory(application.preferences, application.database)
     }
 
     override fun onCreateView(
@@ -44,5 +42,10 @@ class TreatmentFragment: Fragment() {
         val usageMap = computeUsage(requireContext(), now, midnight)
 
         treatmentVm.setTimeSpentToday(usageMap.map { it.value }.sum())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -6,6 +6,9 @@
     <string name="login_sign_in">Sign In</string>
     <string name="request_permission_body">When you click the button below, please scroll to the StudySync entry and permit usage access.</string>
     <string name="request_permission_title">Hi. Welcome to the Smartphone and Mental Health Study.</string>
+    <string name="request_permission_enable_access">Enable Usage Access</string>
+    <string name="request_permission_access_enabled">Usage Access Enabled</string>
+    <string name="request_permission_continue">Continue</string>
     <string name="treatment_hint">Stay under the limit to earn your incentive!</string>
     <string name="treatment_incentive_label">Daily Incentive</string>
     <string name="treatment_earned_label">Total Earned</string>

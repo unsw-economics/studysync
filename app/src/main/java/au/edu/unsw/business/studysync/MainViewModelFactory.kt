@@ -6,10 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import au.edu.unsw.business.studysync.database.AppDatabase
 
 class MainViewModelFactory(
-    private val preferences: SharedPreferences,
-    private val database: AppDatabase
+    private val application: StudySyncApplication
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return MainViewModel(preferences, database) as T
+        return MainViewModel(application) as T
     }
 }

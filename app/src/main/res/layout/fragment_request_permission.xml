@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="title" type="String" />
-        <variable name="body" type="String" />
+        <variable
+            name="vm"
+            type="au.edu.unsw.business.studysync.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,11 +30,36 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
                 android:text="@string/request_permission_body"
                 android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/requestPermissionButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="@color/green"
+                android:fontFamily="@font/work_sans_medium"
+                android:text="@{vm.usageAccessEnabled ? @string/request_permission_access_enabled : @string/request_permission_enable_access }"
+                android:enabled="@{!vm.usageAccessEnabled}"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:cornerRadius="10dp" />
+
+            <Button
+                android:id="@+id/continueButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/green"
+                android:fontFamily="@font/work_sans_medium"
+                android:text="@string/request_permission_continue"
+                android:enabled="@{vm.usageAccessEnabled}"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:cornerRadius="10dp" />
 
         </LinearLayout>
 

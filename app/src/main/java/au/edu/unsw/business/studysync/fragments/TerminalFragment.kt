@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
+import au.edu.unsw.business.studysync.MainViewModel
+import au.edu.unsw.business.studysync.MainViewModelFactory
 import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.databinding.FragmentBaselineIntroBinding
 import au.edu.unsw.business.studysync.databinding.FragmentTerminalBinding
@@ -17,6 +20,8 @@ class TerminalFragment : Fragment() {
     private val binding get() = _binding!!
 
     val args: TerminalFragmentArgs by navArgs()
+
+    val vm: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,5 +36,14 @@ class TerminalFragment : Fragment() {
 
         binding.title = args.title
         binding.body = args.body
+
+        binding.clearDataButton.setOnClickListener {
+            vm.clearData()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

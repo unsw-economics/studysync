@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import au.edu.unsw.business.studysync.LoginViewModel
+import au.edu.unsw.business.studysync.MainActivity
 import au.edu.unsw.business.studysync.MainViewModel
 import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
@@ -37,19 +38,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*
-        binding.requestPermissionButton.setOnClickListener {
-            UsageStatsNegotiator.openUsageAccessPermissionsMenu(requireContext())
-        }
-
-        binding.requestStatsButton.setOnClickListener {
-            val intent = Intent(activity, RawDailyStatsActivity::class.java).apply {
-                putExtra(RAW_STATS_TEXT, UsageStatsNegotiator.getTodayUsageJson(requireContext()).toString(2))
-            }
-
-            startActivity(intent)
-        }
-        */
 
         binding.identifyButton.setOnClickListener {
             val subjectId = binding.subjectIdField.text.toString()
@@ -74,31 +62,13 @@ class LoginFragment : Fragment() {
 
         vm.identified.observe(viewLifecycleOwner) {
             if (it) {
-                findNavController().navigate(R.id.action_login_to_baseline_intro)
+                (activity as MainActivity).navigate()
             }
         }
 
         loginVm.loginEnabled.observe(viewLifecycleOwner) {
             binding.identifyButton.isEnabled = it
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        /*
-        if (UsageStatsNegotiator.hasUsageStatsPermission(requireContext())) {
-            binding.requestPermissionButton.text = "Permission Granted"
-            binding.requestPermissionButton.isEnabled = false
-
-            binding.requestStatsButton.isEnabled = true
-        } else {
-            binding.requestPermissionButton.text = "Request Permission"
-            binding.requestPermissionButton.isEnabled = true
-
-            binding.requestStatsButton.isEnabled = false
-        }
-        */
     }
 
     override fun onDestroyView() {
