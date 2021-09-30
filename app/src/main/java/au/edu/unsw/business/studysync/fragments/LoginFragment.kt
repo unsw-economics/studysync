@@ -1,4 +1,4 @@
-package au.edu.unsw.business.studysync
+package au.edu.unsw.business.studysync.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import au.edu.unsw.business.studysync.LoginViewModel
+import au.edu.unsw.business.studysync.MainViewModel
+import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
 import au.edu.unsw.business.studysync.network.SyncApi
 import kotlinx.coroutines.delay

@@ -1,4 +1,4 @@
-package au.edu.unsw.business.studysync
+package au.edu.unsw.business.studysync.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +10,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import au.edu.unsw.business.studysync.DebugActivity
+import au.edu.unsw.business.studysync.MainViewModel
+import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
 import au.edu.unsw.business.studysync.database.DbAppReport
 import au.edu.unsw.business.studysync.database.DbReport
 import au.edu.unsw.business.studysync.databinding.FragmentBaselineIntroBinding
-import au.edu.unsw.business.studysync.development.DevUtils
 import au.edu.unsw.business.studysync.development.DevUtils.printList
 import au.edu.unsw.business.studysync.logic.TimeUtils.getStudyPeriodAndDay
 import au.edu.unsw.business.studysync.logic.TimeUtils.humanizeTime
@@ -25,17 +27,12 @@ import au.edu.unsw.business.studysync.network.ReportPayload
 import au.edu.unsw.business.studysync.network.ServerAppReport
 import au.edu.unsw.business.studysync.network.SyncApi
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
-import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsageOriginal
 import kotlinx.coroutines.*
 import retrofit2.HttpException
-import java.lang.Error
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
 class BaselineIntroFragment: Fragment() {
 
     private var _binding: FragmentBaselineIntroBinding? = null
@@ -47,7 +44,6 @@ class BaselineIntroFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentBaselineIntroBinding.inflate(inflater, container, false)
         return binding.root
     }

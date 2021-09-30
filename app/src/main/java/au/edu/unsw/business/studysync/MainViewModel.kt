@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class MainViewModel(
     private val preferences: SharedPreferences,
@@ -30,8 +31,15 @@ class MainViewModel(
     private val _lastRecorded = MutableLiveData<LocalDate>()
     val lastRecorded get(): LiveData<LocalDate> = _lastRecorded
 
-    private val _group = MutableLiveData<Int?>()
-    val group get(): LiveData<Int?> = _group
+    private val _group = MutableLiveData<Int>()
+    val group get(): LiveData<Int> = _group
+
+    private val _treatmentDebriefed = MutableLiveData<Boolean>()
+    val treatmentDebriefed get(): LiveData<Boolean> = _treatmentDebriefed
+
+    // Seconds
+    private val _treatmentLimit = MutableLiveData<Int>()
+    val treatmentLimit get(): LiveData<Int> = _treatmentLimit
 
     private val reportDao = database.reportDao()
 
@@ -41,6 +49,8 @@ class MainViewModel(
         _authToken.value = preferences.getString("auth-token", null)
         _lastRecorded.value = LocalDate.parse(preferences.getString("last-recorded", BASELINE_START_DATE_STRING))
         _group.value = preferences.getInt("group", GROUP_UNASSIGNED)
+        _treatmentDebriefed.value = preferences.getBoolean("treatment-debriefed", false)
+        _treatmentLimit.value = preferences.getInt("treatment-limit", 0)
     }
 
     fun identify(subjectId: String, authToken: String) {

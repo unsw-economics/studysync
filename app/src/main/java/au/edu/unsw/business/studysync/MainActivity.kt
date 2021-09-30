@@ -3,10 +3,13 @@ package au.edu.unsw.business.studysync
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Context
+import android.util.Log
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
+import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         supportActionBar?.hide()
@@ -32,24 +36,42 @@ class MainActivity : AppCompatActivity() {
             MainViewModelFactory(preferences, database)
         ).get(MainViewModel::class.java)
 
-        val isBaselinePeriod = LocalDate.now().isBefore(TREATMENT_START_DATE)
+        val isIdentified = vm.identified.value!!
+        val isPermitted = UsageStatsNegotiator.hasUsageStatsPermission(applicationContext)
+        val isBaseline = LocalDate.now().isBefore(TREATMENT_START_DATE)
+        val isTreatment = vm.group.value!! > GROUP_CONTROL
+        val isTreatmentDebriefed = vm.treatmentDebriefed.value!!
 
-        if (vm.identified.value!! || !isBaselinePeriod) {
+        if (isIdentified) {
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
             val navController = navHostFragment.navController
 
-            navController.navigate(
-                when {
-                    isBaselinePeriod ->
-                        R.id.action_login_to_baseline_intro
-                    vm.group.value!! > GROUP_CONTROL ->
-                        R.id.action_login_to_treatment
-                    else ->
-                        R.id.action_login_to_treatment
-                }
-            )
+            when {
+                !isPermitted ->
+                    navController.navigate(R.id.action_login_to_request_permission)
+                isBaseline ->
+                    navController.navigate(
+                        R.id.action_login_to_terminal,
+                        bundleOf(
+                            Pair("title", "Baseline Title"),
+                            Pair("body", "Baseline Body")
+                        )
+                    )
+                !isTreatment ->
+                    navController.navigate(
+                        R.id.action_login_to_terminal,
+                        bundleOf(
+                            Pair("title", "Control Title"),
+                            Pair("body", "Control Body")
+                        )
+                    )
+                !isTreatmentDebriefed ->
+                    navController.navigate(R.id.action_login_to_debrief)
+                else ->
+                    navController.navigate(R.id.action_login_to_treatment)
+            }
+
         }
     }
-
 }

@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">StudySync</string>
-    <string name="title_activity_raw_daily_stats">RawDailyStatsActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+
+    <string name="login_hint">Please enter your ID to begin.</string>
+    <string name="login_id_placeholder">Subject ID</string>
+    <string name="login_sign_in">Sign In</string>
+    <string name="request_permission_body">When you click the button below, please scroll to the StudySync entry and permit usage access.</string>
+    <string name="request_permission_title">Hi. Welcome to the Smartphone and Mental Health Study.</string>
+    <string name="treatment_hint">Stay under the limit to earn your incentive!</string>
+    <string name="treatment_incentive_label">Daily Incentive</string>
+    <string name="treatment_earned_label">Total Earned</string>
 </resources>
