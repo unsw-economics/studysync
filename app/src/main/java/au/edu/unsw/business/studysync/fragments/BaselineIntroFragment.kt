@@ -3,24 +3,22 @@ package au.edu.unsw.business.studysync.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import au.edu.unsw.business.studysync.DebugActivity
 import au.edu.unsw.business.studysync.MainActivity
 import au.edu.unsw.business.studysync.MainViewModel
-import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
 import au.edu.unsw.business.studysync.database.DbAppReport
 import au.edu.unsw.business.studysync.database.DbReport
 import au.edu.unsw.business.studysync.databinding.FragmentBaselineIntroBinding
 import au.edu.unsw.business.studysync.development.DevUtils.printList
 import au.edu.unsw.business.studysync.logic.TimeUtils.getStudyPeriodAndDay
-import au.edu.unsw.business.studysync.logic.TimeUtils.humanizeTime
+import au.edu.unsw.business.studysync.logic.TimeUtils.humanizeTimeHms
 import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
 import au.edu.unsw.business.studysync.logic.TimeUtils.now
 import au.edu.unsw.business.studysync.logic.TimeUtils.toMilliseconds
@@ -28,8 +26,12 @@ import au.edu.unsw.business.studysync.network.ReportPayload
 import au.edu.unsw.business.studysync.network.ServerAppReport
 import au.edu.unsw.business.studysync.network.SyncApi
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.time.Duration
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
@@ -67,7 +69,7 @@ class BaselineIntroFragment: Fragment() {
                     vm.getUnsyncedAppReports()
                 }
 
-                val subjectId = vm.subjectId.value!!
+                val subjectId = vm.subjectSettings.subjectId.value!!
 
                 val payloadMap: MutableMap<Pair<String, Int>, ReportPayload> = HashMap()
 
@@ -86,7 +88,7 @@ class BaselineIntroFragment: Fragment() {
                     (payloadMap[periodDay]!!.reports as MutableList).add(serverAppReport)
                 }
 
-                val authToken = vm.authToken.value!!
+                val authToken = vm.subjectSettings.authToken.value!!
 
                 withContext(Dispatchers.IO) {
                     for ((_, payload) in payloadMap) {
@@ -107,7 +109,7 @@ class BaselineIntroFragment: Fragment() {
         }
 
         binding.recordNewUsagesButton.setOnClickListener {
-            var date = vm.lastRecorded.value!!
+            var date = vm.subjectSettings.lastRecorded.value!!
             val today = LocalDate.now()
 
             val reports: MutableList<DbReport> = LinkedList()
@@ -151,7 +153,7 @@ class BaselineIntroFragment: Fragment() {
             lifecycleScope.launch {
                 val appReports = vm.getAllAppReports()
                 val text = printList(appReports.map {
-                    "${it.period} ${it.day} ${humanizeTime(it.usageSeconds * 1000)}\n${it.applicationName}"
+                    "${it.period} ${it.day} ${humanizeTimeHms(Duration.ofSeconds(it.usageSeconds))}\n${it.applicationName}"
                 })
 
                 val intent = Intent(activity, DebugActivity::class.java).apply {
@@ -166,7 +168,7 @@ class BaselineIntroFragment: Fragment() {
             lifecycleScope.launch {
                 val todayUsages = computeUsage(requireContext(), midnight(), now())
                 val text = printList(todayUsages.toList().map {
-                    "${it.first} ${humanizeTime(it.second)}"
+                    "${it.first} ${humanizeTimeHms(Duration.ofMillis(it.second))}"
                 })
                 val intent = Intent(activity, DebugActivity::class.java).apply {
                     putExtra(DEBUG_DATA, text)

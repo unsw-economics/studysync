@@ -3,11 +3,8 @@ package au.edu.unsw.business.studysync.constants
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import java.time.LocalDate
-import java.time.Period
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 object Constants {
     const val PERIOD_BASELINE = "baseline"
@@ -26,16 +23,16 @@ object Environment {
     val BASELINE_START_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_START_DATE_STRING)
     }
-    val BASELINE_START_DATE_MIDNIGHT: ZonedDateTime by lazy {
-        BASELINE_START_DATE.atStartOfDay(ZONE_ID)
-    }
 
-    const val TREATMENT_START_DATE_STRING = "2021-09-30"
+
+    const val TREATMENT_START_DATE_STRING = "2021-10-01"
     val TREATMENT_START_DATE: LocalDate by lazy {
         LocalDate.parse(TREATMENT_START_DATE_STRING)
     }
-    val TREATMENT_START_DATE_MIDNIGHT: ZonedDateTime by lazy {
-        TREATMENT_START_DATE.atStartOfDay(ZONE_ID)
+
+    const val TREATMENT_END_DATE_STRING = "2021-11-08"
+    val TREATMENT_END_DATE: LocalDate by lazy {
+        LocalDate.parse(TREATMENT_END_DATE_STRING)
     }
 
     val BASELINE_LENGTH: Int by lazy {

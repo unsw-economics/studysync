@@ -1,13 +1,10 @@
 package au.edu.unsw.business.studysync
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.content.Context
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
@@ -39,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         vm = ViewModelProvider(this, MainViewModelFactory(application as StudySyncApplication)).get(MainViewModel::class.java)
 
-        vm.clearDataEvents.subscribe {
+        vm.navigateEvents.subscribe {
             navigate()
         }
 
@@ -61,11 +58,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigate() {
-        val isIdentified = vm.identified.value!!
+        val isIdentified = vm.subjectSettings.identified.value!!
         val isPermitted = vm.usageAccessEnabled.value!!
         val isBaseline = LocalDate.now().isBefore(TREATMENT_START_DATE)
-        val isTreatment = vm.group.value!! > GROUP_CONTROL
-        val isTreatmentDebriefed = vm.treatmentDebriefed.value!!
+        val isTreatment = vm.subjectSettings.treatmentGroup.value!! > GROUP_CONTROL
+        val isTreatmentDebriefed = vm.subjectSettings.treatmentDebriefed.value!!
 
         when {
             !isIdentified ->

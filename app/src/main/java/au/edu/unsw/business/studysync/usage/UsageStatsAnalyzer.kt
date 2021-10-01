@@ -3,10 +3,7 @@ package au.edu.unsw.business.studysync.usage
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import au.edu.unsw.business.studysync.database.DbAppReport
-import au.edu.unsw.business.studysync.network.ServerAppReport
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -68,6 +65,7 @@ object UsageStatsAnalyzer {
             if (type == UsageEvents.Event.SCREEN_INTERACTIVE) {
                 interactive = true
                 currentApp = ""
+                beginTime = timestamp
             } else if (type == UsageEvents.Event.SCREEN_NON_INTERACTIVE) {
                 if (currentApp != "") {
                     usageMap[currentApp] = usageMap.getOrDefault(currentApp, 0) + timestamp - beginTime

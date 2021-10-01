@@ -1,18 +1,20 @@
 package au.edu.unsw.business.studysync.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import au.edu.unsw.business.studysync.*
 import au.edu.unsw.business.studysync.databinding.FragmentTreatmentBinding
+import au.edu.unsw.business.studysync.logic.TimeUtils
 import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
 import au.edu.unsw.business.studysync.logic.TimeUtils.now
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
-import java.util.concurrent.TimeUnit
+import java.time.Duration
 
 class TreatmentFragment: Fragment() {
 
@@ -22,8 +24,7 @@ class TreatmentFragment: Fragment() {
     private val vm: MainViewModel by activityViewModels()
     private val treatmentVm: TreatmentViewModel by viewModels {
         val activity = requireActivity() as MainActivity
-        val application = activity.application as StudySyncApplication
-        TreatmentViewModelFactory(application.preferences, application.database)
+        TreatmentViewModelFactory(activity.application as StudySyncApplication)
     }
 
     override fun onCreateView(
@@ -37,14 +38,28 @@ class TreatmentFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.vm = treatmentVm
+        binding.vm = vm
+        binding.treatmentVm = treatmentVm
+        binding.timeUtils = TimeUtils
 
-        val now = now()
-        val midnight = midnight()
+        treatmentVm.timeSpentToday.observe(viewLifecycleOwner) {
+            if (!TimeUtils.lessThan(it, vm.subjectSettings.treatmentLimit.value!!)) {
+                binding.progress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.red))
+            }
+        }
 
-        val usageMap = computeUsage(requireContext(), now, midnight)
+        binding.clearDataButton.setOnClickListener {
+            vm.clearData()
+        }
+    }
 
-        treatmentVm.setTimeSpentToday(usageMap.map { it.value }.sum())
+    override fun onResume() {
+        super.onResume()
+
+        val usageMap = computeUsage(requireContext(), midnight(), now())
+        val todayUsageMilliseconds = usageMap.map { it.value }.sum()
+
+        treatmentVm.setTimeSpentToday(Duration.ofMillis(todayUsageMilliseconds))
     }
 
     override fun onDestroyView() {

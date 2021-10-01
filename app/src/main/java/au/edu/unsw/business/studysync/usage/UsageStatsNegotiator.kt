@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Process
 import android.provider.Settings
-import kotlin.collections.HashMap
 
 object UsageStatsNegotiator {
     private val packageToApp: MutableMap<String, String> = HashMap()
