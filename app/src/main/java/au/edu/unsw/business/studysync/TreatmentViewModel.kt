@@ -37,8 +37,8 @@ class TreatmentViewModel(
         // Yet to implement search for how much they have earned in the treatment period
         _valueEarned.value = 0
         // Assumption for now that preferences is set
-        _dailyIncentive.value = preferences.getInt("treatment-group", 0) * 0.5
-        _limit.value = Duration.ofHours(2)
+        _dailyIncentive.value = preferences.getInt("group", 0) * 0.5
+        _limit.value = Duration.ofHours(3)
     }
 
     fun clearData() {
@@ -52,4 +52,13 @@ class TreatmentViewModel(
     suspend fun getAllAppReports(): List<DbAppReport> {
         return reportDao.getAllAppReports()
     }
+
+    fun prettyHoursMinutes(milliseconds: Long): String {
+        val totalMinutes = milliseconds / 60000
+        val minutes = totalMinutes % 60
+        val hours = (totalMinutes - minutes) / 60
+
+        return String.format("%d:%02d", hours, minutes)
+    }
+
 }

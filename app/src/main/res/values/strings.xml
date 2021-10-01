@@ -12,4 +12,6 @@
     <string name="treatment_hint">Stay under the limit to earn your incentive!</string>
     <string name="treatment_incentive_label">Daily Incentive</string>
     <string name="treatment_earned_label">Total Earned</string>
+    <string name="max_usage_format">Max %s</string>
+    <string name="dollar_format">$%.2f</string>
 </resources>

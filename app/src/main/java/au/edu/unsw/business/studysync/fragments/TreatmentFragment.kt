@@ -12,6 +12,7 @@ import au.edu.unsw.business.studysync.databinding.FragmentTreatmentBinding
 import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
 import au.edu.unsw.business.studysync.logic.TimeUtils.now
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
+import java.util.concurrent.TimeUnit
 
 class TreatmentFragment: Fragment() {
 
@@ -30,11 +31,13 @@ class TreatmentFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTreatmentBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.vm = treatmentVm
 
         val now = now()
         val midnight = midnight()
