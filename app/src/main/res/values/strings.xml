@@ -17,4 +17,6 @@
     <string name="debrief_body_3">.\n\nAs before, please keep this app installed until\ </string>
     <string name="debrief_body_4">. When the study concludes, we will ask you for your payment details so that you can be compensated.\n\nThank you for your participation!</string>
     <string name="button_continue">Continue</string>
+    <string name="max_usage_format">Max %s</string>
+    <string name="dollar_format">$%.2f</string>
 </resources>

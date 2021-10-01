@@ -68,6 +68,7 @@ object UsageStatsAnalyzer {
             if (type == UsageEvents.Event.SCREEN_INTERACTIVE) {
                 interactive = true
                 currentApp = ""
+                beginTime = timestamp
             } else if (type == UsageEvents.Event.SCREEN_NON_INTERACTIVE) {
                 if (currentApp != "") {
                     usageMap[currentApp] = usageMap.getOrDefault(currentApp, 0) + timestamp - beginTime

@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.TreatmentFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="vm"
+            type="au.edu.unsw.business.studysync.MainViewModel" />
+        <variable
+            name="treatmentVm"
+            type="au.edu.unsw.business.studysync.TreatmentViewModel" />
+        <variable
+            name="timeUtils"
+            type="au.edu.unsw.business.studysync.logic.TimeUtils" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,10 +48,11 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:progress="75"
-                    app:indicatorColor="#F07F2D"
+                    android:progress="@{timeUtils.percentage(treatmentVm.timeSpentToday, vm.subjectSettings.treatmentLimit)}"
+                    app:indicatorColor="@color/orange"
                     app:indicatorSize="240dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -69,16 +78,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/work_sans_light"
-                        android:text="1:30"
+                        android:text="@{timeUtils.digitalTimeHm(treatmentVm.timeSpentToday)}"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textSize="72sp" />
+                        android:textSize="64sp" />
 
                     <TextView
                         android:id="@+id/maxUsageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/work_sans_light"
-                        android:text="Max 2:00"
+                        android:text="@{@string/max_usage_format(timeUtils.digitalTimeHm(vm.subjectSettings.treatmentLimit))}"
                         android:textColor="#888888"
                         android:textSize="20sp" />
                 </LinearLayout>
@@ -107,7 +116,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/work_sans_medium"
                     android:gravity="end|center_vertical"
-                    android:text="$5.00"
+                    android:text="@{@string/dollar_format(treatmentVm.dailyIncentive)}"
                     android:textSize="30sp" />
 
             </LinearLayout>
@@ -134,7 +143,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/work_sans_medium"
                     android:gravity="end|center_vertical"
-                    android:text="$5.00"
+                    android:text="@{@string/dollar_format(treatmentVm.valueEarned)}"
                     android:textColor="#6ADB58"
                     android:textSize="30sp" />
             </LinearLayout>
@@ -149,4 +158,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</layout>
