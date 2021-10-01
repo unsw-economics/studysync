@@ -63,4 +63,14 @@ object TimeUtils {
     fun midnight(): Long {
         return toMilliseconds(LocalDate.now())
     }
+
+    fun prettyHoursMinutesSeconds(milliseconds: Long): String {
+        val totalSeconds = milliseconds / 1000
+        val seconds = totalSeconds % 60
+        val totalMinutes = (totalSeconds - seconds) / 60
+        val minutes = totalMinutes % 60
+        val hours = (totalMinutes - minutes) / 60
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
 }

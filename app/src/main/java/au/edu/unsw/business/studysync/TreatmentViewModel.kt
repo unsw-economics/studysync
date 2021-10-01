@@ -45,4 +45,13 @@ class TreatmentViewModel(application: StudySyncApplication): AndroidViewModel(ap
     suspend fun getAllAppReports(): List<DbAppReport> {
         return reportDao.getAllAppReports()
     }
+
+    fun prettyHoursMinutes(milliseconds: Long): String {
+        val totalMinutes = milliseconds / 60000
+        val minutes = totalMinutes % 60
+        val hours = (totalMinutes - minutes) / 60
+
+        return String.format("%d:%02d", hours, minutes)
+    }
+
 }
