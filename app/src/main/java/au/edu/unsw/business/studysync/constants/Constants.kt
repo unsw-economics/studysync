@@ -1,5 +1,7 @@
 package au.edu.unsw.business.studysync.constants
 
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import java.time.LocalDate
 import java.time.Period
 import java.time.ZoneId
@@ -28,7 +30,7 @@ object Environment {
         BASELINE_START_DATE.atStartOfDay(ZONE_ID)
     }
 
-    const val TREATMENT_START_DATE_STRING = "2021-10-11"
+    const val TREATMENT_START_DATE_STRING = "2021-09-30"
     val TREATMENT_START_DATE: LocalDate by lazy {
         LocalDate.parse(TREATMENT_START_DATE_STRING)
     }
@@ -39,4 +41,10 @@ object Environment {
     val BASELINE_LENGTH: Int by lazy {
         ChronoUnit.DAYS.between(BASELINE_START_DATE, TREATMENT_START_DATE).toInt()
     }
+
+    const val DAILY_REPORT_WORKER_TAG = "daily_report"
+
+    val NETWORK_CONSTRAINT = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
 }
