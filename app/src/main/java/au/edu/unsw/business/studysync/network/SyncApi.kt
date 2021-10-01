@@ -1,14 +1,11 @@
 package au.edu.unsw.business.studysync.network
 
-import au.edu.unsw.business.studysync.constants.Constants
-import au.edu.unsw.business.studysync.constants.Environment
+import au.edu.unsw.business.studysync.BuildConfig.SERVER_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
-import kotlin.reflect.jvm.internal.impl.resolve.scopes.MemberScope
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -16,7 +13,7 @@ private val moshi = Moshi.Builder()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .baseUrl(Environment.SERVER_URL)
+    .baseUrl(SERVER_URL)
     .build()
 
 interface SyncApiService {

@@ -7,6 +7,10 @@ plugins {
 
 android {
 
+    signingConfigs {
+        staging {
+        }
+    }
     compileSdk 31
 
     defaultConfig {
@@ -17,9 +21,19 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {
+        debug {
+            buildConfigField 'String', 'SERVER_URL', '"https://10.0.2.2:8443"'
+            // buildConfigField 'String', 'SERVER_URL', '"http://192.168.20.12:3000"'
+        }
+
+        staging {
+            buildConfigField 'String', 'SERVER_URL', '"https://zhang-smartphone-web.onrender.com"'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
