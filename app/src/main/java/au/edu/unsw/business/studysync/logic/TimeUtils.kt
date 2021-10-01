@@ -5,6 +5,7 @@ import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_LENGTH
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
 import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
+import java.lang.Long.*
 import java.time.Duration
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -35,7 +36,7 @@ object TimeUtils {
 
     fun digitalTimeHm(duration: Duration): String {
         val (hours, minutes, _) = extractHms(duration)
-        return "${hours}:${minutes}"
+        return String.format("%d:%02d", hours, minutes)
     }
 
     fun getStudyPeriodAndDay(d: LocalDate): Pair<String, Int> {
@@ -64,13 +65,12 @@ object TimeUtils {
         return toMilliseconds(LocalDate.now())
     }
 
-    fun prettyHoursMinutesSeconds(milliseconds: Long): String {
-        val totalSeconds = milliseconds / 1000
-        val seconds = totalSeconds % 60
-        val totalMinutes = (totalSeconds - seconds) / 60
-        val minutes = totalMinutes % 60
-        val hours = (totalMinutes - minutes) / 60
+    fun percentage(numerator: Duration, denominator: Duration): Int {
+        val percentage = divideUnsigned(numerator.seconds * 100, denominator.seconds)
+        return min(percentage, 100L).toInt()
+    }
 
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    fun lessThan(a: Duration, b: Duration): Boolean {
+        return a.compareTo(b) < 0
     }
 }

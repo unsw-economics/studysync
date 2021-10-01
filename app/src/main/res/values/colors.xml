@@ -6,4 +6,6 @@
     <color name="light_green">#82E292</color>
     <color name="grey">#3A3E4D</color>
     <color name="light_grey">#717685</color>
+    <color name="orange">#F07F2D</color>
+    <color name="red">#B82626</color>
 </resources>
