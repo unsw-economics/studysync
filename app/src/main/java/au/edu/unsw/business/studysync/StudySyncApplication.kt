@@ -12,4 +12,8 @@ class StudySyncApplication: Application() {
     val database: AppDatabase by lazy {
         AppDatabase.getDatabase(this)
     }
+
+    val subjectSettings: SubjectSettings by lazy {
+        SubjectSettings(preferences)
+    }
 }

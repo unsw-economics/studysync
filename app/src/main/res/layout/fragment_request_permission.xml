@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/green"
                 android:fontFamily="@font/work_sans_medium"
-                android:text="@string/request_permission_continue"
+                android:text="@string/button_continue"
                 android:enabled="@{vm.usageAccessEnabled}"
                 android:textAllCaps="false"
                 android:textSize="16sp"

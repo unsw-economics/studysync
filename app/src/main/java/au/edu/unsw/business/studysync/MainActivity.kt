@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         vm = ViewModelProvider(this, MainViewModelFactory(application as StudySyncApplication)).get(MainViewModel::class.java)
 
-        vm.clearDataEvents.subscribe {
+        vm.navigateEvents.subscribe {
             navigate()
         }
 
@@ -61,11 +61,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigate() {
-        val isIdentified = vm.identified.value!!
+        val isIdentified = vm.subjectSettings.identified.value!!
         val isPermitted = vm.usageAccessEnabled.value!!
         val isBaseline = LocalDate.now().isBefore(TREATMENT_START_DATE)
-        val isTreatment = vm.group.value!! > GROUP_CONTROL
-        val isTreatmentDebriefed = vm.treatmentDebriefed.value!!
+        val isTreatment = vm.subjectSettings.treatmentGroup.value!! > GROUP_CONTROL
+        val isTreatmentDebriefed = vm.subjectSettings.treatmentDebriefed.value!!
 
         when {
             !isIdentified ->

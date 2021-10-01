@@ -38,7 +38,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         binding.identifyButton.setOnClickListener {
             val subjectId = binding.subjectIdField.text.toString()
             loginVm.disableLogin()
@@ -57,12 +56,6 @@ class LoginFragment : Fragment() {
                     delay(300)
                     loginVm.enableLogin()
                 }
-            }
-        }
-
-        vm.identified.observe(viewLifecycleOwner) {
-            if (it) {
-                (activity as MainActivity).navigate()
             }
         }
 

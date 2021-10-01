@@ -21,8 +21,7 @@ class TreatmentFragment: Fragment() {
     private val vm: MainViewModel by activityViewModels()
     private val treatmentVm: TreatmentViewModel by viewModels {
         val activity = requireActivity() as MainActivity
-        val application = activity.application as StudySyncApplication
-        TreatmentViewModelFactory(application.preferences, application.database)
+        TreatmentViewModelFactory(activity.application as StudySyncApplication)
     }
 
     override fun onCreateView(
@@ -42,6 +41,10 @@ class TreatmentFragment: Fragment() {
         val usageMap = computeUsage(requireContext(), now, midnight)
 
         treatmentVm.setTimeSpentToday(usageMap.map { it.value }.sum())
+
+        binding.clearDataButton.setOnClickListener {
+            vm.clearData()
+        }
     }
 
     override fun onDestroyView() {

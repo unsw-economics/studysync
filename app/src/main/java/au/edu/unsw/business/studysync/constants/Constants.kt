@@ -24,16 +24,15 @@ object Environment {
     val BASELINE_START_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_START_DATE_STRING)
     }
-    val BASELINE_START_DATE_MIDNIGHT: ZonedDateTime by lazy {
-        BASELINE_START_DATE.atStartOfDay(ZONE_ID)
-    }
 
     const val TREATMENT_START_DATE_STRING = "2021-10-11"
     val TREATMENT_START_DATE: LocalDate by lazy {
         LocalDate.parse(TREATMENT_START_DATE_STRING)
     }
-    val TREATMENT_START_DATE_MIDNIGHT: ZonedDateTime by lazy {
-        TREATMENT_START_DATE.atStartOfDay(ZONE_ID)
+
+    const val TREATMENT_END_DATE_STRING = "2021-11-08"
+    val TREATMENT_END_DATE: LocalDate by lazy {
+        LocalDate.parse(TREATMENT_END_DATE_STRING)
     }
 
     val BASELINE_LENGTH: Int by lazy {
