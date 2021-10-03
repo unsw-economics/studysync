@@ -11,5 +11,5 @@ data class ReportPayload(
 
 data class ServerAppReport(
     @Json(name = "application_name") val applicationName: String,
-    @Json(name = "usage_seconds") val usageSeconds: Long
+    @Json(name = "usage") val usageSeconds: Long
 )

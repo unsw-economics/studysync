@@ -21,8 +21,8 @@ interface SyncApiService {
     @POST("api/identify")
     suspend fun identify(@Field("subject_id") subjectId: String): ApiResponse<IdentifyResponse>
 
-    @GET("api/get-test-group")
-    suspend fun getTestGroup(@Header("Authorization") authToken: String, @Query("subject_id") subjectId: String): ApiResponse<GetTestGroupResponse>
+    @GET("api/get-group-and-limit")
+    suspend fun getTestGroup(@Header("Authorization") authToken: String, @Query("subject_id") subjectId: String): ApiResponse<GetGroupAndLimitResponse>
 
     @POST("api/submit-report")
     suspend fun submitReport(@Header("Authorization") authToken: String, @Body reportPayload: ReportPayload): BasicApiResponse
