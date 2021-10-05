@@ -1,8 +1,9 @@
 package au.edu.unsw.business.studysync.database
 
 import androidx.annotation.NonNull
-import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "reports",

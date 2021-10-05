@@ -16,7 +16,9 @@ data class IdentifyResponse(
     val authToken: String
 )
 
-data class GetTestGroupResponse(
+data class GetGroupAndLimitResponse(
     @Json(name = "test_group")
-    val testGroup: Int
+    val testGroup: Int,
+    @Json(name = "treatment_limit")
+    val treatmentLimit: Int
 )

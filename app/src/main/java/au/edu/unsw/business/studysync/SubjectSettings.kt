@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import au.edu.unsw.business.studysync.constants.Constants
 import au.edu.unsw.business.studysync.constants.Environment
-import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
 import java.time.Duration
 import java.time.LocalDate
 

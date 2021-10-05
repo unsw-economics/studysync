@@ -1,18 +1,20 @@
 package au.edu.unsw.business.studysync
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import androidx.work.*
+import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
 import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
+import au.edu.unsw.business.studysync.workers.DailySchedulerWorker
+import java.time.Duration
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
@@ -44,6 +46,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         navigate()
+
+        // clears all workers (for development)
+        // WorkManager.getInstance(applicationContext).cancelAllWork()
+
+        val request = DailySchedulerWorker.createRequest()
+
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.KEEP, request)
+
+        Log.d("Main", "work enqueued")
     }
 
     override fun onResume() {

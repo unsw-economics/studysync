@@ -1,15 +1,9 @@
 package au.edu.unsw.business.studysync
 
-import android.content.SharedPreferences
-import android.graphics.Color
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.*
-import au.edu.unsw.business.studysync.database.AppDatabase
-import au.edu.unsw.business.studysync.database.DbAppReport
-import kotlinx.coroutines.launch
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import java.time.Duration
-import java.time.ZonedDateTime
-import java.util.*
 
 class TreatmentViewModel(application: StudySyncApplication): AndroidViewModel(application) {
 

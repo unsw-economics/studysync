@@ -3,10 +3,7 @@ package au.edu.unsw.business.studysync.usage
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import au.edu.unsw.business.studysync.database.DbAppReport
-import au.edu.unsw.business.studysync.network.ServerAppReport
 import java.util.*
 import kotlin.collections.HashMap
 

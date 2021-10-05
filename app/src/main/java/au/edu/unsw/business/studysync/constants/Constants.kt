@@ -1,11 +1,8 @@
 package au.edu.unsw.business.studysync.constants
 
 import java.time.LocalDate
-import java.time.Period
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 object Constants {
     const val PERIOD_BASELINE = "baseline"
@@ -13,6 +10,8 @@ object Constants {
     const val DEBUG_DATA = "DEBUG_DATA"
     const val GROUP_UNASSIGNED = -1
     const val GROUP_CONTROL = 0
+    const val RECORD_AND_SUBMIT_WORK = "RECORD_AND_SUBMIT_WORK"
+    const val DAILY_SCHEDULER_WORK = "DAILY_SCHEDULER_WORK"
 }
 
 object Environment {
@@ -24,6 +23,7 @@ object Environment {
     val BASELINE_START_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_START_DATE_STRING)
     }
+
 
     const val TREATMENT_START_DATE_STRING = "2021-10-01"
     val TREATMENT_START_DATE: LocalDate by lazy {

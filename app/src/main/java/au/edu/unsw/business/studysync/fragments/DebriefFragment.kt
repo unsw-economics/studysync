@@ -2,23 +2,20 @@ package au.edu.unsw.business.studysync.fragments
 
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.toSpannable
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import au.edu.unsw.business.studysync.*
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_END_DATE
-import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
 import au.edu.unsw.business.studysync.databinding.FragmentDebriefBinding
-import au.edu.unsw.business.studysync.databinding.FragmentTreatmentBinding
-import au.edu.unsw.business.studysync.logic.TimeUtils
+import au.edu.unsw.business.studysync.support.TimeUtils
 
 class DebriefFragment : Fragment() {
 

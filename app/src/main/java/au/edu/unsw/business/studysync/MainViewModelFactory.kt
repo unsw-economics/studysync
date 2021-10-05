@@ -1,9 +1,7 @@
 package au.edu.unsw.business.studysync
 
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import au.edu.unsw.business.studysync.database.AppDatabase
 
 class MainViewModelFactory(
     private val application: StudySyncApplication

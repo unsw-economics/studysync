@@ -1,10 +1,9 @@
 package au.edu.unsw.business.studysync
 
-import androidx.core.content.edit
-import androidx.lifecycle.*
-import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
-import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE
-import au.edu.unsw.business.studysync.constants.Environment.BASELINE_START_DATE_STRING
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import au.edu.unsw.business.studysync.database.DbAppReport
 import au.edu.unsw.business.studysync.database.DbReport
 import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
