@@ -81,7 +81,8 @@ class MainActivity: AppCompatActivity() {
         }
 
         workManager.enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.KEEP, DailySchedulerWorker.createRequest())
-        Log.d("Main", "work enqueued")
+
+        Log.d("App/MainActivity", "DailySchedulerWorker enqueued")
     }
 
     override fun onResume() {

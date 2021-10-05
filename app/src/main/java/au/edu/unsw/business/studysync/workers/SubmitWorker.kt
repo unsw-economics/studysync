@@ -7,10 +7,12 @@ import java.time.Duration
 
 class SubmitWorker(private val context: Context, private val params: WorkerParameters): CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
+        Log.d("App/SubmitWorker", "begin")
         return try {
-            Log.d("MainRecord", "submit unsynced reports")
+            Log.d("App/SubmitWorker", "success")
             Result.success()
         } catch (ex: Exception) {
+            Log.d("App/SubmitWorker", "retry")
             Result.retry()
         }
     }

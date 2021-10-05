@@ -27,10 +27,10 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
 
         withContext(Dispatchers.IO) {
             for ((_, payload) in payloadMap) {
-                Log.d("MainActivity", "Submitting $payload")
+                Log.d("App/UsageDriver", "submitting $payload")
                 SyncApi.service.submitReport(authToken, payload)
 
-                Log.d("MainActivity", "Submitted")
+                Log.d("App/UsageDriver", "submitted")
                 reportDao.markReportSynced(payload.period, payload.day)
             }
         }
@@ -96,7 +96,9 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
             reportDao.insertMultipleDayReports(reports, appReports)
         }
 
-        settings.setLastRecorded(today)
+        withContext(Dispatchers.Main) {
+            settings.setLastRecorded(today)
+        }
     }
 
     fun computeTodayUsage(): Duration {

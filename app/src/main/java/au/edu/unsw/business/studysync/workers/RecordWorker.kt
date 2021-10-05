@@ -13,9 +13,8 @@ import java.time.Duration
 
 class RecordWorker(private val context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
+        Log.d("App/RecordWorker", "begin")
         return try {
-            Log.d("MainRecord", "record new usages")
-
             val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
 
             return if (userManager.isUserUnlocked) {
@@ -27,12 +26,14 @@ class RecordWorker(private val context: Context, params: WorkerParameters): Coro
                     usageDriver.recordNewUsages()
                 }
 
+                Log.d("App/RecordWorker", "success")
                 Result.success()
             } else {
+                Log.d("App/RecordWorker", "retry")
                 Result.retry()
             }
         } catch (ex: Exception) {
-            Log.d("Main", "Error: ${ex.message}")
+            Log.d("App/RecordWorker", "retry -- record error: ${ex.message}")
             Result.retry()
         }
     }

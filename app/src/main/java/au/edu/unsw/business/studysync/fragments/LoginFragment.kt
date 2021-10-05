@@ -63,7 +63,7 @@ class LoginFragment : Fragment() {
                         vm.identifyFully(subjectId, idData.authToken, testGroup, treatmentLimit)
                     }
                 } catch (e: Exception) {
-                    Log.d("MainActivity", "Error: ${e.message}")
+                    Log.d("App/LoginFragment", "login error: ${e.message}")
                     // to avoid flashing on error
                     delay(300)
                     loginVm.enableLogin()

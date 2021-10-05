@@ -18,6 +18,8 @@ import java.time.ZonedDateTime
 
 class DailySchedulerWorker(private val context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
+        Log.d("App/DailySchedulerWorker", "begin")
+
         val recordRequest = RecordWorker.createRequest()
 
         val subjectSettings = withContext(Dispatchers.Main) {
@@ -36,7 +38,7 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
 
         allWork.enqueue()
 
-        Log.d("MainWork", "work enqueued (record${ if (subjectSettings.identified.value!!) ", submit" else "" }) for ")
+        Log.d("App/DailySchedulerWorker", "work enqueued (record${ if (subjectSettings.identified.value!!) ", submit" else "" }) for TODO")
 
         val tomorrow = LocalDate.now().plusDays(1)
 
@@ -44,11 +46,6 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
 
             val now = ZonedDateTime.now()
             val delay = Duration.between(now, tomorrow.atStartOfDay(ZONE_ID))
-
-            Log.d(
-                "MainWork",
-                "enqueueing daily scheduler with time delay ${TimeUtils.digitalTimeHm(delay)}"
-            )
 
             val nextRequest = createRequest(delay)
 
@@ -58,9 +55,10 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
                 nextRequest
             )
 
-            Log.d("MainWork", "daily scheduler enqueued")
+            Log.d("App/DailySchedulerWorker", "DailySchedulerWorker enqueued")
         }
 
+        Log.d("App/DailySchedulerWorker", "success")
         return Result.success()
     }
 
