@@ -46,7 +46,7 @@ class SubjectSettings(
         )
         _testGroup.value = preferences.getInt("test-group", 0)
         _treatmentDebriefed.value = preferences.getBoolean("treatment-debriefed", false)
-        _treatmentLimit.value = Duration.ofSeconds(preferences.getLong("treatment-limit", 0))
+        _treatmentLimit.value = Duration.ofSeconds(preferences.getInt("treatment-limit", 0).toLong())
     }
 
     fun identify(subjectId: String, authToken: String) {

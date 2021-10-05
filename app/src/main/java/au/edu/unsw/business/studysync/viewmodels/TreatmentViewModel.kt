@@ -26,7 +26,6 @@ class TreatmentViewModel(private val application: StudySyncApplication): Android
 
     init {
         _todayUsage.value = Duration.ZERO
-        // TODO Yet to implement search for how much they have earned in the treatment period
         _totalEarned.value = 0.0
         _dailyIncentive.value = application.subjectSettings.testGroup.value!! * 0.5
     }

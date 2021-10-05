@@ -37,6 +37,9 @@ class TreatmentFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        treatmentVm.setTotalEarned()
+
         binding.vm = vm
         binding.treatmentVm = treatmentVm
         binding.timeUtils = TimeUtils
