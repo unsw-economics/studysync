@@ -4,12 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import au.edu.unsw.business.studysync.SubjectSettings
+import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_BOUNCE_WORK
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
-import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.constants.Constants.PREFERENCES_NAME
 import au.edu.unsw.business.studysync.constants.Constants.RECORD_AND_SUBMIT_WORK
+import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
 import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
-import au.edu.unsw.business.studysync.support.TimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Duration
@@ -27,7 +27,7 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
         }
         val workManager = WorkManager.getInstance(context)
 
-        val firstStep = workManager.beginUniqueWork(RECORD_AND_SUBMIT_WORK, ExistingWorkPolicy.KEEP, recordRequest)
+        val firstStep = workManager.beginUniqueWork(RECORD_AND_SUBMIT_WORK, ExistingWorkPolicy.REPLACE, recordRequest)
 
         val allWork = if (subjectSettings.identified.value!!) {
             val submitRequest = SubmitWorker.createRequest()
@@ -38,24 +38,18 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
 
         allWork.enqueue()
 
-        Log.d("App/DailySchedulerWorker", "work enqueued (record${ if (subjectSettings.identified.value!!) ", submit" else "" }) for TODO")
+        Log.d("App/DailySchedulerWorker", "work enqueued (record${ if (subjectSettings.identified.value!!) ", submit" else "" })")
 
         val tomorrow = LocalDate.now().plusDays(1)
 
-        if (TimeUtils.getPeriod(tomorrow) != PERIOD_OVER) {
-
-            val now = ZonedDateTime.now()
-            val delay = Duration.between(now, tomorrow.atStartOfDay(ZONE_ID))
-
-            val nextRequest = createRequest(delay)
-
+        if (!tomorrow.isAfter(OVER_DATE)) {
             workManager.enqueueUniqueWork(
-                DAILY_SCHEDULER_WORK,
-                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                nextRequest
+                DAILY_SCHEDULER_BOUNCE_WORK,
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequestBuilder<DailySchedulerBounceWorker>().build()
             )
 
-            Log.d("App/DailySchedulerWorker", "DailySchedulerWorker enqueued")
+            Log.d("App/DailySchedulerWorker", "DailySchedulerBounceWorker enqueued")
         }
 
         Log.d("App/DailySchedulerWorker", "success")
@@ -63,15 +57,22 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
     }
 
     companion object {
-        fun createRequest(delay: Duration): OneTimeWorkRequest {
-            return OneTimeWorkRequestBuilder<DailySchedulerWorker>()
-                .setInitialDelay(delay)
-                .build()
-        }
+        fun createRequestForNext0001(): OneTimeWorkRequest {
+            val now = ZonedDateTime.now()
+            val next0001 = LocalDate.now().plusDays(1).atStartOfDay(ZONE_ID).plusMinutes(1)
+            // val next0001 = now.plusSeconds(15)
 
-        fun createRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<DailySchedulerWorker>()
+                .setInitialDelay(Duration.between(now, next0001))
                 .build()
         }
+    }
+}
+
+class DailySchedulerBounceWorker(private val context: Context, params: WorkerParameters): Worker(context, params) {
+    override fun doWork(): Result {
+        val workManager = WorkManager.getInstance(context)
+        workManager.enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.REPLACE, DailySchedulerWorker.createRequestForNext0001())
+        return Result.success()
     }
 }

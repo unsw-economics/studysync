@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -13,6 +14,7 @@ import androidx.work.*
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
@@ -28,8 +30,16 @@ class MainActivity: AppCompatActivity() {
     private lateinit var vm: MainViewModel
     private lateinit var navController: NavController
 
+    private val application by lazy {
+        getApplication() as StudySyncApplication
+    }
+
     private val subjectSettings by lazy {
-        (application as StudySyncApplication).subjectSettings
+        application.subjectSettings
+    }
+
+    private val usageDriver by lazy {
+        application.usageDriver
     }
 
     private val navOptions by lazy {
@@ -56,18 +66,28 @@ class MainActivity: AppCompatActivity() {
         vm = ViewModelProvider(this, MainViewModelFactory(application as StudySyncApplication)).get(
             MainViewModel::class.java)
 
-        vm.navigateEvents.subscribe {
-            navigate()
-        }
-
-        navigate()
-
         val period = TimeUtils.getTodayPeriod()
 
         if (period == PERIOD_OVER) {
             vm.clearData()
             return
         }
+
+        vm.usageAccessEnabled.observe(this) {
+            Log.d("App/Main", "$it")
+            if (it) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    usageDriver.recordNewUsages()
+                }
+            }
+        }
+
+        vm.navigateEvents.subscribe {
+            navigate()
+        }
+
+        navigate()
+
 
         if (period == PERIOD_EXPERIMENT && subjectSettings.identified.value!! && subjectSettings.testGroup.value!! == GROUP_UNASSIGNED) {
             lifecycleScope.launch {
@@ -80,7 +100,7 @@ class MainActivity: AppCompatActivity() {
             }
         }
 
-        workManager.enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.KEEP, DailySchedulerWorker.createRequest())
+        workManager.enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.REPLACE, DailySchedulerWorker.createRequestForNext0001())
 
         Log.d("App/MainActivity", "DailySchedulerWorker enqueued")
     }
@@ -107,7 +127,7 @@ class MainActivity: AppCompatActivity() {
         val isTreatmentDebriefed = subjectSettings.treatmentDebriefed.value!!
 
         when {
-            period == "ENDED" ->
+            period == PERIOD_OVER ->
                 navigateIfDifferent(
                     R.id.TerminalFragment,
                     bundleOf(
@@ -119,7 +139,7 @@ class MainActivity: AppCompatActivity() {
                 navigateIfDifferent(R.id.LoginFragment)
             !isPermitted ->
                 navigateIfDifferent(R.id.RequestPermissionFragment)
-            period == "BASELINE" ->
+            period == PERIOD_BASELINE ->
                 navigateIfDifferent(
                     R.id.TerminalFragment,
                     bundleOf(

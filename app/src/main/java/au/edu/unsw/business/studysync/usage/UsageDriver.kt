@@ -85,8 +85,8 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
                 )
             )
 
-            for ((appName, usage_ms) in usage) {
-                appReports.add(DbAppReport(period, day, appName, usage_ms / 1000))
+            for ((appName, usageMilliseconds) in usage) {
+                appReports.add(DbAppReport(period, day, appName, usageMilliseconds / 1000))
             }
 
             date = nextDate
