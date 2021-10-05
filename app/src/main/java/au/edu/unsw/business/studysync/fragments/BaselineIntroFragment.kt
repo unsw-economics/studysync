@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import au.edu.unsw.business.studysync.DebugActivity
 import au.edu.unsw.business.studysync.MainActivity
+import au.edu.unsw.business.studysync.StudySyncApplication
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
 import au.edu.unsw.business.studysync.database.DbAppReport
@@ -25,6 +26,7 @@ import au.edu.unsw.business.studysync.support.TimeUtils.toMilliseconds
 import au.edu.unsw.business.studysync.network.ReportPayload
 import au.edu.unsw.business.studysync.network.ServerAppReport
 import au.edu.unsw.business.studysync.network.SyncApi
+import au.edu.unsw.business.studysync.usage.UsageDriver
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -56,96 +58,24 @@ class BaselineIntroFragment: Fragment() {
 
         binding.vm = vm
 
+        /*
         binding.clearDataButton.setOnClickListener {
             lifecycleScope.launch {
                 vm.clearData()
-                (activity as MainActivity).navigate()
             }
         }
 
+        val usageDriver = (requireActivity().application as StudySyncApplication).usageDriver
+
         binding.submitReportButton.setOnClickListener {
             MainScope().launch {
-                val unsyncedAppReports = withContext(Dispatchers.IO) {
-                    vm.getUnsyncedAppReports()
-                }
-
-                val subjectId = vm.subjectSettings.subjectId.value!!
-
-                val payloadMap: MutableMap<Pair<String, Int>, ReportPayload> = HashMap()
-
-                for (appReport in unsyncedAppReports) {
-                    val period = appReport.period
-                    val day = appReport.day
-
-                    val periodDay = Pair(appReport.period, appReport.day)
-
-                    if (!payloadMap.contains(periodDay)) {
-                        payloadMap[periodDay] = ReportPayload(subjectId, period, day, LinkedList())
-                    }
-
-                    val serverAppReport =
-                        ServerAppReport(appReport.applicationName, appReport.usageSeconds)
-                    (payloadMap[periodDay]!!.reports as MutableList).add(serverAppReport)
-                }
-
-                val authToken = vm.subjectSettings.authToken.value!!
-
-                withContext(Dispatchers.IO) {
-                    for ((_, payload) in payloadMap) {
-                        try {
-                            Log.d("MainActivity", "Submitting $payload")
-                            val response = SyncApi.service.submitReport(authToken, payload)
-
-                            Log.d("MainActivity", "Submitted")
-                            vm.markReportSynced(payload.period, payload.day)
-                        } catch (e: HttpException) {
-                            val errorBody = e.response()?.errorBody()?.source().toString()
-                            Log.d("MainActivity", "Error: ${e.message}; $errorBody")
-                            // TODO handle exception properly
-                        }
-                    }
-                }
+                usageDriver.submitUnsyncedReports()
             }
         }
 
         binding.recordNewUsagesButton.setOnClickListener {
-            var date = vm.subjectSettings.lastRecorded.value!!
-            val today = LocalDate.now()
-
-            val reports: MutableList<DbReport> = LinkedList()
-            val appReports: MutableList<DbAppReport> = LinkedList()
-
-            while (date.isBefore(today)) {
-                val nextDate = date.plusDays(1)
-                val usage = computeUsage(requireContext(), toMilliseconds(date), toMilliseconds(nextDate))
-                val (period, day) = getStudyPeriodAndDay(date)
-
-                reports.add(
-                    DbReport(
-                        period,
-                        day
-                    )
-                )
-
-                for ((appName, usage_ms) in usage) {
-                    Log.d("MainActivity", "$period $day $appName ${usage_ms / 1000}")
-                    appReports.add(DbAppReport(period, day, appName, usage_ms / 1000))
-                }
-
-                date = nextDate
-            }
-
             MainScope().launch {
-                vm.insertMultipleDayReports(reports, appReports)
-                vm.setLastRecorded(today)
-
-                val text = printList(reports) + "\n" + printList(appReports)
-
-                val intent = Intent(activity, DebugActivity::class.java).apply {
-                    putExtra(DEBUG_DATA, text)
-                }
-
-                startActivity(intent)
+                usageDriver.recordNewUsages()
             }
         }
 
@@ -177,6 +107,7 @@ class BaselineIntroFragment: Fragment() {
                 startActivity(intent)
             }
         }
+        */
     }
 
     override fun onDestroyView() {

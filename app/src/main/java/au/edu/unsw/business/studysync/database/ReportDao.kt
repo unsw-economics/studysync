@@ -10,6 +10,9 @@ interface ReportDao {
     @Query("select AR.* from reports R join app_reports AR on (R.period = AR.period and R.day = AR.day)")
     suspend fun getAllAppReports(): List<DbAppReport>
 
+    @Query("select AR.* from reports R join app_reports AR on (R.period = AR.period and R.day = AR.day) where R.period = 'experiment'")
+    suspend fun getExperimentAppReports(): List<DbAppReport>
+
     @Query("select AR.* from reports R join app_reports AR on (R.period = AR.period and R.day = AR.day) where R.synced = false")
     suspend fun getUnsyncedAppReports(): List<DbAppReport>
 

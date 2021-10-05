@@ -11,13 +11,9 @@ import androidx.fragment.app.viewModels
 import au.edu.unsw.business.studysync.*
 import au.edu.unsw.business.studysync.databinding.FragmentTreatmentBinding
 import au.edu.unsw.business.studysync.support.TimeUtils
-import au.edu.unsw.business.studysync.support.TimeUtils.midnight
-import au.edu.unsw.business.studysync.support.TimeUtils.now
-import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.viewmodels.TreatmentViewModel
 import au.edu.unsw.business.studysync.viewmodels.TreatmentViewModelFactory
-import java.time.Duration
 
 class TreatmentFragment: Fragment() {
 
@@ -45,7 +41,7 @@ class TreatmentFragment: Fragment() {
         binding.treatmentVm = treatmentVm
         binding.timeUtils = TimeUtils
 
-        treatmentVm.timeSpentToday.observe(viewLifecycleOwner) {
+        treatmentVm.todayUsage.observe(viewLifecycleOwner) {
             if (!TimeUtils.lessThan(it, vm.subjectSettings.treatmentLimit.value!!)) {
                 binding.progress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.red))
             }
@@ -58,11 +54,7 @@ class TreatmentFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-        val usageMap = computeUsage(requireContext(), midnight(), now())
-        val todayUsageMilliseconds = usageMap.map { it.value }.sum()
-
-        treatmentVm.setTimeSpentToday(Duration.ofMillis(todayUsageMilliseconds))
+        treatmentVm.setTodayUsage()
     }
 
     override fun onDestroyView() {
