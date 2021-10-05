@@ -9,12 +9,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.*
+import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
-import au.edu.unsw.business.studysync.constants.Environment
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
 import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
+import au.edu.unsw.business.studysync.workers.DailySchedulerWorker
+import java.time.Duration
 import java.time.LocalDate
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,37 +47,15 @@ class MainActivity : AppCompatActivity() {
 
         navigate()
 
+        // clears all workers (for development)
+        // WorkManager.getInstance(applicationContext).cancelAllWork()
 
-        // Set execution around 12AM
-        Log.d("MainActivity", "Starting work request builder")
-        // TODO Calculate difference between now and treatment start midnight
-        val timeDiff = 0L
-        val dailyWorkRequest = PeriodicWorkRequestBuilder<ReportDailyWorker>(
-            15, TimeUnit.MINUTES,
-            5, TimeUnit.MINUTES
-        )
-            .setConstraints(Environment.NETWORK_CONSTRAINT)
-            .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
-            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
-            .build()
-
-        val myWorkRequest = OneTimeWorkRequestBuilder<ReportDailyWorker>()
-            .setBackoffCriteria(
-                BackoffPolicy.LINEAR,
-                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                TimeUnit.MILLISECONDS)
-            .addTag("one time work")
-            .build()
+        val request = DailySchedulerWorker.createRequest()
 
         WorkManager.getInstance(applicationContext)
-            .enqueue(myWorkRequest)
+            .enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.KEEP, request)
 
-        WorkManager.getInstance(applicationContext)
-            .enqueueUniquePeriodicWork(
-                Environment.DAILY_REPORT_WORKER_TAG, ExistingPeriodicWorkPolicy.REPLACE,
-                dailyWorkRequest)
-        Log.d("MainActivity", "Finished work request builder")
-
+        Log.d("Main", "work enqueued")
     }
 
     override fun onResume() {

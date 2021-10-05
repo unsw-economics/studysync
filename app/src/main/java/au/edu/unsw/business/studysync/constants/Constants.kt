@@ -1,7 +1,5 @@
 package au.edu.unsw.business.studysync.constants
 
-import androidx.work.Constraints
-import androidx.work.NetworkType
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -12,6 +10,8 @@ object Constants {
     const val DEBUG_DATA = "DEBUG_DATA"
     const val GROUP_UNASSIGNED = -1
     const val GROUP_CONTROL = 0
+    const val RECORD_AND_SUBMIT_WORK = "RECORD_AND_SUBMIT_WORK"
+    const val DAILY_SCHEDULER_WORK = "DAILY_SCHEDULER_WORK"
 }
 
 object Environment {
@@ -38,10 +38,4 @@ object Environment {
     val BASELINE_LENGTH: Int by lazy {
         ChronoUnit.DAYS.between(BASELINE_START_DATE, TREATMENT_START_DATE).toInt()
     }
-
-    const val DAILY_REPORT_WORKER_TAG = "daily_report"
-
-    val NETWORK_CONSTRAINT = Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.CONNECTED)
-        .build()
 }

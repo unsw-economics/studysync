@@ -10,9 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import au.edu.unsw.business.studysync.*
 import au.edu.unsw.business.studysync.databinding.FragmentTreatmentBinding
-import au.edu.unsw.business.studysync.logic.TimeUtils
-import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
-import au.edu.unsw.business.studysync.logic.TimeUtils.now
+import au.edu.unsw.business.studysync.support.TimeUtils
+import au.edu.unsw.business.studysync.support.TimeUtils.midnight
+import au.edu.unsw.business.studysync.support.TimeUtils.now
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
 import java.time.Duration
 

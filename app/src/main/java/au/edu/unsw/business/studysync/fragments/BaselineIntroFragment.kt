@@ -17,11 +17,11 @@ import au.edu.unsw.business.studysync.database.DbAppReport
 import au.edu.unsw.business.studysync.database.DbReport
 import au.edu.unsw.business.studysync.databinding.FragmentBaselineIntroBinding
 import au.edu.unsw.business.studysync.development.DevUtils.printList
-import au.edu.unsw.business.studysync.logic.TimeUtils.getStudyPeriodAndDay
-import au.edu.unsw.business.studysync.logic.TimeUtils.humanizeTimeHms
-import au.edu.unsw.business.studysync.logic.TimeUtils.midnight
-import au.edu.unsw.business.studysync.logic.TimeUtils.now
-import au.edu.unsw.business.studysync.logic.TimeUtils.toMilliseconds
+import au.edu.unsw.business.studysync.support.TimeUtils.getStudyPeriodAndDay
+import au.edu.unsw.business.studysync.support.TimeUtils.humanizeTimeHms
+import au.edu.unsw.business.studysync.support.TimeUtils.midnight
+import au.edu.unsw.business.studysync.support.TimeUtils.now
+import au.edu.unsw.business.studysync.support.TimeUtils.toMilliseconds
 import au.edu.unsw.business.studysync.network.ReportPayload
 import au.edu.unsw.business.studysync.network.ServerAppReport
 import au.edu.unsw.business.studysync.network.SyncApi

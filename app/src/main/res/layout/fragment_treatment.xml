@@ -10,7 +10,7 @@
             type="au.edu.unsw.business.studysync.TreatmentViewModel" />
         <variable
             name="timeUtils"
-            type="au.edu.unsw.business.studysync.logic.TimeUtils" />
+            type="au.edu.unsw.business.studysync.support.TimeUtils" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

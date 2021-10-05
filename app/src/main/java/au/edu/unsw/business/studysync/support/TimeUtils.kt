@@ -1,4 +1,4 @@
-package au.edu.unsw.business.studysync.logic
+package au.edu.unsw.business.studysync.support
 
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
@@ -13,7 +13,7 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 object TimeUtils {
-    fun extractHms(duration: Duration): Triple<Long, Long, Long> {
+    private fun extractHms(duration: Duration): Triple<Long, Long, Long> {
         val milliseconds = duration.toMillis()
 
         val totalSeconds = milliseconds / 1000

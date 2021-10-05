@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import au.edu.unsw.business.studysync.*
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_END_DATE
 import au.edu.unsw.business.studysync.databinding.FragmentDebriefBinding
-import au.edu.unsw.business.studysync.logic.TimeUtils
+import au.edu.unsw.business.studysync.support.TimeUtils
 
 class DebriefFragment : Fragment() {
 
