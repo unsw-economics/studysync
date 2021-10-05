@@ -13,6 +13,7 @@ import au.edu.unsw.business.studysync.viewmodels.LoginViewModel
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
 import au.edu.unsw.business.studysync.network.SyncApi
+import au.edu.unsw.business.studysync.support.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -41,12 +42,25 @@ class LoginFragment : Fragment() {
 
             lifecycleScope.launch {
                 try {
-                    val response = SyncApi.service.identify(subjectId)
+                    val idResponse = SyncApi.service.identify(subjectId)
 
-                    if (response.message != null) throw Exception(response.message)
+                    if (idResponse.message != null) throw Exception(idResponse.message)
 
-                    val data = response.data!!
-                    vm.identify(subjectId, data.authToken)
+                    val idData = idResponse.data!!
+
+                    if (TimeUtils.isBaseline()) {
+                        vm.identify(subjectId, idData.authToken)
+                    } else {
+                        val glResponse = SyncApi.service.getGroupAndLimit(idData.authToken, subjectId)
+
+                        if (glResponse.message != null) throw Exception(glResponse.message)
+
+                        val glData = glResponse.data!!
+
+                        if (glData.testGroup == null) throw Exception("Test group not found, please contact us.")
+
+                        vm.identifyFully(subjectId, idData.authToken, glData.testGroup, glData.treatmentLimit ?: 0)
+                    }
                 } catch (e: Exception) {
                     Log.d("MainActivity", "Error: ${e.message}")
                     // to avoid flashing on error

@@ -18,7 +18,7 @@ data class IdentifyResponse(
 
 data class GetGroupAndLimitResponse(
     @Json(name = "test_group")
-    val testGroup: Int,
+    val testGroup: Int?,
     @Json(name = "treatment_limit")
-    val treatmentLimit: Int
+    val treatmentLimit: Int?
 )

@@ -25,8 +25,8 @@ class SubjectSettings(
     private val _lastRecorded = MutableLiveData<LocalDate>()
     val lastRecorded get(): LiveData<LocalDate> = _lastRecorded
 
-    private val _treatmentGroup = MutableLiveData<Int>()
-    val treatmentGroup get(): LiveData<Int> = _treatmentGroup
+    private val _testGroup = MutableLiveData<Int>()
+    val testGroup get(): LiveData<Int> = _testGroup
 
     private val _treatmentDebriefed = MutableLiveData<Boolean>()
     val treatmentDebriefed get(): LiveData<Boolean> = _treatmentDebriefed
@@ -44,9 +44,9 @@ class SubjectSettings(
                 Environment.BASELINE_START_DATE_STRING
             )
         )
-        _treatmentGroup.value = preferences.getInt("treatment-group", 3)
+        _testGroup.value = preferences.getInt("test-group", 0)
         _treatmentDebriefed.value = preferences.getBoolean("treatment-debriefed", false)
-        _treatmentLimit.value = Duration.ofSeconds(preferences.getLong("treatment-limit", Duration.ofHours(2).seconds))
+        _treatmentLimit.value = Duration.ofSeconds(preferences.getLong("treatment-limit", 0))
     }
 
     fun identify(subjectId: String, authToken: String) {
@@ -62,6 +62,16 @@ class SubjectSettings(
         _authToken.value = authToken
     }
 
+    fun setTestParameters(group: Int, limit: Int) {
+        preferences.edit {
+            putInt("test-group", group)
+            putInt("treatment-limit", limit)
+        }
+
+        _testGroup.value = group
+        _treatmentLimit.value = Duration.ofSeconds(limit.toLong())
+    }
+
     fun clearData() {
         preferences.edit {
             clear()
@@ -72,9 +82,9 @@ class SubjectSettings(
         _subjectId.value = null
         _authToken.value = null
         _lastRecorded.value = Environment.BASELINE_START_DATE
-        _treatmentGroup.value = Constants.GROUP_UNASSIGNED
+        _testGroup.value = Constants.GROUP_UNASSIGNED
         _treatmentDebriefed.value = false
-        _treatmentLimit.value = Duration.ofSeconds(0)
+        _treatmentLimit.value = Duration.ofSeconds(1)
     }
 
     fun setLastRecorded(date: LocalDate) {

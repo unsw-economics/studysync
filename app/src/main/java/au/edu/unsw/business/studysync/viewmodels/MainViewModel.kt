@@ -41,6 +41,12 @@ class MainViewModel(application: StudySyncApplication): AndroidViewModel(applica
         _navigateEvents.accept(Unit)
     }
 
+    fun identifyFully(subjectId: String, authToken: String, testGroup: Int, treatmentLimit: Int) {
+        subjectSettings.identify(subjectId, authToken)
+        subjectSettings.setTestParameters(testGroup, treatmentLimit)
+        _navigateEvents.accept(Unit)
+    }
+
     fun clearData() {
         viewModelScope.launch {
             subjectSettings.clearData()

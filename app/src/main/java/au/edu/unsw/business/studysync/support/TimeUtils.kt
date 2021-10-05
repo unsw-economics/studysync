@@ -13,6 +13,10 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 object TimeUtils {
+    fun isBaseline(): Boolean {
+        return LocalDate.now().isBefore(TREATMENT_START_DATE)
+    }
+
     private fun extractHms(duration: Duration): Triple<Long, Long, Long> {
         val milliseconds = duration.toMillis()
 
@@ -67,11 +71,13 @@ object TimeUtils {
     }
 
     fun percentage(numerator: Duration, denominator: Duration): Int {
+        if (denominator.seconds == 0L) return 0
+
         val percentage = divideUnsigned(numerator.seconds * 100, denominator.seconds)
         return min(percentage, 100L).toInt()
     }
 
     fun lessThan(a: Duration, b: Duration): Boolean {
-        return a.compareTo(b) < 0
+        return a < b
     }
 }

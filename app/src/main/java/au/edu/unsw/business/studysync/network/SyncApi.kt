@@ -22,7 +22,7 @@ interface SyncApiService {
     suspend fun identify(@Field("subject_id") subjectId: String): ApiResponse<IdentifyResponse>
 
     @GET("api/get-group-and-limit")
-    suspend fun getTestGroup(@Header("Authorization") authToken: String, @Query("subject_id") subjectId: String): ApiResponse<GetGroupAndLimitResponse>
+    suspend fun getGroupAndLimit(@Header("Authorization") authToken: String, @Query("subject_id") subjectId: String): ApiResponse<GetGroupAndLimitResponse>
 
     @POST("api/submit-report")
     suspend fun submitReport(@Header("Authorization") authToken: String, @Body reportPayload: ReportPayload): BasicApiResponse

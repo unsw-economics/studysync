@@ -12,6 +12,7 @@ import androidx.work.*
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
+import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.support.UsageUtils
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.viewmodels.MainViewModelFactory
@@ -77,8 +78,8 @@ class MainActivity : AppCompatActivity() {
     fun navigate() {
         val isIdentified = vm.subjectSettings.identified.value!!
         val isPermitted = vm.usageAccessEnabled.value!!
-        val isBaseline = LocalDate.now().isBefore(TREATMENT_START_DATE)
-        val isTreatment = vm.subjectSettings.treatmentGroup.value!! > GROUP_CONTROL
+        val isBaseline = TimeUtils.isBaseline()
+        val isTreatment = vm.subjectSettings.testGroup.value!! > GROUP_CONTROL
         val isTreatmentDebriefed = vm.subjectSettings.treatmentDebriefed.value!!
 
         when {
