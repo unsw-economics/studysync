@@ -1,9 +1,11 @@
 package au.edu.unsw.business.studysync.support
 
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_LENGTH
-import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
+import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
+import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_DATE
 import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
 import java.lang.Long.divideUnsigned
 import java.lang.Long.min
@@ -13,8 +15,16 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 object TimeUtils {
-    fun isBaseline(): Boolean {
-        return LocalDate.now().isBefore(TREATMENT_START_DATE)
+    fun getPeriod(date: LocalDate): String {
+        return when {
+            date.isBefore(TREATMENT_DATE) -> PERIOD_BASELINE
+            date.isBefore(OVER_DATE) -> PERIOD_EXPERIMENT
+            else -> PERIOD_OVER
+        }
+    }
+
+    fun getTodayPeriod(): String {
+        return getPeriod(LocalDate.now())
     }
 
     private fun extractHms(duration: Duration): Triple<Long, Long, Long> {
@@ -45,7 +55,7 @@ object TimeUtils {
     }
 
     fun getStudyPeriodAndDay(d: LocalDate): Pair<String, Int> {
-        val diff = ChronoUnit.DAYS.between(TREATMENT_START_DATE, d).toInt()
+        val diff = ChronoUnit.DAYS.between(TREATMENT_DATE, d).toInt()
 
         return if (diff >= 0) {
             Pair(PERIOD_EXPERIMENT, diff)

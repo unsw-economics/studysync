@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import au.edu.unsw.business.studysync.*
-import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_END_DATE
+import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
 import au.edu.unsw.business.studysync.databinding.FragmentDebriefBinding
 import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
@@ -59,7 +59,7 @@ class DebriefFragment : Fragment() {
             .append(getString(R.string.debrief_body_3))
             .bold {
                 color(lightGreen) {
-                    append(TREATMENT_END_DATE.toString())
+                    append(OVER_DATE.toString())
                 }
             }
             .append(getString(R.string.debrief_body_4))

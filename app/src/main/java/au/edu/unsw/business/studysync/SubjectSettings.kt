@@ -41,7 +41,7 @@ class SubjectSettings(
         _lastRecorded.value = LocalDate.parse(
             preferences.getString(
                 "last-recorded",
-                Environment.BASELINE_START_DATE_STRING
+                Environment.BASELINE_DATE_STRING
             )
         )
         _testGroup.value = preferences.getInt("test-group", 0)
@@ -81,7 +81,7 @@ class SubjectSettings(
         _identified.value = false
         _subjectId.value = null
         _authToken.value = null
-        _lastRecorded.value = Environment.BASELINE_START_DATE
+        _lastRecorded.value = Environment.BASELINE_DATE
         _testGroup.value = Constants.GROUP_UNASSIGNED
         _treatmentDebriefed.value = false
         _treatmentLimit.value = Duration.ofSeconds(1)

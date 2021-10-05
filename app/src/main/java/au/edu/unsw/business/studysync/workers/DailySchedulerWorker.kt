@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.constants.Constants.RECORD_AND_SUBMIT_WORK
 import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
 import au.edu.unsw.business.studysync.support.TimeUtils
@@ -24,17 +25,28 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
 
         Log.d("MainWork", "record and submit enqueued")
 
-        val now = ZonedDateTime.now()
         val tomorrow = LocalDate.now().plusDays(1)
-        val delay = Duration.between(now, tomorrow.atStartOfDay(ZONE_ID))
 
-        Log.d("MainWork", "enqueueing daily scheduler with time delay ${TimeUtils.digitalTimeHm(delay)}")
+        if (TimeUtils.getPeriod(tomorrow) != PERIOD_OVER) {
 
-        val nextRequest = createRequest(delay)
+            val now = ZonedDateTime.now()
+            val delay = Duration.between(now, tomorrow.atStartOfDay(ZONE_ID))
 
-        wm.enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.APPEND_OR_REPLACE, nextRequest)
+            Log.d(
+                "MainWork",
+                "enqueueing daily scheduler with time delay ${TimeUtils.digitalTimeHm(delay)}"
+            )
 
-        Log.d("MainWork", "daily scheduler enqueued")
+            val nextRequest = createRequest(delay)
+
+            wm.enqueueUniqueWork(
+                DAILY_SCHEDULER_WORK,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                nextRequest
+            )
+
+            Log.d("MainWork", "daily scheduler enqueued")
+        }
 
         return Result.success()
     }

@@ -5,8 +5,9 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 object Constants {
-    const val PERIOD_BASELINE = "baseline"
-    const val PERIOD_EXPERIMENT = "experiment"
+    const val PERIOD_BASELINE = "BASELINE"
+    const val PERIOD_EXPERIMENT = "EXPERIMENT"
+    const val PERIOD_OVER = "OVER"
     const val DEBUG_DATA = "DEBUG_DATA"
     const val GROUP_UNASSIGNED = -1
     const val GROUP_CONTROL = 0
@@ -19,23 +20,25 @@ object Environment {
         ZoneId.systemDefault()
     }
 
-    const val BASELINE_START_DATE_STRING = "2021-09-27"
-    val BASELINE_START_DATE: LocalDate by lazy {
-        LocalDate.parse(BASELINE_START_DATE_STRING)
+    const val BASELINE_DATE_STRING = "2021-09-27"
+    val BASELINE_DATE: LocalDate by lazy {
+        LocalDate.parse(BASELINE_DATE_STRING)
     }
 
 
-    const val TREATMENT_START_DATE_STRING = "2021-10-01"
-    val TREATMENT_START_DATE: LocalDate by lazy {
-        LocalDate.parse(TREATMENT_START_DATE_STRING)
+    // const val TREATMENT_DATE_STRING = "2021-10-11"
+    const val TREATMENT_DATE_STRING = "2021-10-01"
+    val TREATMENT_DATE: LocalDate by lazy {
+        LocalDate.parse(TREATMENT_DATE_STRING)
     }
 
-    const val TREATMENT_END_DATE_STRING = "2021-11-08"
-    val TREATMENT_END_DATE: LocalDate by lazy {
-        LocalDate.parse(TREATMENT_END_DATE_STRING)
+    // const val OVER_DATE_STRING = "2021-11-08"
+    const val OVER_DATE_STRING = "2021-10-07"
+    val OVER_DATE: LocalDate by lazy {
+        LocalDate.parse(OVER_DATE_STRING)
     }
 
     val BASELINE_LENGTH: Int by lazy {
-        ChronoUnit.DAYS.between(BASELINE_START_DATE, TREATMENT_START_DATE).toInt()
+        ChronoUnit.DAYS.between(BASELINE_DATE, TREATMENT_DATE).toInt()
     }
 }

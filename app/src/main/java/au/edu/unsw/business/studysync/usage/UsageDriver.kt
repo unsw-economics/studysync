@@ -85,7 +85,7 @@ class UsageDriver(private val application: StudySyncApplication) {
 
             reports.add(
                 DbReport(
-                    period,
+                    period.lowercase(),
                     day
                 )
             )

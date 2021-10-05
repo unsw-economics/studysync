@@ -11,13 +11,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.work.*
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
-import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.support.UsageUtils
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.viewmodels.MainViewModelFactory
 import au.edu.unsw.business.studysync.workers.DailySchedulerWorker
-import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,8 +49,12 @@ class MainActivity : AppCompatActivity() {
 
         navigate()
 
-        // clears all workers (for development)
-        // WorkManager.getInstance(applicationContext).cancelAllWork()
+        val period = TimeUtils.getTodayPeriod()
+
+        if (period == PERIOD_OVER) {
+            WorkManager.getInstance(applicationContext).cancelAllWork()
+            return
+        }
 
         val request = DailySchedulerWorker.createRequest()
 
@@ -76,18 +79,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigate() {
+        val period = TimeUtils.getTodayPeriod()
         val isIdentified = vm.subjectSettings.identified.value!!
         val isPermitted = vm.usageAccessEnabled.value!!
-        val isBaseline = TimeUtils.isBaseline()
         val isTreatment = vm.subjectSettings.testGroup.value!! > GROUP_CONTROL
         val isTreatmentDebriefed = vm.subjectSettings.treatmentDebriefed.value!!
 
         when {
+            period == "ENDED" ->
+                navigateIfDifferent(
+                    R.id.TerminalFragment,
+                    bundleOf(
+                        Pair("title", "Over Title"),
+                        Pair("body", "Over Body")
+                    )
+                )
             !isIdentified ->
                 navigateIfDifferent(R.id.LoginFragment)
             !isPermitted ->
                 navigateIfDifferent(R.id.RequestPermissionFragment)
-            isBaseline ->
+            period == "BASELINE" ->
                 navigateIfDifferent(
                     R.id.TerminalFragment,
                     bundleOf(

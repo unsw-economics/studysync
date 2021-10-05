@@ -16,6 +16,7 @@ import au.edu.unsw.business.studysync.network.SyncApi
 import au.edu.unsw.business.studysync.support.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class LoginFragment : Fragment() {
 
@@ -48,7 +49,7 @@ class LoginFragment : Fragment() {
 
                     val idData = idResponse.data!!
 
-                    if (TimeUtils.isBaseline()) {
+                    if (TimeUtils.getTodayPeriod() == "BASELINE") {
                         vm.identify(subjectId, idData.authToken)
                     } else {
                         val glResponse = SyncApi.service.getGroupAndLimit(idData.authToken, subjectId)
