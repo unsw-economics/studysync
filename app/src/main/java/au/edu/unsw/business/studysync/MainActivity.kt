@@ -5,29 +5,42 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.*
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
+import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
+import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
 import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.support.UsageUtils
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.viewmodels.MainViewModelFactory
 import au.edu.unsw.business.studysync.workers.DailySchedulerWorker
+import kotlinx.coroutines.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
 
     private lateinit var vm: MainViewModel
     private lateinit var navController: NavController
+
+    private val subjectSettings by lazy {
+        (application as StudySyncApplication).subjectSettings
+    }
 
     private val navOptions by lazy {
         NavOptions.Builder()
             .setEnterAnim(R.anim.nav_default_enter_anim)
             .setPopUpTo(R.id.nav_graph, true)
             .build()
+    }
+
+    private val workManager by lazy {
+        WorkManager.getInstance(applicationContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,15 +65,22 @@ class MainActivity : AppCompatActivity() {
         val period = TimeUtils.getTodayPeriod()
 
         if (period == PERIOD_OVER) {
-            WorkManager.getInstance(applicationContext).cancelAllWork()
+            vm.clearData()
             return
         }
 
-        val request = DailySchedulerWorker.createRequest()
+        if (period == PERIOD_EXPERIMENT && subjectSettings.identified.value!! && subjectSettings.testGroup.value!! == GROUP_UNASSIGNED) {
+            lifecycleScope.launch {
+                val result = RobustFetchTestParameters.fetchOrScheduleRetry(applicationContext, subjectSettings.authToken.value!!, subjectSettings.subjectId.value!!)
 
-        WorkManager.getInstance(applicationContext)
-            .enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.KEEP, request)
+                if (result.isSuccess) {
+                    val data = result.getOrNull()!!
+                    subjectSettings.setTestParameters(data.first, data.second)
+                }
+            }
+        }
 
+        workManager.enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.KEEP, DailySchedulerWorker.createRequest())
         Log.d("Main", "work enqueued")
     }
 
@@ -80,10 +100,10 @@ class MainActivity : AppCompatActivity() {
 
     fun navigate() {
         val period = TimeUtils.getTodayPeriod()
-        val isIdentified = vm.subjectSettings.identified.value!!
+        val isIdentified = subjectSettings.identified.value!!
         val isPermitted = vm.usageAccessEnabled.value!!
-        val isTreatment = vm.subjectSettings.testGroup.value!! > GROUP_CONTROL
-        val isTreatmentDebriefed = vm.subjectSettings.treatmentDebriefed.value!!
+        val isTreatment = subjectSettings.testGroup.value!! > GROUP_CONTROL
+        val isTreatmentDebriefed = subjectSettings.treatmentDebriefed.value!!
 
         when {
             period == "ENDED" ->

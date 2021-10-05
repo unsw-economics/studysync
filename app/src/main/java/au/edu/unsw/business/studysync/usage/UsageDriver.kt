@@ -1,7 +1,9 @@
 package au.edu.unsw.business.studysync.usage
 
+import android.content.Context
 import android.util.Log
-import au.edu.unsw.business.studysync.StudySyncApplication
+import au.edu.unsw.business.studysync.SubjectSettings
+import au.edu.unsw.business.studysync.database.AppDatabase
 import au.edu.unsw.business.studysync.database.DbAppReport
 import au.edu.unsw.business.studysync.database.DbReport
 import au.edu.unsw.business.studysync.network.ReportPayload
@@ -10,33 +12,26 @@ import au.edu.unsw.business.studysync.network.SyncApi
 import au.edu.unsw.business.studysync.support.TimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import java.time.Duration
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
 
-class UsageDriver(private val application: StudySyncApplication) {
-    private val reportDao = application.database.reportDao()
-    private val subjectSettings = application.subjectSettings
+class UsageDriver(private val context: Context, private val settings: SubjectSettings) {
+    private val database = AppDatabase.getDatabase(context)
+    private val reportDao = database.reportDao()
 
     suspend fun submitUnsyncedReports() {
         val payloadMap = getUnsyncedReportPayloads()
-        val authToken = subjectSettings.authToken.value!!
+        val authToken = settings.authToken.value!!
 
         withContext(Dispatchers.IO) {
             for ((_, payload) in payloadMap) {
-                try {
-                    Log.d("MainActivity", "Submitting $payload")
-                    SyncApi.service.submitReport(authToken, payload)
+                Log.d("MainActivity", "Submitting $payload")
+                SyncApi.service.submitReport(authToken, payload)
 
-                    Log.d("MainActivity", "Submitted")
-                    reportDao.markReportSynced(payload.period, payload.day)
-                } catch (e: HttpException) {
-                    val errorBody = e.response()?.errorBody()?.source().toString()
-                    Log.d("MainActivity", "Error: ${e.message}; $errorBody")
-                    // TODO handle exception properly
-                }
+                Log.d("MainActivity", "Submitted")
+                reportDao.markReportSynced(payload.period, payload.day)
             }
         }
     }
@@ -46,7 +41,7 @@ class UsageDriver(private val application: StudySyncApplication) {
             reportDao.getUnsyncedAppReports()
         }
 
-        val subjectId = subjectSettings.subjectId.value!!
+        val subjectId = settings.subjectId.value!!
         val payloadMap: MutableMap<Pair<String, Int>, ReportPayload> = HashMap()
 
         for (appReport in unsyncedAppReports) {
@@ -68,7 +63,7 @@ class UsageDriver(private val application: StudySyncApplication) {
     }
 
     suspend fun recordNewUsages() {
-        var date = subjectSettings.lastRecorded.value!!
+        var date = settings.lastRecorded.value!!
         val today = LocalDate.now()
 
         val reports: MutableList<DbReport> = LinkedList()
@@ -77,7 +72,7 @@ class UsageDriver(private val application: StudySyncApplication) {
         while (date.isBefore(today)) {
             val nextDate = date.plusDays(1)
             val usage = UsageStatsAnalyzer.computeUsage(
-                application,
+                context,
                 TimeUtils.toMilliseconds(date),
                 TimeUtils.toMilliseconds(nextDate)
             )
@@ -85,13 +80,12 @@ class UsageDriver(private val application: StudySyncApplication) {
 
             reports.add(
                 DbReport(
-                    period.lowercase(),
+                    period,
                     day
                 )
             )
 
             for ((appName, usage_ms) in usage) {
-                Log.d("MainActivity", "$period $day $appName ${usage_ms / 1000}")
                 appReports.add(DbAppReport(period, day, appName, usage_ms / 1000))
             }
 
@@ -102,12 +96,11 @@ class UsageDriver(private val application: StudySyncApplication) {
             reportDao.insertMultipleDayReports(reports, appReports)
         }
 
-        subjectSettings.setLastRecorded(today)
+        settings.setLastRecorded(today)
     }
 
     fun computeTodayUsage(): Duration {
-        val usageMap =
-            UsageStatsAnalyzer.computeUsage(application, TimeUtils.midnight(), TimeUtils.now())
+        val usageMap = UsageStatsAnalyzer.computeUsage(context, TimeUtils.midnight(), TimeUtils.now())
         return Duration.ofMillis(usageMap.map { it.value }.sum())
     }
 
@@ -122,11 +115,11 @@ class UsageDriver(private val application: StudySyncApplication) {
             dailyUsageMap[appReport.day] = dailyUsageMap.getOrDefault(appReport.day, 0) + appReport.usageSeconds
         }
 
-        val limit = subjectSettings.treatmentLimit.value!!.seconds
+        val limit = settings.treatmentLimit.value!!.seconds
 
         return dailyUsageMap
             .filter { it.value < limit }
             .map { it.value }
-            .sum().toDouble()
+            .count() * settings.testGroup.value!! * 0.5
     }
 }

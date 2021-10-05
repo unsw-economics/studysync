@@ -5,14 +5,18 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 object Constants {
-    const val PERIOD_BASELINE = "BASELINE"
-    const val PERIOD_EXPERIMENT = "EXPERIMENT"
-    const val PERIOD_OVER = "OVER"
+    // keep lowercase for database compatibility
+    const val PERIOD_BASELINE = "baseline"
+    const val PERIOD_EXPERIMENT = "experiment"
+    const val PERIOD_OVER = "over"
+
     const val DEBUG_DATA = "DEBUG_DATA"
     const val GROUP_UNASSIGNED = -1
     const val GROUP_CONTROL = 0
     const val RECORD_AND_SUBMIT_WORK = "RECORD_AND_SUBMIT_WORK"
     const val DAILY_SCHEDULER_WORK = "DAILY_SCHEDULER_WORK"
+    const val FETCH_TEST_PARAMS_WORK = "FETCH_TEST_PARAMS_WORK"
+    const val PREFERENCES_NAME = "studysync-config"
 }
 
 object Environment {
@@ -24,7 +28,6 @@ object Environment {
     val BASELINE_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_DATE_STRING)
     }
-
 
     // const val TREATMENT_DATE_STRING = "2021-10-11"
     const val TREATMENT_DATE_STRING = "2021-10-01"

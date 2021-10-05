@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import au.edu.unsw.business.studysync.viewmodels.LoginViewModel
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
+import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
 import au.edu.unsw.business.studysync.network.SyncApi
 import au.edu.unsw.business.studysync.support.TimeUtils
 import kotlinx.coroutines.delay
@@ -52,15 +53,14 @@ class LoginFragment : Fragment() {
                     if (TimeUtils.getTodayPeriod() == "BASELINE") {
                         vm.identify(subjectId, idData.authToken)
                     } else {
-                        val glResponse = SyncApi.service.getGroupAndLimit(idData.authToken, subjectId)
+                        val glResult = RobustFetchTestParameters.fetch(idData.authToken, subjectId)
 
-                        if (glResponse.message != null) throw Exception(glResponse.message)
+                        if (glResult.isFailure) {
+                            throw glResult.exceptionOrNull()!!
+                        }
 
-                        val glData = glResponse.data!!
-
-                        if (glData.testGroup == null) throw Exception("Test group not found, please contact us.")
-
-                        vm.identifyFully(subjectId, idData.authToken, glData.testGroup, glData.treatmentLimit ?: 0)
+                        val (testGroup, treatmentLimit) = glResult.getOrNull()!!
+                        vm.identifyFully(subjectId, idData.authToken, testGroup, treatmentLimit)
                     }
                 } catch (e: Exception) {
                     Log.d("MainActivity", "Error: ${e.message}")

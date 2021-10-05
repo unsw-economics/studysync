@@ -4,6 +4,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import au.edu.unsw.business.studysync.StudySyncApplication
 import au.edu.unsw.business.studysync.support.UsageUtils
 import com.jakewharton.rxrelay3.PublishRelay
@@ -12,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel(application: StudySyncApplication): AndroidViewModel(application) {
+class MainViewModel(private val application: StudySyncApplication): AndroidViewModel(application) {
 
     private val _navigateEvents: PublishRelay<Unit> = PublishRelay.create()
     val navigateEvents get(): Observable<Unit> = _navigateEvents
@@ -55,6 +56,8 @@ class MainViewModel(application: StudySyncApplication): AndroidViewModel(applica
             withContext(Dispatchers.IO) {
                 database.clearAllTables()
             }
+
+            WorkManager.getInstance(application).cancelAllWork()
 
             _navigateEvents.accept(Unit)
         }

@@ -5,14 +5,13 @@ import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import au.edu.unsw.business.studysync.constants.Constants
+import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Environment
+import au.edu.unsw.business.studysync.constants.Environment.BASELINE_DATE_STRING
 import java.time.Duration
 import java.time.LocalDate
 
-class SubjectSettings(
-    private val preferences: SharedPreferences
-) {
-
+class SubjectSettings(private val preferences: SharedPreferences) {
     private val _identified = MutableLiveData<Boolean>()
     val identified get(): LiveData<Boolean> = _identified
 
@@ -35,18 +34,14 @@ class SubjectSettings(
     val treatmentLimit get(): LiveData<Duration> = _treatmentLimit
 
     init {
-        _identified.value = preferences.getBoolean("identified", false)
-        _subjectId.value = preferences.getString("subject-id", null)
-        _authToken.value = preferences.getString("auth-token", null)
-        _lastRecorded.value = LocalDate.parse(
-            preferences.getString(
-                "last-recorded",
-                Environment.BASELINE_DATE_STRING
-            )
-        )
-        _testGroup.value = preferences.getInt("test-group", 0)
-        _treatmentDebriefed.value = preferences.getBoolean("treatment-debriefed", false)
-        _treatmentLimit.value = Duration.ofSeconds(preferences.getInt("treatment-limit", 0).toLong())
+        val static = StaticSubjectSettings(preferences)
+        _identified.value = static.identified
+        _subjectId.value = static.subjectId
+        _authToken.value = static.authToken
+        _lastRecorded.value = static.lastRecorded
+        _testGroup.value = static.testGroup
+        _treatmentDebriefed.value = static.treatmentDebriefed
+        _treatmentLimit.value = static.treatmentLimit
     }
 
     fun identify(subjectId: String, authToken: String) {
@@ -82,9 +77,9 @@ class SubjectSettings(
         _subjectId.value = null
         _authToken.value = null
         _lastRecorded.value = Environment.BASELINE_DATE
-        _testGroup.value = Constants.GROUP_UNASSIGNED
+        _testGroup.value = GROUP_UNASSIGNED
         _treatmentDebriefed.value = false
-        _treatmentLimit.value = Duration.ofSeconds(1)
+        _treatmentLimit.value = Duration.ZERO
     }
 
     fun setLastRecorded(date: LocalDate) {
@@ -102,4 +97,14 @@ class SubjectSettings(
 
         _treatmentDebriefed.value = true
     }
+}
+
+data class StaticSubjectSettings(val preferences: SharedPreferences) {
+    val identified: Boolean = preferences.getBoolean("identified", false)
+    val subjectId: String? = preferences.getString("subject-id", null)
+    val authToken: String? = preferences.getString("auth-token", null)
+    val lastRecorded: LocalDate = LocalDate.parse(preferences.getString("last-recorded", BASELINE_DATE_STRING)!!)
+    val testGroup: Int = preferences.getInt("test-group", GROUP_UNASSIGNED)
+    val treatmentDebriefed: Boolean = preferences.getBoolean("treatment-debriefed", false)
+    val treatmentLimit: Duration = Duration.ofSeconds(preferences.getInt("treatment-limit", 0).toLong())
 }
