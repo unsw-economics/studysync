@@ -1,12 +1,13 @@
-package au.edu.unsw.business.studysync
+package au.edu.unsw.business.studysync.viewmodels
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import au.edu.unsw.business.studysync.StudySyncApplication
 import au.edu.unsw.business.studysync.database.DbAppReport
 import au.edu.unsw.business.studysync.database.DbReport
-import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
+import au.edu.unsw.business.studysync.support.UsageUtils
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,7 @@ class MainViewModel(application: StudySyncApplication): AndroidViewModel(applica
     val subjectSettings = application.subjectSettings
 
     init {
-        _usageAccessEnabled.value = UsageStatsNegotiator.hasUsageStatsPermission(application)
+        _usageAccessEnabled.value = UsageUtils.hasUsageStatsPermission(application)
     }
 
     fun setUsageAccessEnabled(isEnabled: Boolean) {

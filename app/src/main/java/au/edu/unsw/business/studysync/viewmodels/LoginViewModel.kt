@@ -1,4 +1,4 @@
-package au.edu.unsw.business.studysync
+package au.edu.unsw.business.studysync.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import au.edu.unsw.business.studysync.LoginViewModel
-import au.edu.unsw.business.studysync.MainViewModel
+import au.edu.unsw.business.studysync.viewmodels.LoginViewModel
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
 import au.edu.unsw.business.studysync.network.SyncApi
 import kotlinx.coroutines.delay

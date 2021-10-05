@@ -14,6 +14,9 @@ import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.support.TimeUtils.midnight
 import au.edu.unsw.business.studysync.support.TimeUtils.now
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer.computeUsage
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
+import au.edu.unsw.business.studysync.viewmodels.TreatmentViewModel
+import au.edu.unsw.business.studysync.viewmodels.TreatmentViewModelFactory
 import java.time.Duration
 
 class TreatmentFragment: Fragment() {

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="au.edu.unsw.business.studysync.MainViewModel" />
+            type="au.edu.unsw.business.studysync.viewmodels.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

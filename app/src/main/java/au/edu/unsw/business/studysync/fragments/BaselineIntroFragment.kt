@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import au.edu.unsw.business.studysync.DebugActivity
 import au.edu.unsw.business.studysync.MainActivity
-import au.edu.unsw.business.studysync.MainViewModel
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.constants.Constants.DEBUG_DATA
 import au.edu.unsw.business.studysync.database.DbAppReport
 import au.edu.unsw.business.studysync.database.DbReport

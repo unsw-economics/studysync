@@ -16,6 +16,9 @@ import au.edu.unsw.business.studysync.*
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_END_DATE
 import au.edu.unsw.business.studysync.databinding.FragmentDebriefBinding
 import au.edu.unsw.business.studysync.support.TimeUtils
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
+import au.edu.unsw.business.studysync.viewmodels.TreatmentViewModel
+import au.edu.unsw.business.studysync.viewmodels.TreatmentViewModelFactory
 
 class DebriefFragment : Fragment() {
 

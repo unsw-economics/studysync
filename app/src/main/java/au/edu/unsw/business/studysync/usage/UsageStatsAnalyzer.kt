@@ -4,6 +4,8 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import au.edu.unsw.business.studysync.support.PackageUtils
+import au.edu.unsw.business.studysync.support.UsageUtils
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -32,7 +34,7 @@ object UsageStatsAnalyzer {
             ) continue
 
             val packageName = event.packageName
-            val appName = UsageStatsNegotiator.getAppName(context, packageName)
+            val appName = PackageUtils.getAppName(context, packageName)
 
             filteredEvents.add(Triple(appName, type, event.timeStamp))
 
@@ -98,7 +100,7 @@ object UsageStatsAnalyzer {
         val usageMap: MutableMap<String, Long> = HashMap()
 
         for (usage in stats) {
-            val appName = UsageStatsNegotiator.getAppName(context, usage.packageName)
+            val appName = PackageUtils.getAppName(context, usage.packageName)
             usageMap[appName] = usageMap.getOrDefault(appName, 0) + usage.totalTimeInForeground
         }
 

@@ -1,8 +1,9 @@
-package au.edu.unsw.business.studysync
+package au.edu.unsw.business.studysync.viewmodels
 
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import au.edu.unsw.business.studysync.StudySyncApplication
 import java.time.Duration
 
 class TreatmentViewModel(application: StudySyncApplication): AndroidViewModel(application) {
@@ -24,7 +25,6 @@ class TreatmentViewModel(application: StudySyncApplication): AndroidViewModel(ap
         _timeSpentToday.value = Duration.ZERO
         // TODO Yet to implement search for how much they have earned in the treatment period
         _valueEarned.value = 0.0
-        // TODO Assumption for now that preferences is set
         _dailyIncentive.value = application.subjectSettings.treatmentGroup.value!! * 0.5
     }
 

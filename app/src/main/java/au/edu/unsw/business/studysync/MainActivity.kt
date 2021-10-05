@@ -12,9 +12,10 @@ import androidx.work.*
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_START_DATE
-import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
+import au.edu.unsw.business.studysync.support.UsageUtils
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
+import au.edu.unsw.business.studysync.viewmodels.MainViewModelFactory
 import au.edu.unsw.business.studysync.workers.DailySchedulerWorker
-import java.time.Duration
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
@@ -39,7 +40,8 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        vm = ViewModelProvider(this, MainViewModelFactory(application as StudySyncApplication)).get(MainViewModel::class.java)
+        vm = ViewModelProvider(this, MainViewModelFactory(application as StudySyncApplication)).get(
+            MainViewModel::class.java)
 
         vm.navigateEvents.subscribe {
             navigate()
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val isPermitted = UsageStatsNegotiator.hasUsageStatsPermission(applicationContext)
+        val isPermitted = UsageUtils.hasUsageStatsPermission(applicationContext)
 
         if (vm.usageAccessEnabled.value != isPermitted) {
             vm.setUsageAccessEnabled(isPermitted)

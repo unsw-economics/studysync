@@ -4,10 +4,10 @@
     <data>
         <variable
             name="vm"
-            type="au.edu.unsw.business.studysync.MainViewModel" />
+            type="au.edu.unsw.business.studysync.viewmodels.MainViewModel" />
         <variable
             name="treatmentVm"
-            type="au.edu.unsw.business.studysync.TreatmentViewModel" />
+            type="au.edu.unsw.business.studysync.viewmodels.TreatmentViewModel" />
         <variable
             name="timeUtils"
             type="au.edu.unsw.business.studysync.support.TimeUtils" />

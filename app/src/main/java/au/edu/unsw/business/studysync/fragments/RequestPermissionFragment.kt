@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import au.edu.unsw.business.studysync.MainActivity
-import au.edu.unsw.business.studysync.MainViewModel
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.databinding.FragmentRequestPermissionBinding
-import au.edu.unsw.business.studysync.usage.UsageStatsNegotiator
+import au.edu.unsw.business.studysync.support.UsageUtils
 
 class RequestPermissionFragment : Fragment() {
 
@@ -33,7 +33,7 @@ class RequestPermissionFragment : Fragment() {
         binding.vm = vm
 
         binding.requestPermissionButton.setOnClickListener {
-            UsageStatsNegotiator.openUsageAccessPermissionsMenu(requireContext())
+            UsageUtils.openUsageAccessPermissionsMenu(requireContext())
         }
 
         binding.continueButton.setOnClickListener {
