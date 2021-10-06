@@ -49,10 +49,6 @@ class TreatmentFragment: Fragment() {
                 binding.progress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.red))
             }
         }
-
-        binding.clearDataButton.setOnClickListener {
-            vm.clearData()
-        }
     }
 
     override fun onResume() {

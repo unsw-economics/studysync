@@ -10,7 +10,7 @@ import androidx.navigation.fragment.navArgs
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.databinding.FragmentTerminalBinding
 
-class TerminalFragment : Fragment() {
+class TerminalFragment: Fragment() {
 
     private var _binding: FragmentTerminalBinding? = null
     private val binding get() = _binding!!
@@ -32,10 +32,6 @@ class TerminalFragment : Fragment() {
 
         binding.title = args.title
         binding.body = args.body
-
-        binding.clearDataButton.setOnClickListener {
-            vm.clearData()
-        }
     }
 
     override fun onDestroyView() {

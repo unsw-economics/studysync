@@ -63,8 +63,10 @@ class MainActivity: AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        vm = ViewModelProvider(this, MainViewModelFactory(application as StudySyncApplication)).get(
+        vm = ViewModelProvider(this, MainViewModelFactory(application)).get(
             MainViewModel::class.java)
+
+        navigate()
 
         val period = TimeUtils.getTodayPeriod()
 
@@ -73,8 +75,13 @@ class MainActivity: AppCompatActivity() {
             return
         }
 
+        if (vm.usageAccessEnabled.value!!) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                usageDriver.recordNewUsages()
+            }
+        }
+
         vm.usageAccessEnabled.observe(this) {
-            Log.d("App/Main", "$it")
             if (it) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     usageDriver.recordNewUsages()
@@ -85,9 +92,6 @@ class MainActivity: AppCompatActivity() {
         vm.navigateEvents.subscribe {
             navigate()
         }
-
-        navigate()
-
 
         if (period == PERIOD_EXPERIMENT && subjectSettings.identified.value!! && subjectSettings.testGroup.value!! == GROUP_UNASSIGNED) {
             lifecycleScope.launch {

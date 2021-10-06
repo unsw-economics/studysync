@@ -102,8 +102,8 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
     }
 
     fun computeTodayUsage(): Duration {
-        val usageMap = UsageStatsAnalyzer.computeUsage(context, TimeUtils.midnight(), TimeUtils.now())
-        return Duration.ofMillis(usageMap.map { it.value }.sum())
+        val usage = UsageStatsAnalyzer.computeUsage(context, TimeUtils.midnight(), TimeUtils.now())
+        return Duration.ofMillis(usage.map { it.value }.sum())
     }
 
     suspend fun computeTotalEarned(): Double {
@@ -120,7 +120,9 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
         val limit = settings.treatmentLimit.value!!.seconds
 
         return dailyUsageMap
-            .filter { it.value < limit }
+            .filter {
+                Log.d("App/UsageDriver", "Day ${it.key} usage: ${TimeUtils.digitalTimeHm(Duration.ofSeconds(it.value))}")
+                it.value < limit }
             .map { it.value }
             .count() * settings.testGroup.value!! * 0.5
     }
