@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import au.edu.unsw.business.studysync.StudySyncApplication
+import au.edu.unsw.business.studysync.constants.Constants.GROUP_INTERCEPT
 import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer
 import kotlinx.coroutines.MainScope
@@ -18,16 +19,20 @@ class TreatmentViewModel(private val application: StudySyncApplication): Android
     private val _todayUsage = MutableLiveData<Duration>()
     val todayUsage get(): LiveData<Duration> = _todayUsage
 
-    private val _totalEarned = MutableLiveData<Double>()
-    val totalEarned get(): LiveData<Double> = _totalEarned
+    private val _successes = MutableLiveData<Int>()
+    val successes get(): LiveData<Int> = _successes
 
     private val _dailyIncentive = MutableLiveData<Double>()
     val dailyIncentive get(): LiveData<Double> = _dailyIncentive
 
+    private var _interceptGroup: Boolean?
+    val interceptGroup get(): Boolean = _interceptGroup!!
+
     init {
         _todayUsage.value = Duration.ZERO
-        _totalEarned.value = 0.0
-        _dailyIncentive.value = application.subjectSettings.testGroup.value!! * 0.5
+        _successes.value = 0
+        _dailyIncentive.value = application.subjectSettings.treatmentIntensity.value!! * 0.5
+        _interceptGroup = application.subjectSettings.testGroup.value!! == GROUP_INTERCEPT
     }
 
     fun setTodayUsage() {
@@ -36,9 +41,9 @@ class TreatmentViewModel(private val application: StudySyncApplication): Android
         }
     }
 
-    fun setTotalEarned() {
+    fun setSuccesses() {
         viewModelScope.launch {
-            _totalEarned.value = usageDriver.computeTotalEarned()
+            _successes.value = usageDriver.countSuccesses()
         }
     }
 

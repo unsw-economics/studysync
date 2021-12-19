@@ -59,8 +59,8 @@ class LoginFragment : Fragment() {
                             throw glResult.exceptionOrNull()!!
                         }
 
-                        val (testGroup, treatmentLimit) = glResult.getOrNull()!!
-                        vm.identifyFully(subjectId, idData.authToken, testGroup, treatmentLimit)
+                        val (testGroup, treatmentIntensity, treatmentLimit) = glResult.getOrNull()!!
+                        vm.identifyFully(subjectId, idData.authToken, testGroup, treatmentIntensity, treatmentLimit)
                     }
                 } catch (e: Exception) {
                     Log.d("App/LoginFragment", "login error: ${e.message}")

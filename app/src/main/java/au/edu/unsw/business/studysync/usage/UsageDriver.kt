@@ -106,7 +106,7 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
         return Duration.ofMillis(usage.map { it.value }.sum())
     }
 
-    suspend fun computeTotalEarned(): Double {
+    suspend fun countSuccesses(): Int {
         val appReports = withContext(Dispatchers.IO) {
             reportDao.getExperimentAppReports()
         }
@@ -124,6 +124,6 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
                 Log.d("App/UsageDriver", "Day ${it.key} usage: ${TimeUtils.digitalTimeHm(Duration.ofSeconds(it.value))}")
                 it.value < limit }
             .map { it.value }
-            .count() * settings.testGroup.value!! * 0.5
+            .count()
     }
 }

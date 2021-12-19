@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_alpha">#CCFFFFFF</color>
     <color name="green">#3FAB51</color>
     <color name="light_green">#82E292</color>
+    <color name="med_green">#6ADB58</color>
+    <color name="med_green_alpha">#CC6ADB58</color>
     <color name="grey">#3A3E4D</color>
     <color name="light_grey">#717685</color>
     <color name="orange">#F07F2D</color>

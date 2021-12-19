@@ -18,9 +18,9 @@ class FetchTestParametersWorker(private val context: Context, params: WorkerPara
                 throw result.exceptionOrNull()!!
             }
 
-            val (testGroup, treatmentLimit) = result.getOrNull()!!
+            val (testGroup, treatmentIntensity, treatmentLimit) = result.getOrNull()!!
 
-            subjectSettings.setTestParameters(testGroup, treatmentLimit)
+            subjectSettings.setTestParameters(testGroup, treatmentIntensity, treatmentLimit)
 
             return Result.success()
         } catch (ex: Exception) {

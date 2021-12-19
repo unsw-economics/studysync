@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import au.edu.unsw.business.studysync.*
 import au.edu.unsw.business.studysync.databinding.FragmentTreatmentBinding
+import au.edu.unsw.business.studysync.support.MessageUtils
 import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.viewmodels.TreatmentViewModel
@@ -38,11 +39,12 @@ class TreatmentFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        treatmentVm.setTotalEarned()
+        treatmentVm.setSuccesses()
 
         binding.vm = vm
         binding.treatmentVm = treatmentVm
         binding.timeUtils = TimeUtils
+        binding.messageUtils = MessageUtils
 
         treatmentVm.todayUsage.observe(viewLifecycleOwner) {
             if (!TimeUtils.lessThan(it, vm.subjectSettings.treatmentLimit.value!!)) {

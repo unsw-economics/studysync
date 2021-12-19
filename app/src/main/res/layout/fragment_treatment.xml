@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="vm"
             type="au.edu.unsw.business.studysync.viewmodels.MainViewModel" />
@@ -11,6 +12,9 @@
         <variable
             name="timeUtils"
             type="au.edu.unsw.business.studysync.support.TimeUtils" />
+        <variable
+            name="messageUtils"
+            type="au.edu.unsw.business.studysync.support.MessageUtils" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="72dp"
-                android:text="@string/treatment_hint"
+                android:text="@{treatmentVm.interceptGroup ? @string/treatment_hint_intercept : @string/treatment_hint}"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -87,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/work_sans_light"
                         android:text="@{@string/max_usage_format(timeUtils.digitalTimeHm(vm.subjectSettings.treatmentLimit))}"
-                        android:textColor="#888888"
+                        android:textColor="@color/light_grey"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -97,7 +101,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="@{treatmentVm.interceptGroup ? View.GONE : View.VISIBLE}">
 
                 <TextView
                     android:id="@+id/incentiveLabel"
@@ -105,7 +110,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@string/treatment_incentive_label"
-                    android:textColor="#CCFFFFFF"
+                    android:textColor="@color/white_alpha"
                     android:textSize="20sp" />
 
                 <TextView
@@ -124,7 +129,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="@{treatmentVm.interceptGroup ? View.GONE : View.VISIBLE}">
 
                 <TextView
                     android:id="@+id/totalEarnedLabel"
@@ -132,7 +138,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@string/treatment_earned_label"
-                    android:textColor="#CC6ADB58"
+                    android:textColor="@color/med_green_alpha"
                     android:textSize="20sp" />
 
                 <TextView
@@ -142,9 +148,26 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/work_sans_medium"
                     android:gravity="end|center_vertical"
-                    android:text="@{@string/dollar_format(treatmentVm.totalEarned)}"
-                    android:textColor="#6ADB58"
+                    android:text="@{@string/dollar_format((double) treatmentVm.successes * treatmentVm.dailyIncentive)}"
+                    android:textColor="@color/med_green"
                     android:textSize="30sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="@{treatmentVm.interceptGroup ? View.VISIBLE : View.GONE}">
+
+                <TextView
+                    android:id="@+id/successes_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="@{messageUtils.successesMessage(treatmentVm.successes, @color/med_green)}"
+                    android:textSize="20sp" />
+
             </LinearLayout>
 
         </LinearLayout>

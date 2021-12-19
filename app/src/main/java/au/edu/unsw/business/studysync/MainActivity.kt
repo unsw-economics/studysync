@@ -99,7 +99,7 @@ class MainActivity: AppCompatActivity() {
 
                 if (result.isSuccess) {
                     val data = result.getOrNull()!!
-                    subjectSettings.setTestParameters(data.first, data.second)
+                    subjectSettings.setTestParameters(data.first, data.second, data.third)
                 }
             }
         }

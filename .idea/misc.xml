@@ -18,7 +18,7 @@
         <entry key="app/src/main/res/layout/fragment_request_permission.xml" value="0.21603297211526304" />
         <entry key="app/src/main/res/layout/fragment_terminal.xml" value="0.3989422215699742" />
         <entry key="app/src/main/res/layout/fragment_terminal_debrief.xml" value="0.19479166666666667" />
-        <entry key="app/src/main/res/layout/fragment_treatment.xml" value="0.27381417641469297" />
+        <entry key="app/src/main/res/layout/fragment_treatment.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_treatment_debrief.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.25364583333333335" />
       </map>

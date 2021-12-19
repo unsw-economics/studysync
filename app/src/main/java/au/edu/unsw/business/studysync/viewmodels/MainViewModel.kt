@@ -38,14 +38,9 @@ class MainViewModel(private val application: StudySyncApplication): AndroidViewM
         _navigateEvents.accept(Unit)
     }
 
-    fun identifyFully(subjectId: String, authToken: String, testGroup: Int, treatmentLimit: Int) {
+    fun identifyFully(subjectId: String, authToken: String, testGroup: Int, treatmentIntensity: Int, treatmentLimit: Int) {
         subjectSettings.identify(subjectId, authToken)
-        subjectSettings.setTestParameters(testGroup, treatmentLimit)
-        _navigateEvents.accept(Unit)
-    }
-
-    fun setTestParameters(testGroup: Int, treatmentLimit: Int) {
-        subjectSettings.setTestParameters(testGroup, treatmentLimit)
+        subjectSettings.setTestParameters(testGroup, treatmentIntensity, treatmentLimit)
         _navigateEvents.accept(Unit)
     }
 

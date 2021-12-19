@@ -13,8 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import au.edu.unsw.business.studysync.*
+import au.edu.unsw.business.studysync.constants.Constants.GROUP_INTERCEPT
 import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
 import au.edu.unsw.business.studysync.databinding.FragmentDebriefBinding
+import au.edu.unsw.business.studysync.support.MessageUtils
 import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.viewmodels.TreatmentViewModel
@@ -42,29 +44,15 @@ class DebriefFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val lightGreen = ContextCompat.getColor(requireActivity().applicationContext, R.color.light_green)
-
-        val bodySpan = SpannableStringBuilder(getString(R.string.debrief_body_1))
-            .bold {
-                color(lightGreen) {
-                    append(String.format("$%.2f", treatmentVm.dailyIncentive.value!!))
-                }
-            }
-            .append(getString(R.string.debrief_body_2))
-            .bold {
-                color(lightGreen) {
-                    append(TimeUtils.humanizeTimeHm(vm.subjectSettings.treatmentLimit.value!!))
-                }
-            }
-            .append(getString(R.string.debrief_body_3))
-            .bold {
-                color(lightGreen) {
-                    append(OVER_DATE.toString())
-                }
-            }
-            .append(getString(R.string.debrief_body_4))
-
-        binding.body = bodySpan.toSpannable()
+        binding.body = if (vm.subjectSettings.testGroup.value!! == GROUP_INTERCEPT) {
+            "Treatment 1 Debrief Body"
+        } else {
+            MessageUtils.treatmentAffineDebrief(
+                treatmentVm.dailyIncentive.value!!,
+                TimeUtils.humanizeTimeHm(vm.subjectSettings.treatmentLimit.value!!),
+                ContextCompat.getColor(requireContext(), R.color.light_green)
+            )
+        }
 
         binding.continueButton.setOnClickListener {
             vm.completeDebrief()
