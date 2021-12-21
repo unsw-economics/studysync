@@ -6,9 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import au.edu.unsw.business.studysync.StudySyncApplication
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_INTERCEPT
-import au.edu.unsw.business.studysync.support.TimeUtils
-import au.edu.unsw.business.studysync.usage.UsageStatsAnalyzer
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.time.Duration
 

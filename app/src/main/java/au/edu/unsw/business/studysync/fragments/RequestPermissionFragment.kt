@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import au.edu.unsw.business.studysync.MainActivity
-import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.databinding.FragmentRequestPermissionBinding
 import au.edu.unsw.business.studysync.support.UsageUtils
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 
 class RequestPermissionFragment : Fragment() {
 

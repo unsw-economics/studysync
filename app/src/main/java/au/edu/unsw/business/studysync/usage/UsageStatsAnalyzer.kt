@@ -5,7 +5,6 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import au.edu.unsw.business.studysync.support.PackageUtils
-import au.edu.unsw.business.studysync.support.UsageUtils
 import java.util.*
 import kotlin.collections.HashMap
 

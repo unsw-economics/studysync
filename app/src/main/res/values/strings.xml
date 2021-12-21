@@ -2,17 +2,22 @@
     <string name="app_name">StudySync</string>
 
     <string name="login_hint">Please enter your ID to begin.</string>
-    <string name="login_id_placeholder">Subject ID</string>
+    <string name="login_id_placeholder">Participant ID</string>
     <string name="login_sign_in">Sign In</string>
-    <string name="request_permission_title">Hi. Welcome to the Smartphone and Mental Health Study.</string>
+    <string name="request_permission_title">Welcome to the Smartphone Study (HC210886)!</string>
     <string name="request_permission_body">When you click the button below, please scroll to the StudySync entry and permit usage access.</string>
     <string name="request_permission_enable_access">Enable Usage Access</string>
     <string name="request_permission_access_enabled">Usage Access Enabled</string>
-    <string name="treatment_hint">Stay under the limit to earn your incentive!</string>
-    <string name="treatment_hint_intercept">Keep your usage under the limit!</string>
+    <string name="baseline_title">Your usage data is now being shared with the study.</string>
+    <string name="control_title">You do not need to do anything.</string>
+    <string name="control_body">Simply keep the app installed for the duration of the study.\n\nThank you for your participation!</string>
+    <string name="treatment_hint">Stay under the daily limit to earn your reward!</string>
+    <string name="treatment_hint_intercept">Stay under the daily limit to hit your target!</string>
     <string name="treatment_incentive_label">Daily Incentive</string>
     <string name="treatment_earned_label">Total Earned</string>
     <string name="debrief_title">You have been selected for an additional branch of the study.</string>
+    <string name="over_title">The study is now over. Thank you for participating!</string>
+    <string name="over_body">Please check your email for the endline survey. Upon completion of the endline survey, your total earnings from the study (if applicable) along with $x for completing the surveys will be paid to your nominated PayID account within a week. If you have any questions, please contact the research team at unswsmartphonestudy@gmail.com.</string>
     <string name="button_continue">Continue</string>
     <string name="max_usage_format">Max %s</string>
     <string name="dollar_format">$%.2f</string>

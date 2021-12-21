@@ -8,7 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import au.edu.unsw.business.studysync.*
+import au.edu.unsw.business.studysync.MainActivity
+import au.edu.unsw.business.studysync.R
+import au.edu.unsw.business.studysync.StudySyncApplication
 import au.edu.unsw.business.studysync.databinding.FragmentTreatmentBinding
 import au.edu.unsw.business.studysync.support.MessageUtils
 import au.edu.unsw.business.studysync.support.TimeUtils

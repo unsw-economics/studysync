@@ -1,14 +1,23 @@
 package au.edu.unsw.business.studysync.workers
 
+import android.app.PendingIntent
 import android.content.Context
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
+import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
+import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.SubjectSettings
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_BOUNCE_WORK
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.PREFERENCES_NAME
 import au.edu.unsw.business.studysync.constants.Constants.RECORD_AND_SUBMIT_WORK
+import au.edu.unsw.business.studysync.constants.Constants.STUDY_PHASE_CHANNEL
+import au.edu.unsw.business.studysync.constants.Constants.TREATMENT_OVER_NOTIFICATION
+import au.edu.unsw.business.studysync.constants.Constants.TREATMENT_START_NOTIFICATION
 import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
+import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_DATE
 import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -40,7 +49,8 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
 
         Log.d("App/DailySchedulerWorker", "work enqueued (record${ if (subjectSettings.identified.value!!) ", submit" else "" })")
 
-        val tomorrow = LocalDate.now().plusDays(1)
+        val today = LocalDate.now()
+        val tomorrow = today.plusDays(1)
 
         if (!tomorrow.isAfter(OVER_DATE)) {
             workManager.enqueueUniqueWork(
@@ -50,6 +60,28 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
             )
 
             Log.d("App/DailySchedulerWorker", "DailySchedulerBounceWorker enqueued")
+        }
+
+        if (subjectSettings.identified.value!! && (today.isEqual(TREATMENT_DATE) || today.isEqual(OVER_DATE))) {
+            val packageManager = context.packageManager
+            val intent = packageManager.getLaunchIntentForPackage(context.packageName)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
+            val (title, text, notificationId) = if (today.isEqual(TREATMENT_DATE)) {
+                Triple("New Study Phase", "Please check the app for instructions.", TREATMENT_START_NOTIFICATION)
+            } else {
+                Triple("Study Completed", "The study is now over. Please check the app for instructions.", TREATMENT_OVER_NOTIFICATION)
+            }
+
+            val builder = NotificationCompat.Builder(context, STUDY_PHASE_CHANNEL)
+                .setSmallIcon(R.drawable.ic_science)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setPriority(PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+
+            NotificationManagerCompat.from(context).notify(notificationId, builder.build())
         }
 
         Log.d("App/DailySchedulerWorker", "success")

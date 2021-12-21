@@ -3,7 +3,6 @@ package au.edu.unsw.business.studysync.support
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Process
 import android.provider.Settings
 

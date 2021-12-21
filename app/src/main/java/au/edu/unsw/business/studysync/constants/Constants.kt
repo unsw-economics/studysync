@@ -20,6 +20,11 @@ object Constants {
     const val DAILY_SCHEDULER_BOUNCE_WORK = "DAILY_SCHEDULER_BOUNCE_WORK"
     const val FETCH_TEST_PARAMS_WORK = "FETCH_TEST_PARAMS_WORK"
     const val PREFERENCES_NAME = "studysync-config"
+
+    const val STUDY_PHASE_CHANNEL = "STUDY_PHASE_CHANNEL"
+
+    const val TREATMENT_START_NOTIFICATION = 0
+    const val TREATMENT_OVER_NOTIFICATION = 1
 }
 
 object Environment {
@@ -32,12 +37,12 @@ object Environment {
         LocalDate.parse(BASELINE_DATE_STRING)
     }
 
-    const val TREATMENT_DATE_STRING = "2021-12-19"
+    const val TREATMENT_DATE_STRING = "2021-12-20"
     val TREATMENT_DATE: LocalDate by lazy {
         LocalDate.parse(TREATMENT_DATE_STRING)
     }
 
-    const val OVER_DATE_STRING = "2021-12-22"
+    const val OVER_DATE_STRING = "2021-12-21"
     val OVER_DATE: LocalDate by lazy {
         LocalDate.parse(OVER_DATE_STRING)
     }

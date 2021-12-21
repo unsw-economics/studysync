@@ -1,8 +1,8 @@
 package au.edu.unsw.business.studysync.support
 
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
-import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_LENGTH
 import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_DATE

@@ -3,27 +3,31 @@ package au.edu.unsw.business.studysync
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.work.*
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
+import au.edu.unsw.business.studysync.constants.Environment
 import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
+import au.edu.unsw.business.studysync.support.MessageUtils
 import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.support.UsageUtils
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.viewmodels.MainViewModelFactory
 import au.edu.unsw.business.studysync.workers.DailySchedulerWorker
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity: AppCompatActivity() {
 
@@ -70,10 +74,7 @@ class MainActivity: AppCompatActivity() {
 
         val period = TimeUtils.getTodayPeriod()
 
-        if (period == PERIOD_OVER) {
-            vm.clearData()
-            return
-        }
+        if (period == PERIOD_OVER) return
 
         if (vm.usageAccessEnabled.value!!) {
             lifecycleScope.launch(Dispatchers.IO) {
@@ -135,8 +136,8 @@ class MainActivity: AppCompatActivity() {
                 navigateIfDifferent(
                     R.id.TerminalFragment,
                     bundleOf(
-                        Pair("title", "Over Title"),
-                        Pair("body", "Over Body")
+                        Pair("title", getString(R.string.over_title)),
+                        Pair("body", getString(R.string.over_body))
                     )
                 )
             !isIdentified ->
@@ -147,16 +148,16 @@ class MainActivity: AppCompatActivity() {
                 navigateIfDifferent(
                     R.id.TerminalFragment,
                     bundleOf(
-                        Pair("title", "Baseline Title"),
-                        Pair("body", "Baseline Body")
+                        Pair("title", getString(R.string.baseline_title)),
+                        Pair("body", MessageUtils.baselineBody(Environment.OVER_DATE, ContextCompat.getColor(application, R.color.light_green)))
                     )
                 )
             !isTreatment ->
                 navigateIfDifferent(
                     R.id.TerminalFragment,
                     bundleOf(
-                        Pair("title", "Control Title"),
-                        Pair("body", "Control Body")
+                        Pair("title", getString(R.string.control_title)),
+                        Pair("body", getString(R.string.control_body))
                     )
                 )
             !isTreatmentDebriefed ->

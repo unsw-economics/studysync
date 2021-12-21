@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import au.edu.unsw.business.studysync.constants.Constants
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Environment
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_DATE_STRING

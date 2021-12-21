@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
-import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.databinding.FragmentTerminalBinding
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 
 class TerminalFragment: Fragment() {
 

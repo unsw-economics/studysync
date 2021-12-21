@@ -9,7 +9,6 @@ import au.edu.unsw.business.studysync.constants.Constants.GROUP_AFFINE
 import au.edu.unsw.business.studysync.workers.FetchTestParametersWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.Exception
 
 object RobustFetchTestParameters {
     suspend fun fetch(authToken: String, subjectId: String): Result<Triple<Int, Int, Int>> {

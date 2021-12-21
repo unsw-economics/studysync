@@ -3,16 +3,25 @@ package au.edu.unsw.business.studysync.support
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.toSpannable
-import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.constants.Environment
+import java.time.LocalDate
 
 object MessageUtils {
+    fun baselineBody(endlineDate: LocalDate, @ColorInt highlightColor: Int): Spannable {
+        return SpannableStringBuilder("Please keep this app installed for the duration of the study. You will be asked to complete an endline survey on ")
+            .bold {
+                color(highlightColor) {
+                    append(endlineDate.toString())
+                }
+            }
+            .append(", at which point you will be given instructions regarding deletion of the app.\n\nThank you for your participation!")
+            .toSpannable()
+    }
     fun treatmentAffineDebrief(incentive: Double, limit: String, @ColorInt highlightColor: Int): Spannable {
-        return SpannableStringBuilder("From now until the end of the study, you will be rewarded ")
+        return SpannableStringBuilder("You will be rewarded ")
             .bold {
                 color(highlightColor) {
                     append(String.format("$%.2f", incentive))
@@ -24,13 +33,13 @@ object MessageUtils {
                     append(limit)
                 }
             }
-            .append(".\n\nAs before, please keep this app installed until ")
+            .append(".\n\nThe app will keep a running tally of the reward that you have earned over the four week period starting on ")
             .bold {
                 color(highlightColor) {
-                    append(Environment.OVER_DATE.toString())
+                    append(Environment.TREATMENT_DATE.toString())
                 }
             }
-            .append(". When the study concludes, we will ask you for your payment details so that you can be compensated.\n\nThank you for your participation!")
+            .append(". Please keep this app installed for the duration of the study and thank you for your participation!")
             .toSpannable()
     }
 

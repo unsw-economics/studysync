@@ -9,15 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import au.edu.unsw.business.studysync.viewmodels.LoginViewModel
-import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
 import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
 import au.edu.unsw.business.studysync.network.SyncApi
 import au.edu.unsw.business.studysync.support.TimeUtils
+import au.edu.unsw.business.studysync.viewmodels.LoginViewModel
+import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 class LoginFragment : Fragment() {
 
