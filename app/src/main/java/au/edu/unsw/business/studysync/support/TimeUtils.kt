@@ -25,6 +25,9 @@ object TimeUtils {
 
     fun getTodayPeriod(): String {
         return getPeriod(LocalDate.now())
+
+        // for testing
+        // return getPeriod(ZonedDateTime.now().minusMinutes(105).toLocalDate())
     }
 
     private fun extractHms(duration: Duration): Triple<Long, Long, Long> {

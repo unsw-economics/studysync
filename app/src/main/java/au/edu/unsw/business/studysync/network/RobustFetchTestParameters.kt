@@ -6,6 +6,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import au.edu.unsw.business.studysync.constants.Constants.FETCH_TEST_PARAMS_WORK
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_AFFINE
+import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.workers.FetchTestParametersWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,10 +26,10 @@ object RobustFetchTestParameters {
 
             if (data.testGroup == GROUP_AFFINE && data.treatmentIntensity == null) return Result.failure(Exception("No treatment intensity found for subject. Please report this error."))
 
-            if (data.treatmentLimit == null) return Result.failure(Exception("No treatment limit found for subject. Please report this error."))
+            if (data.testGroup != GROUP_CONTROL && data.treatmentLimit == null) return Result.failure(Exception("No treatment limit found for subject. Please report this error."))
 
             Log.d("App/RobustFetchTestParameters (fetch)", "success")
-            return Result.success(Triple(data.testGroup, data.treatmentIntensity ?: 0, data.treatmentLimit))
+            return Result.success(Triple(data.testGroup, data.treatmentIntensity ?: 0, data.treatmentLimit ?: 0))
         } catch (ex: Exception) {
             Log.d("App/RobustFetchTestParameters (fetch)", "failure")
             return Result.failure(ex)

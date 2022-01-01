@@ -13,7 +13,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
+import au.edu.unsw.business.studysync.constants.Constants.GROUP_AFFINE
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
+import au.edu.unsw.business.studysync.constants.Constants.GROUP_INTERCEPT
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
@@ -121,6 +123,12 @@ class MainActivity: AppCompatActivity() {
             if (navController.currentDestination!!.id != R.id.RequestPermissionFragment) {
                 navigate()
             }
+        } else if (
+            (subjectSettings.testGroup.value!! == GROUP_INTERCEPT || subjectSettings.testGroup.value!! == GROUP_AFFINE)
+            && navController.currentDestination!!.id == R.id.TerminalFragment
+            && TimeUtils.getTodayPeriod() == PERIOD_EXPERIMENT
+        ) {
+            navigate()
         }
     }
 
@@ -149,7 +157,7 @@ class MainActivity: AppCompatActivity() {
                     R.id.TerminalFragment,
                     bundleOf(
                         Pair("title", getString(R.string.baseline_title)),
-                        Pair("body", MessageUtils.baselineBody(Environment.OVER_DATE, ContextCompat.getColor(application, R.color.light_green)))
+                        Pair("body", MessageUtils.baselineBody(Environment.OVER_DATE, ContextCompat.getColor(application, R.color.light_green)).toString())
                     )
                 )
             !isTreatment ->
