@@ -129,6 +129,8 @@ class MainActivity: AppCompatActivity() {
             && TimeUtils.getTodayPeriod() == PERIOD_EXPERIMENT
         ) {
             navigate()
+        } else if (TimeUtils.getTodayPeriod() == PERIOD_OVER) {
+            navigate()
         }
     }
 

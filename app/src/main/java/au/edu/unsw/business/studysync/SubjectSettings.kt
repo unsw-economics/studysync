@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Environment
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_DATE_STRING
+import org.acra.ACRA
 import java.time.Duration
 import java.time.LocalDate
 
@@ -45,6 +46,10 @@ class SubjectSettings(private val preferences: SharedPreferences) {
         _treatmentIntensity.value = static.treatmentIntensity
         _treatmentDebriefed.value = static.treatmentDebriefed
         _treatmentLimit.value = static.treatmentLimit
+
+        if (static.subjectId != null) {
+            ACRA.errorReporter.putCustomData("SUBJECT_ID", static.subjectId)
+        }
     }
 
     fun identify(subjectId: String, authToken: String) {
@@ -54,6 +59,8 @@ class SubjectSettings(private val preferences: SharedPreferences) {
             putString("auth-token", authToken)
             commit()
         }
+
+        ACRA.errorReporter.putCustomData("SUBJECT_ID", subjectId)
 
         _identified.value = true
         _subjectId.value = subjectId

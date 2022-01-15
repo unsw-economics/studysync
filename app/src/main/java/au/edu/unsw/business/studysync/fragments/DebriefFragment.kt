@@ -41,14 +41,13 @@ class DebriefFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val limit = TimeUtils.humanizeTimeHm(vm.subjectSettings.treatmentLimit.value!!)
+        val highlightColor = ContextCompat.getColor(requireContext(), R.color.light_green)
+
         binding.body = if (vm.subjectSettings.testGroup.value!! == GROUP_INTERCEPT) {
-            "Treatment 1 Debrief Body"
+            MessageUtils.treatmentInterceptDebrief(limit, highlightColor)
         } else {
-            MessageUtils.treatmentAffineDebrief(
-                treatmentVm.dailyIncentive.value!!,
-                TimeUtils.humanizeTimeHm(vm.subjectSettings.treatmentLimit.value!!),
-                ContextCompat.getColor(requireContext(), R.color.light_green)
-            )
+            MessageUtils.treatmentAffineDebrief(treatmentVm.dailyIncentive.value!!, limit, highlightColor)
         }
 
         binding.continueButton.setOnClickListener {

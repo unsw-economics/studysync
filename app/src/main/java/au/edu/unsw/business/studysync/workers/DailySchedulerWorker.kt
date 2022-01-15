@@ -19,10 +19,12 @@ import au.edu.unsw.business.studysync.constants.Constants.TREATMENT_START_NOTIFI
 import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_DATE
 import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
+import au.edu.unsw.business.studysync.support.TimeUtils.nowLD
+import au.edu.unsw.business.studysync.support.TimeUtils.nowZDT
+import au.edu.unsw.business.studysync.support.UsageUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Duration
-import java.time.LocalDate
 import java.time.ZonedDateTime
 
 class DailySchedulerWorker(private val context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
@@ -36,20 +38,26 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
         }
         val workManager = WorkManager.getInstance(context)
 
-        val firstStep = workManager.beginUniqueWork(RECORD_AND_SUBMIT_WORK, ExistingWorkPolicy.REPLACE, recordRequest)
+        if (UsageUtils.hasUsageStatsPermission(context)) {
+            val firstStep = workManager.beginUniqueWork(
+                RECORD_AND_SUBMIT_WORK,
+                ExistingWorkPolicy.REPLACE,
+                recordRequest
+            )
 
-        val allWork = if (subjectSettings.identified.value!!) {
-            val submitRequest = SubmitWorker.createRequest()
-            firstStep.then(submitRequest)
-        } else {
-            firstStep
+            val allWork = if (subjectSettings.identified.value!!) {
+                val submitRequest = SubmitWorker.createRequest()
+                firstStep.then(submitRequest)
+            } else {
+                firstStep
+            }
+
+            allWork.enqueue()
         }
-
-        allWork.enqueue()
 
         Log.d("App/DailySchedulerWorker", "work enqueued (record${ if (subjectSettings.identified.value!!) ", submit" else "" })")
 
-        val today = LocalDate.now()
+        val today = nowLD()
         val tomorrow = today.plusDays(1)
 
         if (!tomorrow.isAfter(OVER_DATE)) {
@@ -90,8 +98,8 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
 
     companion object {
         fun createRequestForNext0001(): OneTimeWorkRequest {
-            val now = ZonedDateTime.now()
-            val next0001 = LocalDate.now().plusDays(1).atStartOfDay(ZONE_ID).plusMinutes(1)
+            val now = nowZDT()
+            val next0001 = nowLD().plusDays(1).atStartOfDay(ZONE_ID).plusMinutes(1)
             // val next0001 = now.plusSeconds(15)
 
             return OneTimeWorkRequestBuilder<DailySchedulerWorker>()

@@ -20,6 +20,24 @@ object MessageUtils {
             .append(", at which point you will be given instructions regarding deletion of the app.\n\nThank you for your participation!")
             .toSpannable()
     }
+
+    fun treatmentInterceptDebrief(limit: String, @ColorInt highlightColor: Int): Spannable {
+        return SpannableStringBuilder("Your target is to keep your smartphone usage under ")
+            .bold {
+                color(highlightColor) {
+                    append(limit)
+                }
+            }
+            .append(" each day. The app will keep a running tally of all the days for which you have met this target over the four week period starting on ")
+            .bold {
+                color(highlightColor) {
+                    append(Environment.TREATMENT_DATE.toString())
+                }
+            }
+            .append(". Note that you will not receive monetary compensation for hitting your target.\n\nPlease keep this app installed for the duration of the study and thank you for your participation!")
+            .toSpannable()
+    }
+
     fun treatmentAffineDebrief(incentive: Double, limit: String, @ColorInt highlightColor: Int): Spannable {
         return SpannableStringBuilder("You will be rewarded ")
             .bold {
@@ -33,13 +51,13 @@ object MessageUtils {
                     append(limit)
                 }
             }
-            .append(".\n\nThe app will keep a running tally of the reward that you have earned over the four week period starting on ")
+            .append(" each day. The app will keep a running tally of the reward that you have earned over the four week period starting on ")
             .bold {
                 color(highlightColor) {
                     append(Environment.TREATMENT_DATE.toString())
                 }
             }
-            .append(". Please keep this app installed for the duration of the study and thank you for your participation!")
+            .append(".\n\nPlease keep this app installed for the duration of the study and thank you for your participation!")
             .toSpannable()
     }
 

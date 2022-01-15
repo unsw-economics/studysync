@@ -15,6 +15,9 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 object TimeUtils {
+    // val TIME_DELAY = Duration.ofHours(2).plusMinutes(10)
+    val TIME_DELAY = Duration.ZERO
+
     fun getPeriod(date: LocalDate): String {
         return when {
             date.isBefore(TREATMENT_DATE) -> PERIOD_BASELINE
@@ -23,8 +26,26 @@ object TimeUtils {
         }
     }
 
+    fun nowZDT(): ZonedDateTime {
+        val now = ZonedDateTime.now()
+
+        return if (TIME_DELAY.equals(Duration.ZERO)) {
+            now
+        } else {
+            now.minus(TIME_DELAY)
+        }
+    }
+
+    fun nowLD(): LocalDate {
+        return if (TIME_DELAY.equals(Duration.ZERO)) {
+            LocalDate.now()
+        } else {
+            nowZDT().toLocalDate()
+        }
+    }
+
     fun getTodayPeriod(): String {
-        return getPeriod(LocalDate.now())
+        return getPeriod(nowLD())
 
         // for testing
         // return getPeriod(ZonedDateTime.now().minusMinutes(105).toLocalDate())
@@ -76,11 +97,11 @@ object TimeUtils {
     }
 
     fun now(): Long {
-        return toMilliseconds(ZonedDateTime.now())
+        return toMilliseconds(nowZDT())
     }
 
     fun midnight(): Long {
-        return toMilliseconds(LocalDate.now())
+        return toMilliseconds(nowLD())
     }
 
     fun percentage(numerator: Duration, denominator: Duration): Int {

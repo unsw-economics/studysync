@@ -32,17 +32,17 @@ object Environment {
         ZoneId.systemDefault()
     }
 
-    const val BASELINE_DATE_STRING = "2021-12-31"
+    const val BASELINE_DATE_STRING = "2022-01-07"
     val BASELINE_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_DATE_STRING)
     }
 
-    const val TREATMENT_DATE_STRING = "2022-01-02"
+    const val TREATMENT_DATE_STRING = "2022-01-11"
     val TREATMENT_DATE: LocalDate by lazy {
         LocalDate.parse(TREATMENT_DATE_STRING)
     }
 
-    const val OVER_DATE_STRING = "2022-01-15"
+    const val OVER_DATE_STRING = "2022-02-14"
     val OVER_DATE: LocalDate by lazy {
         LocalDate.parse(OVER_DATE_STRING)
     }

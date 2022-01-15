@@ -41,8 +41,6 @@ class TreatmentFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        treatmentVm.setSuccesses()
-
         binding.vm = vm
         binding.treatmentVm = treatmentVm
         binding.timeUtils = TimeUtils
@@ -58,6 +56,7 @@ class TreatmentFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         treatmentVm.setTodayUsage()
+        treatmentVm.setSuccesses()
     }
 
     override fun onDestroyView() {

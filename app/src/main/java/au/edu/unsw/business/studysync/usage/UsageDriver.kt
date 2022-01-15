@@ -13,7 +13,6 @@ import au.edu.unsw.business.studysync.support.TimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Duration
-import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -64,7 +63,7 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
 
     suspend fun recordNewUsages() {
         var date = settings.lastRecorded.value!!
-        val today = LocalDate.now()
+        val today = TimeUtils.nowLD()
 
         val reports: MutableList<DbReport> = LinkedList()
         val appReports: MutableList<DbAppReport> = LinkedList()
