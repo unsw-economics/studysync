@@ -14,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Duration
 import java.util.*
-import kotlin.collections.HashMap
 
 class UsageDriver(private val context: Context, private val settings: SubjectSettings) {
     private val database = AppDatabase.getDatabase(context)
@@ -67,6 +66,9 @@ class UsageDriver(private val context: Context, private val settings: SubjectSet
 
         val reports: MutableList<DbReport> = LinkedList()
         val appReports: MutableList<DbAppReport> = LinkedList()
+
+        Log.d("App/UsageDriver", "$date")
+        Log.d("App/UsageDriver", "$today")
 
         while (date.isBefore(today)) {
             val nextDate = date.plusDays(1)

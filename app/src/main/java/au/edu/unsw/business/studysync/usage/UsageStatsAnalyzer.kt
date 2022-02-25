@@ -6,7 +6,6 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import au.edu.unsw.business.studysync.support.PackageUtils
 import java.util.*
-import kotlin.collections.HashMap
 
 object UsageStatsAnalyzer {
     fun getEvents(context: Context, begin: Long, end: Long): UsageEvents {
@@ -55,6 +54,7 @@ object UsageStatsAnalyzer {
 
     fun computeUsageSynthetic(context: Context, begin: Long, end: Long): Map<String, Long> {
         val (filteredEvents, initialState) = getFilteredEventsWithInitialState(context, begin, end)
+
 
         val usageMap: MutableMap<String, Long> = HashMap()
         var interactive = initialState

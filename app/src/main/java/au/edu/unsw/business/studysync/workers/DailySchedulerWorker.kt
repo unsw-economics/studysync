@@ -1,6 +1,7 @@
 package au.edu.unsw.business.studysync.workers
 
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -25,7 +26,6 @@ import au.edu.unsw.business.studysync.support.UsageUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Duration
-import java.time.ZonedDateTime
 
 class DailySchedulerWorker(private val context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
@@ -73,7 +73,7 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
         if (subjectSettings.identified.value!! && (today.isEqual(TREATMENT_DATE) || today.isEqual(OVER_DATE))) {
             val packageManager = context.packageManager
             val intent = packageManager.getLaunchIntentForPackage(context.packageName)
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_IMMUTABLE)
 
             val (title, text, notificationId) = if (today.isEqual(TREATMENT_DATE)) {
                 Triple("New Study Phase", "Please check the app for instructions.", TREATMENT_START_NOTIFICATION)
@@ -99,8 +99,11 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
     companion object {
         fun createRequestForNext0001(): OneTimeWorkRequest {
             val now = nowZDT()
-            val next0001 = nowLD().plusDays(1).atStartOfDay(ZONE_ID).plusMinutes(1)
+            val next0001 = nowLD().plusDays(1).atStartOfDay(ZONE_ID).plusMinutes(0)
             // val next0001 = now.plusSeconds(15)
+            Log.d("App/DailySchedulerWorker", now.toString())
+            Log.d("App/DailySchedulerWorker", next0001.toString())
+            Log.d("App/DailySchedulerWorker", Duration.between(now, next0001).toString())
 
             return OneTimeWorkRequestBuilder<DailySchedulerWorker>()
                 .setInitialDelay(Duration.between(now, next0001))

@@ -10,6 +10,7 @@ import au.edu.unsw.business.studysync.support.UsageUtils
 import au.edu.unsw.business.studysync.usage.UsageDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.acra.ACRA
 import java.time.Duration
 
 class RecordWorker(private val context: Context, private val params: WorkerParameters): CoroutineWorker(context, params) {
@@ -42,6 +43,7 @@ class RecordWorker(private val context: Context, private val params: WorkerParam
             }
         } catch (ex: Exception) {
             Log.d("App/RecordWorker", "retry -- record error: ${ex.message}")
+            ACRA.errorReporter.handleSilentException(ex)
             Result.retry()
         }
     }

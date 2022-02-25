@@ -7,17 +7,16 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.toSpannable
 import au.edu.unsw.business.studysync.constants.Environment
-import java.time.LocalDate
 
 object MessageUtils {
-    fun baselineBody(endlineDate: LocalDate, @ColorInt highlightColor: Int): Spannable {
-        return SpannableStringBuilder("Please keep this app installed for the duration of the study. You will be asked to complete an endline survey on ")
+    fun baselineBody(@ColorInt highlightColor: Int): Spannable {
+        return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. You will be asked to complete an endline survey on ")
             .bold {
                 color(highlightColor) {
-                    append(endlineDate.toString())
+                    append(Environment.ENDLINE_DATE.toString())
                 }
             }
-            .append(", at which point you will be given instructions regarding deletion of the app.\n\nThank you for your participation!")
+            .append(".\n\nThank you for your participation!")
             .toSpannable()
     }
 
@@ -58,6 +57,17 @@ object MessageUtils {
                 }
             }
             .append(".\n\nPlease keep this app installed for the duration of the study and thank you for your participation!")
+            .toSpannable()
+    }
+
+    fun endlineBody(@ColorInt highlightColor: Int): Spannable {
+        return SpannableStringBuilder("Please check your email for the endline survey. Upon completion of the endline survey, your total earnings from the study (if applicable) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week. If you have any questions, please contact the research team at unswsmartphonestudy@gmail.com.\n\nPlease keep the app installed until ")
+            .bold {
+                color(highlightColor) {
+                    append(Environment.OVER_DATE.toString())
+                }
+            }
+            .append(", at which point you will be given instructions regarding deletion of the app. If you do so, you will also be entered into a lottery to win $100.\n\nThank you for your participation!")
             .toSpannable()
     }
 

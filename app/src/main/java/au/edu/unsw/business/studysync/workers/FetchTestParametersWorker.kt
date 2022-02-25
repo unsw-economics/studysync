@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.*
 import au.edu.unsw.business.studysync.SubjectSettings
 import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
+import org.acra.ACRA
 import java.time.Duration
 
 class FetchTestParametersWorker(private val context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
@@ -24,6 +25,7 @@ class FetchTestParametersWorker(private val context: Context, params: WorkerPara
 
             return Result.success()
         } catch (ex: Exception) {
+            ACRA.errorReporter.handleSilentException(ex)
             return Result.retry()
         }
     }

@@ -8,6 +8,7 @@ object Constants {
     // keep lowercase for database compatibility
     const val PERIOD_BASELINE = "baseline"
     const val PERIOD_EXPERIMENT = "experiment"
+    const val PERIOD_ENDLINE = "endline"
     const val PERIOD_OVER = "over"
 
     const val DEBUG_DATA = "DEBUG_DATA"
@@ -32,17 +33,22 @@ object Environment {
         ZoneId.systemDefault()
     }
 
-    const val BASELINE_DATE_STRING = "2022-01-06"
+    const val BASELINE_DATE_STRING = "2022-02-14"
     val BASELINE_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_DATE_STRING)
     }
 
-    const val TREATMENT_DATE_STRING = "2022-01-17"
+    const val TREATMENT_DATE_STRING = "2022-02-27"
     val TREATMENT_DATE: LocalDate by lazy {
         LocalDate.parse(TREATMENT_DATE_STRING)
     }
 
-    const val OVER_DATE_STRING = "2022-02-14"
+    const val ENDLINE_DATE_STRING = "2022-03-27"
+    val ENDLINE_DATE: LocalDate by lazy {
+        LocalDate.parse(ENDLINE_DATE_STRING)
+    }
+
+    const val OVER_DATE_STRING = "2022-04-10"
     val OVER_DATE: LocalDate by lazy {
         LocalDate.parse(OVER_DATE_STRING)
     }

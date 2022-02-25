@@ -10,6 +10,7 @@ import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.workers.FetchTestParametersWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.acra.ACRA
 
 object RobustFetchTestParameters {
     suspend fun fetch(authToken: String, subjectId: String): Result<Triple<Int, Int, Int>> {
@@ -31,6 +32,7 @@ object RobustFetchTestParameters {
             Log.d("App/RobustFetchTestParameters (fetch)", "success")
             return Result.success(Triple(data.testGroup, data.treatmentIntensity ?: 0, data.treatmentLimit ?: 0))
         } catch (ex: Exception) {
+            ACRA.errorReporter.handleSilentException(ex)
             Log.d("App/RobustFetchTestParameters (fetch)", "failure")
             return Result.failure(ex)
         }

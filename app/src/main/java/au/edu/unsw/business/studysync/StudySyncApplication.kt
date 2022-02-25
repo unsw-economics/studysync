@@ -11,11 +11,9 @@ import au.edu.unsw.business.studysync.constants.Constants.PREFERENCES_NAME
 import au.edu.unsw.business.studysync.constants.Constants.STUDY_PHASE_CHANNEL
 import au.edu.unsw.business.studysync.database.AppDatabase
 import au.edu.unsw.business.studysync.usage.UsageDriver
-import org.acra.annotation.AcraHttpSender
 import org.acra.config.httpSender
 import org.acra.data.StringFormat
 import org.acra.ktx.initAcra
-import org.acra.security.TLS
 import org.acra.sender.HttpSender
 
 class StudySyncApplication: Application() {

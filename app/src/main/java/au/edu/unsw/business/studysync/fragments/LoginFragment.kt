@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
 import au.edu.unsw.business.studysync.databinding.FragmentLoginBinding
 import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
 import au.edu.unsw.business.studysync.network.SyncApi
@@ -17,6 +18,7 @@ import au.edu.unsw.business.studysync.viewmodels.LoginViewModel
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.acra.ACRA
 
 class LoginFragment : Fragment() {
 
@@ -49,7 +51,7 @@ class LoginFragment : Fragment() {
 
                     val idData = idResponse.data!!
 
-                    if (TimeUtils.getTodayPeriod() == "BASELINE") {
+                    if (TimeUtils.getTodayPeriod() == PERIOD_BASELINE) {
                         vm.identify(subjectId, idData.authToken)
                     } else {
                         val glResult = RobustFetchTestParameters.fetch(idData.authToken, subjectId)
@@ -63,6 +65,7 @@ class LoginFragment : Fragment() {
                     }
                 } catch (e: Exception) {
                     Log.d("App/LoginFragment", "login error: ${e.message}")
+                    ACRA.errorReporter.handleSilentException(e)
                     // to avoid flashing on error
                     delay(300)
                     loginVm.enableLogin()

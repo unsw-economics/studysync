@@ -1,9 +1,11 @@
 package au.edu.unsw.business.studysync.support
 
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_ENDLINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_LENGTH
+import au.edu.unsw.business.studysync.constants.Environment.ENDLINE_DATE
 import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
 import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_DATE
 import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
@@ -15,13 +17,14 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 object TimeUtils {
-    // val TIME_DELAY = Duration.ofHours(2).plusMinutes(10)
+    // val TIME_DELAY = Duration.ofHours(23).plusMinutes(54)
     val TIME_DELAY = Duration.ZERO
 
     fun getPeriod(date: LocalDate): String {
         return when {
             date.isBefore(TREATMENT_DATE) -> PERIOD_BASELINE
-            date.isBefore(OVER_DATE) -> PERIOD_EXPERIMENT
+            date.isBefore(ENDLINE_DATE) -> PERIOD_EXPERIMENT
+            date.isBefore(OVER_DATE) -> PERIOD_ENDLINE
             else -> PERIOD_OVER
         }
     }
@@ -79,12 +82,13 @@ object TimeUtils {
     }
 
     fun getStudyPeriodAndDay(d: LocalDate): Pair<String, Int> {
-        val diff = ChronoUnit.DAYS.between(TREATMENT_DATE, d).toInt()
+        val treatmentTime = ChronoUnit.DAYS.between(TREATMENT_DATE, d).toInt()
+        val endlineTime = ChronoUnit.DAYS.between(ENDLINE_DATE, d).toInt()
 
-        return if (diff >= 0) {
-            Pair(PERIOD_EXPERIMENT, diff)
-        } else {
-            Pair(PERIOD_BASELINE, diff + BASELINE_LENGTH)
+        return when {
+            treatmentTime < 0 -> Pair(PERIOD_BASELINE, treatmentTime + BASELINE_LENGTH)
+            endlineTime < 0 -> Pair(PERIOD_EXPERIMENT, treatmentTime)
+            else -> Pair(PERIOD_ENDLINE, endlineTime)
         }
     }
 

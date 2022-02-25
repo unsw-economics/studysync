@@ -17,8 +17,9 @@
     <string name="treatment_incentive_label">Daily Incentive</string>
     <string name="treatment_earned_label">Total Earned</string>
     <string name="debrief_title">Treatment Period Instructions</string>
+    <string name="endline_title">Your results have been finalised.</string>
     <string name="over_title">The study is now over. Thank you for participating!</string>
-    <string name="over_body">Please check your email for the endline survey. Upon completion of the endline survey, your total earnings from the study (if applicable) along with $25 for completing the surveys will be paid to your nominated PayID account within a week. If you have any questions, please contact the research team at unswsmartphonestudy@gmail.com.</string>
+    <string name="over_body">You may now safely delete the app.</string>
     <string name="button_continue">Continue</string>
     <string name="max_usage_format">Max %s</string>
     <string name="dollar_format">$%.2f</string>

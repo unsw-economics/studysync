@@ -1,5 +1,4 @@
 package au.edu.unsw.business.studysync
-
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -18,9 +17,9 @@ import au.edu.unsw.business.studysync.constants.Constants.GROUP_CONTROL
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_INTERCEPT
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
+import au.edu.unsw.business.studysync.constants.Constants.PERIOD_ENDLINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
-import au.edu.unsw.business.studysync.constants.Environment
 import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
 import au.edu.unsw.business.studysync.support.MessageUtils
 import au.edu.unsw.business.studysync.support.TimeUtils
@@ -116,6 +115,7 @@ class MainActivity: AppCompatActivity() {
         super.onResume()
 
         val isPermitted = UsageUtils.hasUsageStatsPermission(applicationContext)
+        val period = TimeUtils.getTodayPeriod()
 
         if (vm.usageAccessEnabled.value != isPermitted) {
             vm.setUsageAccessEnabled(isPermitted)
@@ -126,10 +126,10 @@ class MainActivity: AppCompatActivity() {
         } else if (
             (subjectSettings.testGroup.value!! == GROUP_INTERCEPT || subjectSettings.testGroup.value!! == GROUP_AFFINE)
             && navController.currentDestination!!.id == R.id.TerminalFragment
-            && TimeUtils.getTodayPeriod() == PERIOD_EXPERIMENT
+            && period == PERIOD_EXPERIMENT
         ) {
             navigate()
-        } else if (TimeUtils.getTodayPeriod() == PERIOD_OVER) {
+        } else if (period == PERIOD_OVER || period == PERIOD_ENDLINE) {
             navigate()
         }
     }
@@ -150,6 +150,14 @@ class MainActivity: AppCompatActivity() {
                         Pair("body", getString(R.string.over_body))
                     )
                 )
+            period == PERIOD_ENDLINE ->
+                navigateIfDifferent(
+                    R.id.TerminalFragment,
+                    bundleOf(
+                        Pair("title", getString(R.string.endline_title)),
+                        Pair("body", MessageUtils.endlineBody(ContextCompat.getColor(application, R.color.light_green)).toString())
+                    )
+                )
             !isIdentified ->
                 navigateIfDifferent(R.id.LoginFragment)
             !isPermitted ->
@@ -159,7 +167,7 @@ class MainActivity: AppCompatActivity() {
                     R.id.TerminalFragment,
                     bundleOf(
                         Pair("title", getString(R.string.baseline_title)),
-                        Pair("body", MessageUtils.baselineBody(Environment.OVER_DATE, ContextCompat.getColor(application, R.color.light_green)).toString())
+                        Pair("body", MessageUtils.baselineBody(ContextCompat.getColor(application, R.color.light_green)).toString())
                     )
                 )
             !isTreatment ->
@@ -182,7 +190,10 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun navigateIfDifferent(resId: Int, args: Bundle?) {
-        if (navController.currentDestination!!.id != resId) {
+        val destination = navController.currentDestination!!
+
+        // second part of this conditional is a hack for changing between TerminalFragments
+        if (destination.id != resId || resId == R.id.TerminalFragment) {
             navController.navigate(resId, args, navOptions)
         }
     }

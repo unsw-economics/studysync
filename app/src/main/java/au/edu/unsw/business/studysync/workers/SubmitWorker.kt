@@ -8,6 +8,7 @@ import au.edu.unsw.business.studysync.constants.Constants
 import au.edu.unsw.business.studysync.usage.UsageDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.acra.ACRA
 import java.time.Duration
 
 class SubmitWorker(private val context: Context, private val params: WorkerParameters): CoroutineWorker(context, params) {
@@ -29,6 +30,7 @@ class SubmitWorker(private val context: Context, private val params: WorkerParam
             Log.d("App/SubmitWorker", "success")
             Result.success()
         } catch (ex: Exception) {
+            ACRA.errorReporter.handleSilentException(ex)
             Log.d("App/SubmitWorker", "retry")
             Result.retry()
         }
