@@ -1,0 +1,131 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "ac2d4d9994c953c8baf468dfb55e7db2",
+    "entities": [
+      {
+        "tableName": "reports",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`period` TEXT NOT NULL, `day` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "period",
+            "columnName": "period",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "day",
+            "columnName": "day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "synced",
+            "columnName": "synced",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_reports_period_day",
+            "unique": true,
+            "columnNames": [
+              "period",
+              "day"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_reports_period_day` ON `${TABLE_NAME}` (`period`, `day`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "app_reports",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`period` TEXT NOT NULL, `day` INTEGER NOT NULL, `application_name` TEXT NOT NULL, `usage_seconds` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`period`, `day`) REFERENCES `reports`(`period`, `day`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "period",
+            "columnName": "period",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "day",
+            "columnName": "day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "applicationName",
+            "columnName": "application_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usageSeconds",
+            "columnName": "usage_seconds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_app_reports_period_day_application_name",
+            "unique": true,
+            "columnNames": [
+              "period",
+              "day",
+              "application_name"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_app_reports_period_day_application_name` ON `${TABLE_NAME}` (`period`, `day`, `application_name`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "reports",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "period",
+              "day"
+            ],
+            "referencedColumns": [
+              "period",
+              "day"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ac2d4d9994c953c8baf468dfb55e7db2')"
+    ]
+  }
+}
