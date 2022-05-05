@@ -112,8 +112,6 @@ internal class RobustFetchTestParametersTest {
         coEvery { RobustFetchTestParameters.fetch(any(), any()) } returns Result.success(Triple(1, 2, 3))
         coEvery { RobustFetchTestParameters.fetch("invalidToken", any()) } returns Result.failure(Exception())
 
-        //mockkStatic("au.edu.unsw.business.studysync.network.RobustFetchTestParametersTestKt")
-        //mockkStatic(FetchTestParametersWorker::class.java.name + "Kt")
         mockkObject(FetchTestParametersWorker)
         coEvery { FetchTestParametersWorker.createRequest() } returns mockk(relaxed = true)
 

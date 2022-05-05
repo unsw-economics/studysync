@@ -54,7 +54,7 @@ object TimeUtils {
         // return getPeriod(ZonedDateTime.now().minusMinutes(105).toLocalDate())
     }
 
-    private fun extractHms(duration: Duration): Triple<Long, Long, Long> {
+    private fun extractHms(duration: Duration): Triple<Int, Int, Int> {
         val milliseconds = duration.toMillis()
 
         val totalSeconds = milliseconds / 1000
@@ -63,7 +63,7 @@ object TimeUtils {
         val minutes = totalMinutes % 60
         val hours = (totalMinutes - minutes) / 60
 
-        return Triple(hours, minutes, seconds)
+        return Triple(hours.toInt(), minutes.toInt(), seconds.toInt())
     }
 
     fun humanizeTimeHms(duration: Duration): String {
@@ -73,7 +73,20 @@ object TimeUtils {
 
     fun humanizeTimeHm(duration: Duration): String {
         val (hours, minutes, _) = extractHms(duration)
-        return "$hours hours $minutes minutes"
+        if (hours == 0 && minutes == 0) return "0 minutes"
+
+        val hourStr = when (hours) {
+            1 -> "1 hour"
+            0 -> ""
+            else -> "$hours hours"
+        }
+        val minuteStr = when {
+            minutes == 1 -> "1 minute"
+            (minutes == 0) && (hours != 0) -> ""
+            else -> "$minutes minutes"
+        }
+
+        return "$hourStr $minuteStr".trim()
     }
 
     fun digitalTimeHm(duration: Duration): String {
@@ -82,6 +95,7 @@ object TimeUtils {
     }
 
     fun getStudyPeriodAndDay(d: LocalDate): Pair<String, Int> {
+        // Days start at 0
         val treatmentTime = ChronoUnit.DAYS.between(TREATMENT_DATE, d).toInt()
         val endlineTime = ChronoUnit.DAYS.between(ENDLINE_DATE, d).toInt()
 
