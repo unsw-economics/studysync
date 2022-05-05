@@ -117,4 +117,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.3.2'
+
+    testImplementation "io.mockk:mockk:1.12.3"
+    testImplementation "io.mockk:mockk-agent-jvm:1.12.3"
 }
