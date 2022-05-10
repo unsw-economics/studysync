@@ -21,6 +21,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         signingConfig signingConfigs.debug
 
         kapt {
@@ -66,6 +67,7 @@ android {
     testOptions {
         animationsDisabled = true
 
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
         unitTests.all {
             useJUnitPlatform()
         }
@@ -127,4 +129,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'com.kaspersky.android-components:kaspresso:1.4.1'
+    androidTestUtil 'androidx.test:orchestrator:1.4.1'
 }
