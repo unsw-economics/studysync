@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit
 object TimeUtils {
     // val TIME_DELAY = Duration.ofHours(23).plusMinutes(54)
     val TIME_DELAY = Duration.ZERO
+    var periodToday: String? = null // Used for testing purposes to mock date
 
     fun getPeriod(date: LocalDate): String {
         return when {
@@ -48,7 +49,7 @@ object TimeUtils {
     }
 
     fun getTodayPeriod(): String {
-        return getPeriod(nowLD())
+        return periodToday ?: getPeriod(nowLD())
 
         // for testing
         // return getPeriod(ZonedDateTime.now().minusMinutes(105).toLocalDate())
