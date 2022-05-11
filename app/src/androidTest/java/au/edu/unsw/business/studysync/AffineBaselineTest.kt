@@ -13,7 +13,7 @@ import org.junit.*
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ControlBaselineTest {
+class AffineBaselineTest {
     private lateinit var scenario: ActivityScenario<MainActivity>
 
     @Before
@@ -46,7 +46,7 @@ class ControlBaselineTest {
     private fun loginScreenTest() {
         // Type in subjectId for control group subject
         onView(withId(R.id.subjectIdField))
-            .perform(typeText("aaaaaa000000"))
+            .perform(typeText("aaaaaa000002"))
             .perform(closeSoftKeyboard())
 
         // Press submit button
