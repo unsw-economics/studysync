@@ -37,7 +37,7 @@ class InterceptBaselineTest {
     }
 
     @Test
-    fun testControlGroupFlowDuringBaseline() {
+    fun testInterceptGroupFlowDuringBaseline() {
         loginScreenTest()
         requestPermissionTest()
         baselineTextTest()

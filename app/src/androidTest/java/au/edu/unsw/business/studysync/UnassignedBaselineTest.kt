@@ -37,7 +37,7 @@ class UnassignedBaselineTest {
     }
 
     @Test
-    fun testControlGroupFlowDuringBaseline() {
+    fun testUnassignedGroupFlowDuringBaseline() {
         loginScreenTest()
         requestPermissionTest()
         baselineTextTest()

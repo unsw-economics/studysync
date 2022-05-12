@@ -37,7 +37,7 @@ class ControlExperimentTest {
     }
 
     @Test
-    fun testControlGroupFlowDuringBaseline() {
+    fun testControlGroupFlowDuringExperiment() {
         loginScreenTest()
         requestPermissionTest()
         checkControlText()

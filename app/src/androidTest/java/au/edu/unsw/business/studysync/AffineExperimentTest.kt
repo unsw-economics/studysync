@@ -38,7 +38,7 @@ class AffineExperimentTest {
     }
 
     @Test
-    fun testControlGroupFlowDuringBaseline() {
+    fun testAffineGroupFlowDuringExperiment() {
         loginScreenTest()
         requestPermissionTest()
         checkTreatmentDebriefInstructions()
