@@ -1,11 +1,12 @@
 package au.edu.unsw.business.studysync
 
 import android.view.View
+import android.widget.TextView
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
 import org.hamcrest.Matcher
@@ -53,4 +54,28 @@ fun waitForView(viewId: Int, timeout: Long): ViewAction {
                 .build()
         }
     }
+}
+
+/**
+ * Retrieves the text inside a TextView
+ * Source: https://gist.github.com/gunesmes/9eceda390b244bdfc72a465e1ab4741f
+ */
+fun getText(matcher: ViewInteraction): String {
+    var text = String()
+    matcher.perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(TextView::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "Text of the view"
+        }
+
+        override fun perform(uiController: UiController, view: View) {
+            val tv = view as TextView
+            text = tv.text.toString()
+        }
+    })
+
+    return text
 }
