@@ -55,7 +55,7 @@ object TimeUtils {
         // return getPeriod(ZonedDateTime.now().minusMinutes(105).toLocalDate())
     }
 
-    private fun extractHms(duration: Duration): Triple<Int, Int, Int> {
+    private fun extractHms(duration: Duration): Triple<Long, Long, Long> {
         val milliseconds = duration.toMillis()
 
         val totalSeconds = milliseconds / 1000
@@ -64,7 +64,7 @@ object TimeUtils {
         val minutes = totalMinutes % 60
         val hours = (totalMinutes - minutes) / 60
 
-        return Triple(hours.toInt(), minutes.toInt(), seconds.toInt())
+        return Triple(hours, minutes, seconds)
     }
 
     fun humanizeTimeHms(duration: Duration): String {
@@ -74,16 +74,16 @@ object TimeUtils {
 
     fun humanizeTimeHm(duration: Duration): String {
         val (hours, minutes, _) = extractHms(duration)
-        if (hours == 0 && minutes == 0) return "0 minutes"
+        if (hours == 0L && minutes == 0L) return "0 minutes"
 
         val hourStr = when (hours) {
-            1 -> "1 hour"
-            0 -> ""
+            1L -> "1 hour"
+            0L -> ""
             else -> "$hours hours"
         }
         val minuteStr = when {
-            minutes == 1 -> "1 minute"
-            (minutes == 0) && (hours != 0) -> ""
+            minutes == 1L -> "1 minute"
+            (minutes == 0L) && (hours != 0L) -> ""
             else -> "$minutes minutes"
         }
 
