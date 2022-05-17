@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit
 object TimeUtils {
     // val TIME_DELAY = Duration.ofHours(23).plusMinutes(54)
     val TIME_DELAY = Duration.ZERO
+    var periodToday: String? = null // Used for testing purposes to mock date
 
     fun getPeriod(date: LocalDate): String {
         return when {
@@ -48,7 +49,7 @@ object TimeUtils {
     }
 
     fun getTodayPeriod(): String {
-        return getPeriod(nowLD())
+        return periodToday ?: getPeriod(nowLD())
 
         // for testing
         // return getPeriod(ZonedDateTime.now().minusMinutes(105).toLocalDate())
@@ -73,7 +74,20 @@ object TimeUtils {
 
     fun humanizeTimeHm(duration: Duration): String {
         val (hours, minutes, _) = extractHms(duration)
-        return "$hours hours $minutes minutes"
+        if (hours == 0L && minutes == 0L) return "0 minutes"
+
+        val hourStr = when (hours) {
+            1L -> "1 hour"
+            0L -> ""
+            else -> "$hours hours"
+        }
+        val minuteStr = when {
+            minutes == 1L -> "1 minute"
+            (minutes == 0L) && (hours != 0L) -> ""
+            else -> "$minutes minutes"
+        }
+
+        return "$hourStr $minuteStr".trim()
     }
 
     fun digitalTimeHm(duration: Duration): String {
@@ -82,6 +96,7 @@ object TimeUtils {
     }
 
     fun getStudyPeriodAndDay(d: LocalDate): Pair<String, Int> {
+        // Days start at 0
         val treatmentTime = ChronoUnit.DAYS.between(TREATMENT_DATE, d).toInt()
         val endlineTime = ChronoUnit.DAYS.between(ENDLINE_DATE, d).toInt()
 
