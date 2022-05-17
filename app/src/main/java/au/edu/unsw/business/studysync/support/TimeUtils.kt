@@ -4,6 +4,7 @@ import au.edu.unsw.business.studysync.constants.Constants.PERIOD_BASELINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_ENDLINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
+import au.edu.unsw.business.studysync.constants.Environment.BASELINE_DATE
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_LENGTH
 import au.edu.unsw.business.studysync.constants.Environment.ENDLINE_DATE
 import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
@@ -20,12 +21,13 @@ object TimeUtils {
     // val TIME_DELAY = Duration.ofHours(23).plusMinutes(54)
     val TIME_DELAY = Duration.ZERO
     var periodToday: String? = null // Used for testing purposes to mock date
+    var studyDates = StudyDates(BASELINE_DATE, TREATMENT_DATE, ENDLINE_DATE, OVER_DATE)
 
     fun getPeriod(date: LocalDate): String {
         return when {
-            date.isBefore(TREATMENT_DATE) -> PERIOD_BASELINE
-            date.isBefore(ENDLINE_DATE) -> PERIOD_EXPERIMENT
-            date.isBefore(OVER_DATE) -> PERIOD_ENDLINE
+            date.isBefore(studyDates.treatmentDate) -> PERIOD_BASELINE
+            date.isBefore(studyDates.endlineDate) -> PERIOD_EXPERIMENT
+            date.isBefore(studyDates.overDate) -> PERIOD_ENDLINE
             else -> PERIOD_OVER
         }
     }
@@ -97,8 +99,8 @@ object TimeUtils {
 
     fun getStudyPeriodAndDay(d: LocalDate): Pair<String, Int> {
         // Days start at 0
-        val treatmentTime = ChronoUnit.DAYS.between(TREATMENT_DATE, d).toInt()
-        val endlineTime = ChronoUnit.DAYS.between(ENDLINE_DATE, d).toInt()
+        val treatmentTime = ChronoUnit.DAYS.between(studyDates.treatmentDate, d).toInt()
+        val endlineTime = ChronoUnit.DAYS.between(studyDates.endlineDate, d).toInt()
 
         return when {
             treatmentTime < 0 -> Pair(PERIOD_BASELINE, treatmentTime + BASELINE_LENGTH)

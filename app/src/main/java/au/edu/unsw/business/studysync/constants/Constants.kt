@@ -1,5 +1,6 @@
 package au.edu.unsw.business.studysync.constants
 
+import au.edu.unsw.business.studysync.support.TimeUtils
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -20,6 +21,7 @@ object Constants {
     const val DAILY_SCHEDULER_WORK = "DAILY_SCHEDULER_WORK"
     const val DAILY_SCHEDULER_BOUNCE_WORK = "DAILY_SCHEDULER_BOUNCE_WORK"
     const val FETCH_TEST_PARAMS_WORK = "FETCH_TEST_PARAMS_WORK"
+    const val DAILY_CHECK_STUDY_DATES = "DAILY_CHECK_STUDY_DATES"
     const val PREFERENCES_NAME = "studysync-config"
 
     const val STUDY_PHASE_CHANNEL = "STUDY_PHASE_CHANNEL"
@@ -54,6 +56,6 @@ object Environment {
     }
 
     val BASELINE_LENGTH: Int by lazy {
-        ChronoUnit.DAYS.between(BASELINE_DATE, TREATMENT_DATE).toInt()
+        ChronoUnit.DAYS.between(TimeUtils.studyDates.baselineDate, TimeUtils.studyDates.treatmentDate).toInt()
     }
 }

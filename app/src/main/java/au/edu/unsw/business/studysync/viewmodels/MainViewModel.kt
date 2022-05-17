@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import au.edu.unsw.business.studysync.StudySyncApplication
+import au.edu.unsw.business.studysync.support.StudyDates
 import au.edu.unsw.business.studysync.support.UsageUtils
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
@@ -60,6 +61,11 @@ class MainViewModel(private val application: StudySyncApplication): AndroidViewM
 
     fun completeDebrief() {
         subjectSettings.completeDebrief()
+        _navigateEvents.accept(Unit)
+    }
+
+    fun updateDates(baselineDate: String, treatmentDate: String, endlineDate: String, overDate: String) {
+        subjectSettings.updateDates(baselineDate, treatmentDate, endlineDate, overDate)
         _navigateEvents.accept(Unit)
     }
 }
