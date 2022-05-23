@@ -7,6 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import au.edu.unsw.business.studysync.constants.Constants.GROUP_UNASSIGNED
 import au.edu.unsw.business.studysync.constants.Environment
 import au.edu.unsw.business.studysync.constants.Environment.BASELINE_DATE_STRING
+import au.edu.unsw.business.studysync.constants.Environment.ENDLINE_DATE_STRING
+import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE_STRING
+import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_DATE_STRING
+import au.edu.unsw.business.studysync.support.StudyDates
+import au.edu.unsw.business.studysync.support.TimeUtils
 import org.acra.ACRA
 import java.time.Duration
 import java.time.LocalDate
@@ -50,6 +55,13 @@ class SubjectSettings(private val preferences: SharedPreferences) {
         if (static.subjectId != null) {
             ACRA.errorReporter.putCustomData("SUBJECT_ID", static.subjectId)
         }
+
+        TimeUtils.studyDates = StudyDates(
+            static.baselineDate,
+            static.treatmentDate,
+            static.endlineDate,
+            static.overDate
+        )
     }
 
     fun identify(subjectId: String, authToken: String) {
@@ -110,6 +122,22 @@ class SubjectSettings(private val preferences: SharedPreferences) {
 
         _treatmentDebriefed.value = true
     }
+
+    fun updateDates(baselineDate: String, treatmentDate: String, endlineDate: String, overDate: String) {
+        preferences.edit {
+            putString("baseline-date", baselineDate)
+            putString("treatment-date", treatmentDate)
+            putString("endline-date", endlineDate)
+            putString("over-date", overDate)
+        }
+
+        TimeUtils.studyDates = StudyDates(
+            baselineDate = LocalDate.parse(baselineDate),
+            treatmentDate = LocalDate.parse(treatmentDate),
+            endlineDate = LocalDate.parse(endlineDate),
+            overDate = LocalDate.parse(overDate)
+        )
+    }
 }
 
 data class StaticSubjectSettings(val preferences: SharedPreferences) {
@@ -121,4 +149,8 @@ data class StaticSubjectSettings(val preferences: SharedPreferences) {
     val treatmentIntensity: Int = preferences.getInt("treatment-intensity", 0)
     val treatmentDebriefed: Boolean = preferences.getBoolean("treatment-debriefed", false)
     val treatmentLimit: Duration = Duration.ofSeconds(preferences.getInt("treatment-limit", 0).toLong())
+    val baselineDate: LocalDate = LocalDate.parse(preferences.getString("baseline-date", BASELINE_DATE_STRING)!!)
+    val treatmentDate: LocalDate = LocalDate.parse(preferences.getString("treatment-date", TREATMENT_DATE_STRING)!!)
+    val endlineDate: LocalDate = LocalDate.parse(preferences.getString("endline-date", ENDLINE_DATE_STRING)!!)
+    val overDate: LocalDate = LocalDate.parse(preferences.getString("over-date", OVER_DATE_STRING)!!)
 }

@@ -51,6 +51,21 @@ class LoginFragment : Fragment() {
 
                     val idData = idResponse.data!!
 
+                    // Retrieve the study dates from the server
+                    val studyDatesResponse = SyncApi.service.getDates(idData.authToken, subjectId)
+
+                    if (studyDatesResponse.message != null) throw Exception(studyDatesResponse.message)
+
+                    val studyDates = studyDatesResponse.data!!
+
+                    // If no dates are null then update the study dates in the time utils
+                    if (studyDates.baselineDate != null &&
+                        studyDates.treatmentDate != null &&
+                        studyDates.endlineDate != null &&
+                        studyDates.overDate != null) {
+                        vm.updateDates(studyDates.baselineDate, studyDates.treatmentDate, studyDates.endlineDate, studyDates.overDate)
+                    }
+
                     if (TimeUtils.getTodayPeriod() == PERIOD_BASELINE) {
                         vm.identify(subjectId, idData.authToken)
                     } else {

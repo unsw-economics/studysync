@@ -26,6 +26,9 @@ interface SyncApiService {
 
     @POST("api/submit-report")
     suspend fun submitReport(@Header("Authorization") authToken: String, @Body reportPayload: ReportPayload): BasicApiResponse
+
+    @GET("api/get-dates")
+    suspend fun getDates(@Header("Authorization") authToken: String?, @Query("subject_id") subjectId: String?): ApiResponse<GetDatesResponse>
 }
 
 object SyncApi {

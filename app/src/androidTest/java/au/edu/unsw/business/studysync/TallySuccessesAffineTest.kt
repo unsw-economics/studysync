@@ -14,21 +14,21 @@ import org.junit.Assert.assertNotEquals
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class AffineExperimentTest {
+class TallySuccessesAffineTest {
     private lateinit var scenario: ActivityScenario<MainActivity>
 
     @Before
     fun setUp() {
-        TimeUtils.periodToday = Constants.PERIOD_EXPERIMENT
+        AdbHelpers.setOneMinuteBeforeMidnightToday()
         scenario = ActivityScenario.launch(MainActivity::class.java)
         UsageHelpers.disableUsagePermission()
     }
 
     @After
     fun tearDown() {
-        TimeUtils.periodToday = null
         scenario.close()
         UsageHelpers.disableUsagePermission()
+        AdbHelpers.setAdbAutoTime(true)
     }
 
     private fun delay() {
@@ -38,18 +38,18 @@ class AffineExperimentTest {
     }
 
     @Test
-    fun testAffineGroupFlowDuringExperiment() {
+    fun testTallyForAffineGroup() {
         loginScreenTest()
         requestPermissionTest()
         checkTreatmentDebriefInstructions()
         checkTreatementScreenDetails()
-        testTimeIncrementsCorrectly()
+        testTimeAndTallyIncrementsCorrectly()
     }
 
     private fun loginScreenTest() {
         // Type in subjectId for control group subject
         onView(withId(R.id.subjectIdField))
-            .perform(typeText("aaaaaa000002"))
+            .perform(typeText("incentive"))
             .perform(closeSoftKeyboard())
 
         // Press submit button
@@ -147,15 +147,14 @@ class AffineExperimentTest {
         // Check that the number of successful treatments is not displayed
         onView(withId(R.id.successes_message))
             .check(matches(not(isDisplayed())))
-
-        // Check that the incentive label shows the correct amount of of $3.50
-        onView(withId(R.id.incentiveView))
-            .check(matches(withText("$3.50")))
     }
 
-    private fun testTimeIncrementsCorrectly() {
+    private fun testTimeAndTallyIncrementsCorrectly() {
         // Record the value of the progress bar
         val initialText = getText(onView(withId(R.id.todayUsageView)))
+
+        // Record the value of the incentive label
+        val initialIncentiveText = getText(onView(withId(R.id.totalEarnedView)))
 
         // Do nothing for 1 minute and 1 second
         Thread.sleep(61000)
@@ -164,5 +163,10 @@ class AffineExperimentTest {
         scenario.recreate()
         val finalText = getText(onView(withId(R.id.todayUsageView)))
         assertNotEquals(initialText, finalText)
+
+        // Check that the incentive label has increased
+        val finalIncentiveText = getText(onView(withId(R.id.totalEarnedView)))
+        assertNotEquals(initialIncentiveText, finalIncentiveText)
+        delay()
     }
 }

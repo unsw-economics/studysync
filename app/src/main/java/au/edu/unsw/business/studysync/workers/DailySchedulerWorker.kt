@@ -10,6 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
 import au.edu.unsw.business.studysync.R
 import au.edu.unsw.business.studysync.SubjectSettings
+import au.edu.unsw.business.studysync.constants.Constants.DAILY_CHECK_STUDY_DATES
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_BOUNCE_WORK
 import au.edu.unsw.business.studysync.constants.Constants.DAILY_SCHEDULER_WORK
 import au.edu.unsw.business.studysync.constants.Constants.PREFERENCES_NAME
@@ -17,9 +18,8 @@ import au.edu.unsw.business.studysync.constants.Constants.RECORD_AND_SUBMIT_WORK
 import au.edu.unsw.business.studysync.constants.Constants.STUDY_PHASE_CHANNEL
 import au.edu.unsw.business.studysync.constants.Constants.TREATMENT_OVER_NOTIFICATION
 import au.edu.unsw.business.studysync.constants.Constants.TREATMENT_START_NOTIFICATION
-import au.edu.unsw.business.studysync.constants.Environment.OVER_DATE
-import au.edu.unsw.business.studysync.constants.Environment.TREATMENT_DATE
 import au.edu.unsw.business.studysync.constants.Environment.ZONE_ID
+import au.edu.unsw.business.studysync.support.TimeUtils
 import au.edu.unsw.business.studysync.support.TimeUtils.nowLD
 import au.edu.unsw.business.studysync.support.TimeUtils.nowZDT
 import au.edu.unsw.business.studysync.support.UsageUtils
@@ -57,10 +57,13 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
 
         Log.d("App/DailySchedulerWorker", "work enqueued (record${ if (subjectSettings.identified.value!!) ", submit" else "" })")
 
+        // Trigger the daily scheduler worker to check for updated study dates
+        workManager.enqueueUniqueWork(DAILY_CHECK_STUDY_DATES, ExistingWorkPolicy.REPLACE, UpdateStudyDatesWorker.createRequest())
+
         val today = nowLD()
         val tomorrow = today.plusDays(1)
 
-        if (!tomorrow.isAfter(OVER_DATE)) {
+        if (!tomorrow.isAfter(TimeUtils.studyDates.overDate)) {
             workManager.enqueueUniqueWork(
                 DAILY_SCHEDULER_BOUNCE_WORK,
                 ExistingWorkPolicy.REPLACE,
@@ -70,12 +73,12 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
             Log.d("App/DailySchedulerWorker", "DailySchedulerBounceWorker enqueued")
         }
 
-        if (subjectSettings.identified.value!! && (today.isEqual(TREATMENT_DATE) || today.isEqual(OVER_DATE))) {
+        if (subjectSettings.identified.value!! && (today.isEqual(TimeUtils.studyDates.treatmentDate) || today.isEqual(TimeUtils.studyDates.overDate))) {
             val packageManager = context.packageManager
             val intent = packageManager.getLaunchIntentForPackage(context.packageName)
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_IMMUTABLE)
 
-            val (title, text, notificationId) = if (today.isEqual(TREATMENT_DATE)) {
+            val (title, text, notificationId) = if (today.isEqual(TimeUtils.studyDates.treatmentDate)) {
                 Triple("New Study Phase", "Please check the app for instructions.", TREATMENT_START_NOTIFICATION)
             } else {
                 Triple("Study Completed", "The study is now over. Please check the app for instructions.", TREATMENT_OVER_NOTIFICATION)

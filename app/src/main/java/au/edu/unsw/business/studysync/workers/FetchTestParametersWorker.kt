@@ -11,7 +11,7 @@ class FetchTestParametersWorker(private val context: Context, params: WorkerPara
     override suspend fun doWork(): Result {
         try {
             val preferences = context.getSharedPreferences("studysync-config", Context.MODE_PRIVATE)
-            val subjectSettings = SubjectSettings(preferences)
+            val subjectSettings = SubjectSettings(preferences) // Does this throw "Cannot invoke setValue in a background thread"?
 
             val result = RobustFetchTestParameters.fetch(subjectSettings.authToken.value!!, subjectSettings.subjectId.value!!)
 

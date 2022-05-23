@@ -10,25 +10,26 @@ import au.edu.unsw.business.studysync.constants.Constants
 import au.edu.unsw.business.studysync.support.TimeUtils
 import org.hamcrest.CoreMatchers.not
 import org.junit.*
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class AffineExperimentTest {
+class TallySuccessesInterceptTest {
     private lateinit var scenario: ActivityScenario<MainActivity>
 
     @Before
     fun setUp() {
-        TimeUtils.periodToday = Constants.PERIOD_EXPERIMENT
+        AdbHelpers.setOneMinuteBeforeMidnightToday()
         scenario = ActivityScenario.launch(MainActivity::class.java)
         UsageHelpers.disableUsagePermission()
     }
 
     @After
     fun tearDown() {
-        TimeUtils.periodToday = null
         scenario.close()
         UsageHelpers.disableUsagePermission()
+        AdbHelpers.setAdbAutoTime(true)
     }
 
     private fun delay() {
@@ -38,18 +39,18 @@ class AffineExperimentTest {
     }
 
     @Test
-    fun testAffineGroupFlowDuringExperiment() {
+    fun testTallyForInterceptGroup() {
         loginScreenTest()
         requestPermissionTest()
         checkTreatmentDebriefInstructions()
         checkTreatementScreenDetails()
-        testTimeIncrementsCorrectly()
+        testTimeAndTallyIncrementsCorrectly()
     }
 
     private fun loginScreenTest() {
         // Type in subjectId for control group subject
         onView(withId(R.id.subjectIdField))
-            .perform(typeText("aaaaaa000002"))
+            .perform(typeText("info"))
             .perform(closeSoftKeyboard())
 
         // Press submit button
@@ -122,7 +123,7 @@ class AffineExperimentTest {
 
         // Check that the correct treatment hint is displayed for the intercept group
         onView(withId(R.id.treatmentHintLabel))
-            .check(matches(withText(R.string.treatment_hint)))
+            .check(matches(withText(R.string.treatment_hint_intercept)))
 
         // Check that the progress bar is shown
         onView(withId(R.id.progress))
@@ -132,30 +133,29 @@ class AffineExperimentTest {
         onView(withId(R.id.maxUsageView))
             .check(matches(isDisplayed()))
 
-        // Check that the incentive label appears
+        // Check that the incentive label does not appear
         onView(withId(R.id.incentiveLabel))
-            .check(matches(isDisplayed()))
+            .check(matches(not(isDisplayed())))
         onView(withId(R.id.incentiveView))
-            .check(matches(isDisplayed()))
-
-        // Check that the amount earned appears
-        onView(withId(R.id.totalEarnedLabel))
-            .check(matches(isDisplayed()))
-        onView(withId(R.id.totalEarnedView))
-            .check(matches(isDisplayed()))
-
-        // Check that the number of successful treatments is not displayed
-        onView(withId(R.id.successes_message))
             .check(matches(not(isDisplayed())))
 
-        // Check that the incentive label shows the correct amount of of $3.50
-        onView(withId(R.id.incentiveView))
-            .check(matches(withText("$3.50")))
+        // Check that the amount earned does not appear
+        onView(withId(R.id.totalEarnedLabel))
+            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.totalEarnedView))
+            .check(matches(not(isDisplayed())))
+
+        // Check that the number of successful treatments is displayed
+        onView(withId(R.id.successes_message))
+            .check(matches(isDisplayed()))
     }
 
-    private fun testTimeIncrementsCorrectly() {
+    private fun testTimeAndTallyIncrementsCorrectly() {
         // Record the value of the progress bar
         val initialText = getText(onView(withId(R.id.todayUsageView)))
+
+        // Record the value of the target counter
+        val initialTarget = getText(onView(withId(R.id.successes_message)))
 
         // Do nothing for 1 minute and 1 second
         Thread.sleep(61000)
@@ -164,5 +164,10 @@ class AffineExperimentTest {
         scenario.recreate()
         val finalText = getText(onView(withId(R.id.todayUsageView)))
         assertNotEquals(initialText, finalText)
+
+        // Check that the target incremented by 1
+        val finalTarget = getText(onView(withId(R.id.successes_message)))
+        assertNotEquals(initialTarget, finalTarget)
+        delay()
     }
 }

@@ -6,14 +6,13 @@ import androidx.annotation.ColorInt
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.toSpannable
-import au.edu.unsw.business.studysync.constants.Environment
 
 object MessageUtils {
     fun baselineBody(@ColorInt highlightColor: Int): Spannable {
         return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. You will be asked to complete an endline survey on ")
             .bold {
                 color(highlightColor) {
-                    append(Environment.ENDLINE_DATE.toString())
+                    append(TimeUtils.studyDates.endlineDate.toString())
                 }
             }
             .append(".\n\nThank you for your participation!")
@@ -30,7 +29,7 @@ object MessageUtils {
             .append(" each day. The app will keep a running tally of all the days for which you have met this target over the four week period starting on ")
             .bold {
                 color(highlightColor) {
-                    append(Environment.TREATMENT_DATE.toString())
+                    append(TimeUtils.studyDates.treatmentDate.toString())
                 }
             }
             .append(". Note that you will not receive monetary compensation for hitting your target.\n\nPlease keep this app installed for the duration of the study and thank you for your participation!")
@@ -53,7 +52,7 @@ object MessageUtils {
             .append(" each day. The app will keep a running tally of the reward that you have earned over the four week period starting on ")
             .bold {
                 color(highlightColor) {
-                    append(Environment.TREATMENT_DATE.toString())
+                    append(TimeUtils.studyDates.treatmentDate.toString())
                 }
             }
             .append(".\n\nPlease keep this app installed for the duration of the study and thank you for your participation!")
@@ -61,10 +60,10 @@ object MessageUtils {
     }
 
     fun endlineBody(@ColorInt highlightColor: Int): Spannable {
-        return SpannableStringBuilder("Please check your email for the endline survey. Upon completion of the endline survey, your total earnings from the study (if applicable) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week. If you have any questions, please contact the research team at unswsmartphonestudy@gmail.com.\n\nPlease keep the app installed until ")
+        return SpannableStringBuilder("Please check your email for the invitation to the Endline Survey.  Upon completion of the Endline Survey, your total earnings from this portion of the study (if any) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week.  If you have any questions, please contact the research team at unswsmartphoneproject@gmail.com.\n\nPlease keep the app installed until ")
             .bold {
                 color(highlightColor) {
-                    append(Environment.OVER_DATE.toString())
+                    append(TimeUtils.studyDates.overDate.toString())
                 }
             }
             .append(", at which point you will be given instructions regarding deletion of the app. If you do so, you will also be entered into a lottery to win $100.\n\nThank you for your participation!")
