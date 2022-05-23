@@ -147,6 +147,10 @@ class AffineExperimentTest {
         // Check that the number of successful treatments is not displayed
         onView(withId(R.id.successes_message))
             .check(matches(not(isDisplayed())))
+
+        // Check that the incentive label shows the correct amount of of $3.50
+        onView(withId(R.id.incentiveView))
+            .check(matches(withText("$3.50")))
     }
 
     private fun testTimeIncrementsCorrectly() {
