@@ -60,7 +60,7 @@ object MessageUtils {
     }
 
     fun endlineBody(@ColorInt highlightColor: Int): Spannable {
-        return SpannableStringBuilder("Please check your email for the endline survey. Upon completion of the endline survey, your total earnings from the study (if applicable) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week. If you have any questions, please contact the research team at unswsmartphonestudy@gmail.com.\n\nPlease keep the app installed until ")
+        return SpannableStringBuilder("Please check your email for the invitation to the Endline Survey.  Upon completion of the Endline Survey, your total earnings from this portion of the study (if any) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week.  If you have any questions, please contact the research team at unswsmartphoneproject@gmail.com.\n\nPlease keep the app installed until ")
             .bold {
                 color(highlightColor) {
                     append(TimeUtils.studyDates.overDate.toString())
