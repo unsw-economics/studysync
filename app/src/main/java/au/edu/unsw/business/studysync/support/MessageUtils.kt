@@ -9,6 +9,9 @@ import androidx.core.text.toSpannable
 
 object MessageUtils {
     fun baselineBody(@ColorInt highlightColor: Int): Spannable {
+        return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. In about six weeks you will be asked to complete an endline survey.")
+            .toSpannable()
+        /*
         return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. You will be asked to complete an endline survey on ")
             .bold {
                 color(highlightColor) {
@@ -17,6 +20,7 @@ object MessageUtils {
             }
             .append(".\n\nThank you for your participation!")
             .toSpannable()
+         */
     }
 
     fun treatmentInterceptDebrief(limit: String, @ColorInt highlightColor: Int): Spannable {

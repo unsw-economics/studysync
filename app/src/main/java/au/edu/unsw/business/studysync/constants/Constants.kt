@@ -22,6 +22,8 @@ object Constants {
     const val DAILY_SCHEDULER_BOUNCE_WORK = "DAILY_SCHEDULER_BOUNCE_WORK"
     const val FETCH_TEST_PARAMS_WORK = "FETCH_TEST_PARAMS_WORK"
     const val DAILY_CHECK_STUDY_DATES = "DAILY_CHECK_STUDY_DATES"
+    const val PERODIC_SUBMIT_USAGE_WORK = "PERODIC_SUBMIT_USAGE_WORK"
+    const val PERODIC_UPDATE_DATES_WORK = "PERODIC_UPDATE_DATES_WORK"
     const val PREFERENCES_NAME = "studysync-config"
 
     const val STUDY_PHASE_CHANNEL = "STUDY_PHASE_CHANNEL"
@@ -35,7 +37,7 @@ object Environment {
         ZoneId.systemDefault()
     }
 
-    const val BASELINE_DATE_STRING = "2022-05-26"
+    const val BASELINE_DATE_STRING = "2022-05-27"
     val BASELINE_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_DATE_STRING)
     }

@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.Log
 import androidx.core.content.edit
 import androidx.work.*
-import au.edu.unsw.business.studysync.SubjectSettings
 import au.edu.unsw.business.studysync.network.SyncApi
 import org.acra.ACRA
 import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 class UpdateStudyDatesWorker(private val context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
@@ -42,6 +42,12 @@ class UpdateStudyDatesWorker(private val context: Context, params: WorkerParamet
     companion object {
         fun createRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<UpdateStudyDatesWorker>()
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofHours(1))
+                .build()
+        }
+
+        fun createPerodicRequest(): PeriodicWorkRequest {
+            return PeriodicWorkRequestBuilder<UpdateStudyDatesWorker>(12, TimeUnit.HOURS)
                 .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofHours(1))
                 .build()
         }

@@ -29,6 +29,9 @@ interface SyncApiService {
 
     @GET("api/get-dates")
     suspend fun getDates(@Header("Authorization") authToken: String?, @Query("subject_id") subjectId: String?): ApiResponse<GetDatesResponse>
+
+    @POST("api/submit-usage")
+    suspend fun submitUsage(@Header("Authorization") authToken: String, @Body usagePayload: UsagePayload): BasicApiResponse
 }
 
 object SyncApi {

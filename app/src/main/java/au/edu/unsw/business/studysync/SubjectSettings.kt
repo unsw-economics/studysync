@@ -29,6 +29,9 @@ class SubjectSettings(private val preferences: SharedPreferences) {
     private val _lastRecorded = MutableLiveData<LocalDate>()
     val lastRecorded get(): LiveData<LocalDate> = _lastRecorded
 
+//    private val _lastRun = MutableLiveData<LocalDate>()
+//    val lastRun get(): LiveData<LocalDate> = _lastRun
+
     private val _testGroup = MutableLiveData<Int>()
     val testGroup get(): LiveData<Int> = _testGroup
 
@@ -47,6 +50,7 @@ class SubjectSettings(private val preferences: SharedPreferences) {
         _subjectId.value = static.subjectId
         _authToken.value = static.authToken
         _lastRecorded.value = static.lastRecorded
+//        _lastRun.value = static.lastRun
         _testGroup.value = static.testGroup
         _treatmentIntensity.value = static.treatmentIntensity
         _treatmentDebriefed.value = static.treatmentDebriefed
@@ -101,6 +105,7 @@ class SubjectSettings(private val preferences: SharedPreferences) {
         _subjectId.value = null
         _authToken.value = null
         _lastRecorded.value = Environment.BASELINE_DATE
+//        _lastRun.value = Environment.BASELINE_DATE
         _testGroup.value = GROUP_UNASSIGNED
         _treatmentIntensity.value = 0
         _treatmentDebriefed.value = false
@@ -114,6 +119,14 @@ class SubjectSettings(private val preferences: SharedPreferences) {
 
         _lastRecorded.value = date
     }
+
+//    fun setLastRun(date: LocalDate) {
+//        preferences.edit {
+//            putString("last-run", date.toString())
+//        }
+//
+//        _lastRun.value = date
+//    }
 
     fun completeDebrief() {
         preferences.edit {
@@ -145,6 +158,7 @@ data class StaticSubjectSettings(val preferences: SharedPreferences) {
     val subjectId: String? = preferences.getString("subject-id", null)
     val authToken: String? = preferences.getString("auth-token", null)
     val lastRecorded: LocalDate = LocalDate.parse(preferences.getString("last-recorded", BASELINE_DATE_STRING)!!)
+//    val lastRun: LocalDate = LocalDate.parse(preferences.getString("last-run", BASELINE_DATE_STRING)!!)
     val testGroup: Int = preferences.getInt("test-group", GROUP_UNASSIGNED)
     val treatmentIntensity: Int = preferences.getInt("treatment-intensity", 0)
     val treatmentDebriefed: Boolean = preferences.getBoolean("treatment-debriefed", false)
