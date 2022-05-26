@@ -37,7 +37,7 @@ object Environment {
         ZoneId.systemDefault()
     }
 
-    const val BASELINE_DATE_STRING = "2022-05-26"
+    const val BASELINE_DATE_STRING = "2022-05-27"
     val BASELINE_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_DATE_STRING)
     }
