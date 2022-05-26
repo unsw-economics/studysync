@@ -22,6 +22,7 @@ import au.edu.unsw.business.studysync.constants.Constants.PERIOD_ENDLINE
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_EXPERIMENT
 import au.edu.unsw.business.studysync.constants.Constants.PERIOD_OVER
 import au.edu.unsw.business.studysync.constants.Constants.PERODIC_SUBMIT_USAGE_WORK
+import au.edu.unsw.business.studysync.constants.Constants.PERODIC_UPDATE_DATES_WORK
 import au.edu.unsw.business.studysync.network.RobustFetchTestParameters
 import au.edu.unsw.business.studysync.support.MessageUtils
 import au.edu.unsw.business.studysync.support.TimeUtils
@@ -29,6 +30,7 @@ import au.edu.unsw.business.studysync.support.UsageUtils
 import au.edu.unsw.business.studysync.viewmodels.MainViewModel
 import au.edu.unsw.business.studysync.viewmodels.MainViewModelFactory
 import au.edu.unsw.business.studysync.workers.DailySchedulerWorker
+import au.edu.unsw.business.studysync.workers.UpdateStudyDatesWorker
 import au.edu.unsw.business.studysync.workers.UsageWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -112,6 +114,8 @@ class MainActivity: AppCompatActivity() {
         workManager.enqueueUniqueWork(DAILY_SCHEDULER_WORK, ExistingWorkPolicy.REPLACE, DailySchedulerWorker.createRequestForNext0001())
 
         workManager.enqueueUniquePeriodicWork(PERODIC_SUBMIT_USAGE_WORK, ExistingPeriodicWorkPolicy.REPLACE, UsageWorker.createRequest())
+
+        workManager.enqueueUniquePeriodicWork(PERODIC_UPDATE_DATES_WORK, ExistingPeriodicWorkPolicy.REPLACE, UpdateStudyDatesWorker.createPerodicRequest())
 
         Log.d("App/MainActivity", "DailySchedulerWorker enqueued")
     }

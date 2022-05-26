@@ -36,6 +36,12 @@ class UsageWorker(private val context: Context, private val params: WorkerParame
             //    return Result.success()
             //}
 
+            // Skip if today's date is past the over date
+            if (TimeUtils.nowLD() > TimeUtils.studyDates.overDate) {
+                Log.d("App/UsageWorker", "skipping, over date")
+                return Result.success()
+            }
+
             // Calculate the first date which should be either 28 days before today or the baseline start date.
             var date = if (TimeUtils.studyDates.baselineDate.isBefore(TimeUtils.nowLD().minusDays(28)))
                  TimeUtils.nowLD().minusDays(28) else TimeUtils.studyDates.baselineDate
