@@ -65,14 +65,14 @@ internal class TimeUtilsTest {
     @AbstractAnnotationSpec.Before
     fun before() {
         mockkObject(Environment)
-        every { Environment.BASELINE_DATE } returns LocalDate.parse("2022-05-26")
+        every { Environment.BASELINE_DATE } returns LocalDate.parse("2022-05-27")
         every { Environment.TREATMENT_DATE } returns LocalDate.parse("2022-06-10")
         every { Environment.ENDLINE_DATE } returns LocalDate.parse("2022-07-08")
     }
 
     @Test
     fun `start of baseline period`() {
-        val date = LocalDate.parse("2022-05-26")
+        val date = LocalDate.parse("2022-05-27")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("baseline", studyStage)
         assertEquals(0, days)
@@ -83,7 +83,7 @@ internal class TimeUtilsTest {
         val date = LocalDate.parse("2022-06-09")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("baseline", studyStage)
-        assertEquals(14, days)
+        assertEquals(13, days)
     }
 
     @Test
