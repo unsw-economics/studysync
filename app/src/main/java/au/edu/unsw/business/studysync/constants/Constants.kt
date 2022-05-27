@@ -42,17 +42,17 @@ object Environment {
         LocalDate.parse(BASELINE_DATE_STRING)
     }
 
-    const val TREATMENT_DATE_STRING = "2022-06-10"
+    const val TREATMENT_DATE_STRING = "2022-06-13"
     val TREATMENT_DATE: LocalDate by lazy {
         LocalDate.parse(TREATMENT_DATE_STRING)
     }
 
-    const val ENDLINE_DATE_STRING = "2022-07-08"
+    const val ENDLINE_DATE_STRING = "2022-07-11"
     val ENDLINE_DATE: LocalDate by lazy {
         LocalDate.parse(ENDLINE_DATE_STRING)
     }
 
-    const val OVER_DATE_STRING = "2022-07-22"
+    const val OVER_DATE_STRING = "2022-08-08"
     val OVER_DATE: LocalDate by lazy {
         LocalDate.parse(OVER_DATE_STRING)
     }
