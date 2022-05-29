@@ -73,9 +73,27 @@ class UsageWorker(private val context: Context, private val params: WorkerParame
             }
 
             // Submit the usageMap to the api.
-            withContext(Dispatchers.Main) {
+            val res = withContext(Dispatchers.Main) {
                 val subjectSettings = SubjectSettings(context.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE))
+                val authToken = subjectSettings.authToken.value
+                val subjectId = subjectSettings.subjectId.value
+
+                // Retry if the auth token is null.
+                if (authToken == null || subjectId == null) {
+                    Log.d("App/UsageWorker", "retrying, auth token or subject id is null")
+                    return@withContext Result.retry()
+                }
+
+                Log.d("App/UsageWorker", "submitting usage")
                 SyncApi.service.submitUsage(subjectSettings.authToken.value!!, UsagePayload(subjectSettings.subjectId.value!!, usageMap))
+            }
+            // Log the value of res
+            Log.d("App/UsageWorker", "res: $res")
+
+            // Check if res is retry value.
+            if (res is Result.Retry) {
+                Log.d("App/UsageWorker", "retrying, res is retry")
+                return Result.retry()
             }
 
             Log.d("App/UsageWorker", "success")
