@@ -1,9 +1,12 @@
 package au.edu.unsw.business.studysync.workers
 
+import android.Manifest
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import androidx.core.app.NotificationManagerCompat
@@ -92,6 +95,21 @@ class DailySchedulerWorker(private val context: Context, params: WorkerParameter
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
 
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return Result.success()
+
+            }
             NotificationManagerCompat.from(context).notify(notificationId, builder.build())
         }
 
