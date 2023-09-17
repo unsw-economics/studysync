@@ -7,7 +7,7 @@ import au.edu.unsw.business.studysync.StudySyncApplication
 class TreatmentViewModelFactory(
     private val application: StudySyncApplication
 ): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return TreatmentViewModel(application) as T
     }
 }

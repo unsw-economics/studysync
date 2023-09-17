@@ -54,7 +54,7 @@ class MainActivity: AppCompatActivity() {
 
     private val navOptions by lazy {
         NavOptions.Builder()
-            .setEnterAnim(R.anim.nav_default_enter_anim)
+//            .setEnterAnim(R.anim.nav_default_enter_anim)
             .setPopUpTo(R.id.nav_graph, true)
             .build()
     }
