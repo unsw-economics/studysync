@@ -47,7 +47,7 @@ object Environment {
         LocalDate.parse(TREATMENT_DATE_STRING)
     }
 
-    const val ENDLINE_DATE_STRING = "2023-11-11"
+    const val ENDLINE_DATE_STRING = "2023-11-10"
     val ENDLINE_DATE: LocalDate by lazy {
         LocalDate.parse(ENDLINE_DATE_STRING)
     }

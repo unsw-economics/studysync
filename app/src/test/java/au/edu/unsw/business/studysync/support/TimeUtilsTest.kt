@@ -65,14 +65,14 @@ internal class TimeUtilsTest {
     @AbstractAnnotationSpec.Before
     fun before() {
         mockkObject(Environment)
-        every { Environment.BASELINE_DATE } returns LocalDate.parse("2022-05-27")
-        every { Environment.TREATMENT_DATE } returns LocalDate.parse("2022-06-13")
-        every { Environment.ENDLINE_DATE } returns LocalDate.parse("2022-07-11")
+        every { Environment.BASELINE_DATE } returns LocalDate.parse("2023-09-27")
+        every { Environment.TREATMENT_DATE } returns LocalDate.parse("2023-10-13")
+        every { Environment.ENDLINE_DATE } returns LocalDate.parse("2023-11-10")
     }
 
     @Test
     fun `start of baseline period`() {
-        val date = LocalDate.parse("2022-05-27")
+        val date = LocalDate.parse("2023-09-27")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("baseline", studyStage)
         assertEquals(0, days)
@@ -80,15 +80,15 @@ internal class TimeUtilsTest {
 
     @Test
     fun `end of baseline period`() {
-        val date = LocalDate.parse("2022-06-12")
+        val date = LocalDate.parse("2023-10-12")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("baseline", studyStage)
-        assertEquals(16, days)
+        assertEquals(15, days)
     }
 
     @Test
     fun `start of experiment period`() {
-        val date = LocalDate.parse("2022-06-13")
+        val date = LocalDate.parse("2023-10-13")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("experiment", studyStage)
         assertEquals(0, days)
@@ -96,7 +96,7 @@ internal class TimeUtilsTest {
 
     @Test
     fun `one day after experiment period`() {
-        val date = LocalDate.parse("2022-06-14")
+        val date = LocalDate.parse("2023-10-14")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("experiment", studyStage)
         assertEquals(1, days)
@@ -104,7 +104,7 @@ internal class TimeUtilsTest {
 
     @Test
     fun `middle of experiment period`() {
-        val date = LocalDate.parse("2022-06-25")
+        val date = LocalDate.parse("2023-10-25")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("experiment", studyStage)
         assertEquals(12, days)
@@ -112,7 +112,7 @@ internal class TimeUtilsTest {
 
     @Test
     fun `end of experiment period`() {
-        val date = LocalDate.parse("2022-07-07")
+        val date = LocalDate.parse("2023-11-06")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("experiment", studyStage)
         assertEquals(24, days)
@@ -120,7 +120,7 @@ internal class TimeUtilsTest {
 
     @Test
     fun `start of endline period`() {
-        val date = LocalDate.parse("2022-07-11")
+        val date = LocalDate.parse("2023-11-10")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("endline", studyStage)
         assertEquals(0, days)
@@ -128,7 +128,7 @@ internal class TimeUtilsTest {
 
     @Test
     fun `one day after endline period`() {
-        val date = LocalDate.parse("2022-07-12")
+        val date = LocalDate.parse("2023-11-11")
         val (studyStage, days) = TimeUtils.getStudyPeriodAndDay(date)
         assertEquals("endline", studyStage)
         assertEquals(1, days)
