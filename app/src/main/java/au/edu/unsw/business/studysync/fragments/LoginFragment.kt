@@ -20,6 +20,26 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.acra.ACRA
 
+fun hashStringTo8Digit(input: String): Int {
+    var hash = 0
+
+    for (char in input) {
+        hash += char.toInt()
+        hash += (hash shl 10)
+        hash = hash xor (hash shr 6)
+    }
+
+    hash += (hash shl 3)
+    hash = hash xor (hash shr 11)
+    hash += (hash shl 15)
+
+    // Ensure the result lies in the range [0, 89999999].
+    hash = Math.abs(hash % 90000000)
+
+    // Adjust to ensure it's an 8-digit number without leading zeros: [10000000, 99999999].
+    return hash + 10000000
+}
+
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
@@ -40,12 +60,13 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.identifyButton.setOnClickListener {
-            val subjectId = binding.subjectIdField.text.toString()
+            val email = binding.subjectIdField.text.toString()
+            val subjectId = hashStringTo8Digit(email).toString()
             loginVm.disableLogin()
 
             lifecycleScope.launch {
                 try {
-                    val idResponse = SyncApi.service.identify(subjectId)
+                    val idResponse = SyncApi.service.identify(email)
 
                     if (idResponse.message != null) throw Exception(idResponse.message)
 

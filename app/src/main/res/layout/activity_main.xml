@@ -18,4 +18,21 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/idFragment"
+        android:name="au.edu.unsw.business.studysync.fragments.IDFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/idTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

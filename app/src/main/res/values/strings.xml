@@ -2,9 +2,9 @@
     <string name="app_name">SmartLog</string>
     <string name="app_name_testing">SS TEST</string>
 
-    <string name="login_hint">Please enter your ID to begin.</string>
-    <string name="login_id_placeholder">Participant ID</string>
-    <string name="login_sign_in">Sign In</string>
+    <string name="login_hint">Please enter your Email to begin.</string>
+    <string name="login_id_placeholder">Email</string>
+    <string name="login_sign_in">Begin</string>
     <string name="request_permission_title">Welcome to the Smartphone Study (HC210886)!</string>
     <string name="request_permission_body">When you click the button below, please scroll to the StudySync entry and permit usage access.</string>
     <string name="request_permission_enable_access">Enable Usage Access</string>
