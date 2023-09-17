@@ -24,7 +24,7 @@ fun hashStringTo8Digit(input: String): Int {
     var hash = 0
 
     for (char in input) {
-        hash += char.toInt()
+        hash += char.lowercaseChar().toInt()
         hash += (hash shl 10)
         hash = hash xor (hash shr 6)
     }
