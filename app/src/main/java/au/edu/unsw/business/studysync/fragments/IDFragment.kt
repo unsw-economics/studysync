@@ -30,7 +30,7 @@ class IDFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListene
 
         // Immediately update the TextView with the current value
         val subjectId = sharedPref.getString("subject-id", "") ?: ""
-        idTextView.text = if (subjectId.isNotEmpty()) "ID: $subjectId" else ""
+        idTextView.text = if (subjectId.isNotEmpty()) "Participant ID: $subjectId" else ""
     }
 
     override fun onResume() {
@@ -49,7 +49,7 @@ class IDFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListene
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == "subject-id") {
             val subjectId = sharedPref.getString("subject-id", "") ?: ""
-            idTextView.text = if (subjectId.isNotEmpty()) "ID: $subjectId" else ""
+            idTextView.text = if (subjectId.isNotEmpty()) "Participant ID: $subjectId" else ""
         }
     }
 }
