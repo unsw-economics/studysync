@@ -37,22 +37,22 @@ object Environment {
         ZoneId.systemDefault()
     }
 
-    const val BASELINE_DATE_STRING = "2023-09-27"
+    const val BASELINE_DATE_STRING = "2023-09-25"
     val BASELINE_DATE: LocalDate by lazy {
         LocalDate.parse(BASELINE_DATE_STRING)
     }
 
-    const val TREATMENT_DATE_STRING = "2023-10-13"
+    const val TREATMENT_DATE_STRING = "2023-10-02"
     val TREATMENT_DATE: LocalDate by lazy {
         LocalDate.parse(TREATMENT_DATE_STRING)
     }
 
-    const val ENDLINE_DATE_STRING = "2023-11-10"
+    const val ENDLINE_DATE_STRING = "2023-10-30"
     val ENDLINE_DATE: LocalDate by lazy {
         LocalDate.parse(ENDLINE_DATE_STRING)
     }
 
-    const val OVER_DATE_STRING = "2023-12-08"
+    const val OVER_DATE_STRING = "2023-11-30"
     val OVER_DATE: LocalDate by lazy {
         LocalDate.parse(OVER_DATE_STRING)
     }

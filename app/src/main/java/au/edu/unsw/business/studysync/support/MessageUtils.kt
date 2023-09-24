@@ -9,7 +9,7 @@ import androidx.core.text.toSpannable
 
 object MessageUtils {
     fun baselineBody(@ColorInt highlightColor: Int): Spannable {
-        return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. In about six weeks you will be asked to complete an endline survey.")
+        return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. You will be asked to complete an endline survey around week 8.")
             .toSpannable()
         /*
         return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. You will be asked to complete an endline survey on ")
@@ -64,12 +64,12 @@ object MessageUtils {
     }
 
     fun endlineBody(@ColorInt highlightColor: Int): Spannable {
-        return SpannableStringBuilder("Please check your email for the invitation to the Endline Survey.  Upon completion of the Endline Survey, your total earnings from this portion of the study (if any) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week.  If you have any questions, please contact the research team at unswsmartphoneproject@gmail.com.\n\nPlease keep the app installed until ")
-            .bold {
-                color(highlightColor) {
-                    append(TimeUtils.studyDates.overDate.toString())
-                }
-            }
+        return SpannableStringBuilder("Please check your email for the invitation to the Endline Survey.  Upon completion of the Endline Survey, your total earnings from this portion of the study (if any) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week.  If you have any questions, please contact the research team at unswsmartphoneproject@gmail.com.\n\nPlease keep the app installed until Week 11")
+//            .bold {
+//                color(highlightColor) {
+//                    append(TimeUtils.studyDates.overDate.toString())
+//                }
+//            }
             .append(", at which point you will be given instructions regarding deletion of the app. If you do so, you will also be entered into a lottery to win $100.\n\nThank you for your participation!")
             .toSpannable()
     }
