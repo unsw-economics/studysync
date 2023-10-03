@@ -13,7 +13,9 @@ data class BasicApiResponse(
 
 data class IdentifyResponse(
     @Json(name = "auth_token")
-    val authToken: String
+    val authToken: String,
+    @Json(name = "subject_id")
+    val subjectId: String
 )
 
 data class GetTestParamsResponse(

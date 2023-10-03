@@ -9,7 +9,7 @@ import androidx.core.text.toSpannable
 
 object MessageUtils {
     fun baselineBody(@ColorInt highlightColor: Int): Spannable {
-        return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. You will be asked to complete an endline survey around week 8.")
+        return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. You will be asked to complete an endline survey around week 10.")
             .toSpannable()
         /*
         return SpannableStringBuilder("You do not need to do anything else at the moment. Please keep this app installed for the duration of the study. You will be asked to complete an endline survey on ")
@@ -64,7 +64,7 @@ object MessageUtils {
     }
 
     fun endlineBody(@ColorInt highlightColor: Int): Spannable {
-        return SpannableStringBuilder("Please check your email for the invitation to the Endline Survey.  Upon completion of the Endline Survey, your total earnings from this portion of the study (if any) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week.  If you have any questions, please contact the research team at unswsmartphoneproject@gmail.com.\n\nPlease keep the app installed until Week 11")
+        return SpannableStringBuilder("Please check your email inbox and spam folder for the invitation to the Endline Survey.  Upon completion of the Endline Survey, your total earnings from this portion of the study (if any) along with \$25 for completing the surveys will be paid to your nominated PayID account within a week.  If you have any questions, please contact the research team at unswsmartphoneproject@gmail.com.\n\nPlease keep the app installed until Week 12")
 //            .bold {
 //                color(highlightColor) {
 //                    append(TimeUtils.studyDates.overDate.toString())
